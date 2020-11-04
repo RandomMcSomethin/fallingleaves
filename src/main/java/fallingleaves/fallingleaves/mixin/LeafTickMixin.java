@@ -1,6 +1,7 @@
 package fallingleaves.fallingleaves.mixin;
 
 import fallingleaves.fallingleaves.LeafUtils;
+import fallingleaves.fallingleaves.LeafUtils;
 import fallingleaves.fallingleaves.client.FallingLeavesClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -8,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -22,7 +24,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import static fallingleaves.fallingleaves.client.FallingLeavesClient.FALLING_LEAF;
 import static fallingleaves.fallingleaves.client.FallingLeavesClient.FALLING_SPRUCE_LEAF;
@@ -35,8 +40,13 @@ public abstract class LeafTickMixin {
 
     @Inject(at = @At("HEAD"), method = "randomDisplayTick")
     private void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
-        if (random.nextInt(75) == 0) {
-            BlockPos ogPos = pos;
+        double rateVar = 1.0;
+        for (int leaf = 0; leaf < FallingLeavesClient.coniferLeaves.length; leaf++) {
+            if (state.getBlock() == FallingLeavesClient.coniferLeaves[leaf])
+                rateVar = FallingLeavesClient.config.coniferLeafRate;
+                    else rateVar = FallingLeavesClient.config.leafRate;
+        }
+        if (rateVar != 0 && random.nextInt((int) (75*rateVar)) == 0) {
             Direction direction = Direction.DOWN;
             BlockPos blockPos = pos.offset(direction);
             BlockState blockState = world.getBlockState(blockPos);

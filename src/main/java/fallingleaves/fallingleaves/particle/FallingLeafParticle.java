@@ -19,7 +19,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
 
         this.collidesWithWorld = true;
         this.gravityStrength = 0.1F;
-        this.maxAge = 200;
+        this.maxAge = FallingLeavesClient.config.leafLifespan;
 
         this.velocityX *= 0.3F;
         this.velocityY *= 0.0F;
