@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "fallingleaves",
+  "version": "${version}",
+  "name": "Falling Leaves",
+  "description": "\"How the gentle wind \nbeckons through the leaves \nas autumn colors fall,\ndancing in a swirl \nof golden memories:\nthe loveliest lies of all.\"",
+  "authors": [
+    "RandomMcSomethin"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/fallingleaves/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "fallingleaves.fallingleaves.client.FallingLeavesClient"
+    ],
+    "main": [
+      "fallingleaves.fallingleaves.FallingLeaves"
+    ]
+  },
+  "mixins": [
+    "fallingleaves.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.10.6+build.214",
+    "fabric": "*",
+    "minecraft": "1.16.*"
+  }
+}
