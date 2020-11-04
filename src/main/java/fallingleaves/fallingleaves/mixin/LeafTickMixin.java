@@ -5,6 +5,7 @@ import fallingleaves.fallingleaves.client.FallingLeavesClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -32,6 +33,8 @@ public class LeafTickMixin {
                 float l = (float)(j >> 8 & 255) / 255.0F;
                 float m = (float)(j & 255) / 255.0F;
 
+                //Regular leaves
+                /*
                 for (int leaf = 0; leaf < FallingLeaves.coniferLeaves.length; leaf++) {
                     if (state.getBlock() == FallingLeaves.coniferLeaves[leaf]) {
                         world.addParticle(FallingLeavesClient.FALLING_SPRUCE_LEAF, (double)pos.getX() + d, pos.getY(), (double)pos.getZ() + f, k, l, m);
@@ -39,6 +42,10 @@ public class LeafTickMixin {
                         world.addParticle(FallingLeavesClient.FALLING_LEAF, (double)pos.getX() + d, pos.getY(), (double)pos.getZ() + f, k, l, m);
                     }
                 }
+
+                 */
+                //Dynamic leaves
+                world.addParticle(new BlockStateParticleEffect((FallingLeavesClient.DYNAMIC_FALLING_LEAF, state), (double)pos.getX() + d, pos.getY(), (double)pos.getZ() + f, k, l, m);
             }
         }
     }
