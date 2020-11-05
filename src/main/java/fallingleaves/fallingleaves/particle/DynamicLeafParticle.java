@@ -5,25 +5,24 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.BlockDustParticle;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleFactory;
+import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
-public class DynamicLeafParticle extends BlockDustParticle {
+public class DynamicLeafParticle extends SpriteBillboardParticle {
     private float rotateFactor;
 
-    public DynamicLeafParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState blockState) {
-        super(world, x, y, z, velocityX, velocityY, velocityZ, blockState);
+    public DynamicLeafParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, String blockState) {
+        super(world, x, y, z, velocityX, velocityY, velocityZ);
 
-        int j = MinecraftClient.getInstance().getBlockColors().getColor(blockState, world, new BlockPos(x, y, z), 0);
-        float k = (float)(j >> 16 & 255) / 255.0F;
-        float l = (float)(j >> 8 & 255) / 255.0F;
-        float m = (float)(j & 255) / 255.0F;
+        //int j = MinecraftClient.getInstance().getBlockColors().getColor(getBLo, world, new BlockPos(x, y, z), 0);
+        //float k = (float)(j >> 16 & 255) / 255.0F;
+        //float l = (float)(j >> 8 & 255) / 255.0F;
+        //float m = (float)(j & 255) / 255.0F;
 
         this.collidesWithWorld = true;
         this.gravityStrength = 0.1F;
@@ -33,9 +32,6 @@ public class DynamicLeafParticle extends BlockDustParticle {
         this.velocityY *= 0.0F;
         this.velocityZ *= 0.3F;
 
-        this.colorRed = (float) k;
-        this.colorGreen = (float) l;
-        this.colorBlue = (float) m;
         this.rotateFactor = ((float)Math.random() - 0.5F) * 0.01F;
         this.scale = 0.15F;
     }
@@ -64,11 +60,19 @@ public class DynamicLeafParticle extends BlockDustParticle {
         }
     }
 
+    @Override
+    public ParticleTextureSheet getType() {
+        return ParticleTextureSheet.CUSTOM;
+    }
+
     @Environment(EnvType.CLIENT)
-    public static class DefaultFactory implements ParticleFactory<BlockStateParticleEffect> {
-        public Particle createParticle(BlockStateParticleEffect blockStateParticleEffect, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            BlockState blockState = blockStateParticleEffect.getBlockState();
-            return !blockState.isAir() && !blockState.isOf(Blocks.MOVING_PISTON) ? (new BlockDustParticle(clientWorld, d, e, f, g, h, i, blockState)).setBlockPosFromPosition() : null;
+    public static class Factory implements ParticleFactory<DynamicLeafParticleEffect> {
+        public Factory(SpriteProvider spriteProvider) {
+        }
+
+        @Override
+        public @Nullable Particle createParticle(DynamicLeafParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+            return new DynamicLeafParticle(world, x, y, z, velocityX, velocityY, velocityZ, parameters.state);
         }
     }
 }
