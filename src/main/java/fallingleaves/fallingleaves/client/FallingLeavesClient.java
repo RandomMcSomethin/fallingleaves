@@ -20,7 +20,7 @@ public class FallingLeavesClient implements ClientModInitializer {
 
     public static DefaultParticleType FALLING_LEAF;
     public static DefaultParticleType FALLING_SPRUCE_LEAF;
-    public static BlockStateParticleEffect DYNAMIC_FALLING_LEAF;
+    public static ParticleType<DynamicLeafParticleEffect> DYNAMIC_FALLING_LEAF = FabricParticleTypes.complex(DynamicLeafParticle.FACTORY);
 
     @Override
     public void onInitializeClient() {
@@ -31,6 +31,6 @@ public class FallingLeavesClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(FALLING_SPRUCE_LEAF, FallingSpruceLeafParticle.DefaultFactory::new);
 
         DYNAMIC_FALLING_LEAF = Registry.register(Registry.PARTICLE_TYPE, FallingLeaves.id("dynamic_falling_leaf"), FabricParticleTypes.complex(true, new BlockDustParticle.Factory());
-        ParticleFactoryRegistry.getInstance().register(DYNAMIC_FALLING_LEAF, (ParticleFactory)new BlockDustParticle.Factory());
+        ParticleFactoryRegistry.getInstance().register(DYNAMIC_FALLING_LEAF, DynamicLeafParticle.Factory::new);
     }
 }
