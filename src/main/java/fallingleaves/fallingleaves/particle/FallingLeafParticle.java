@@ -28,7 +28,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         this.colorGreen = (float) h;
         this.colorBlue = (float) i;
         this.rotateFactor = ((float)Math.random() - 0.5F) * 0.01F;
-        this.scale = 0.15F;
+        this.scale = 0.10F;
     }
 
     public void tick() {
