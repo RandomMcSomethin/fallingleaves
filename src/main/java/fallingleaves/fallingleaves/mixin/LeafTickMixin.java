@@ -1,11 +1,13 @@
 package fallingleaves.fallingleaves.mixin;
 
 import fallingleaves.fallingleaves.FallingLeaves;
+import fallingleaves.fallingleaves.LeafUtils;
 import fallingleaves.fallingleaves.client.FallingLeavesClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -14,6 +16,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -33,23 +39,40 @@ public class LeafTickMixin {
 
                 int j = MinecraftClient.getInstance().getBlockColors().getColor(state, world, blockPos.offset(Direction.UP), 0);
                 if (j == -1) {
+                    try {
+                        InputStream is = MinecraftClient.getInstance().getResourceManager().getResource(
+                                new Identifier(LeafUtils.spriteToTexture(MinecraftClient.getInstance().getBlockRenderManager().getModel(state).getSprite()))
+                        ).getInputStream();
+                        BufferedImage img = ImageIO.read(is);
+                        j = LeafUtils.averageColor(img, img.getWidth(), img.getHeight()).getRGB();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                /*
+                if (j == -1) {
                     List<BakedQuad> quads = MinecraftClient.getInstance().getBlockRenderManager().getModel(blockState).getQuads(blockState, Direction.DOWN, random);
                     for (int i = 0; i < Direction.values().length; i++) {
-                        quads = MinecraftClient.getInstance().getBlockRenderManager().getModel(blockState).getQuads(blockState, Direction.byId(i), random);
+                        Direction[] dirz = Direction.values();
+                        quads = MinecraftClient.getInstance().getBlockRenderManager().getModel(blockState).getQuads(blockState, dirz[i], random);
+                        System.out.println("Getting quad...");
                         if (!quads.isEmpty()) {
+                            System.out.println("Quad found!");
                             if (quads.get(quads.size() - 1).hasColor()) {
+                                System.out.println("Quad has color");
                                 break;
                             }
                         }
                     }
                     if (!quads.isEmpty()) {
                         j = MinecraftClient.getInstance().getBlockColors().getColor(state, world, blockPos, quads.get(quads.size() - 1).getColorIndex());
+                        System.out.println("Color is " + j);
                     }
                     j = state.getMaterial().getColor().color;
-                    System.out.println("Color is " + j);
+                    System.out.println("Default color is " + j);
                 }
+                */
                 //if (j == 16777215) {
-
                 //}
                 float k = (float) (j >> 16 & 255) / 255.0F;
                 float l = (float) (j >> 8 & 255) / 255.0F;

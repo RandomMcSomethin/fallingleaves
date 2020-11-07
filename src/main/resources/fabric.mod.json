@@ -17,6 +17,9 @@
     ],
     "main": [
       "fallingleaves.fallingleaves.FallingLeaves"
+    ],
+    "modmenu": [
+      "fallingleaves.fallingleaves.FallingLeavesMenu"
     ]
   },
   "mixins": [
