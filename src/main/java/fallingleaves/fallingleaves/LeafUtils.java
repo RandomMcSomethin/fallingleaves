@@ -1,6 +1,5 @@
 package fallingleaves.fallingleaves;
 
-import net.minecraft.block.MaterialColor;
 import net.minecraft.client.texture.Sprite;
 
 import java.awt.*;
@@ -30,7 +29,7 @@ public class LeafUtils {
         //System.out.println(b/n);
         return new Color((float)r/n/255, (float)g/n/255, (float)b/n/255);
     }
-    
+
     public static String spriteToTexture(Sprite sprite) {
         String id = sprite.getId().toString();
         String newId = "nah";

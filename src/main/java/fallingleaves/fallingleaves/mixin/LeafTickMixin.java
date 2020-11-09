@@ -1,17 +1,19 @@
 package fallingleaves.fallingleaves.mixin;
 
-import fallingleaves.fallingleaves.FallingLeaves;
 import fallingleaves.fallingleaves.LeafUtils;
 import fallingleaves.fallingleaves.client.FallingLeavesClient;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,14 +22,19 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+import static fallingleaves.fallingleaves.client.FallingLeavesClient.FALLING_LEAF;
+import static fallingleaves.fallingleaves.client.FallingLeavesClient.FALLING_SPRUCE_LEAF;
+
+@Environment(EnvType.CLIENT)
 @Mixin(LeavesBlock.class)
-public class LeafTickMixin {
+public abstract class LeafTickMixin {
+    @Unique
+    private static final HashMap<String, Integer> textureColor = new HashMap<>();
+
     @Inject(at = @At("HEAD"), method = "randomDisplayTick")
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
+    private void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
         if (random.nextInt(75) == 0) {
             BlockPos ogPos = pos;
             Direction direction = Direction.DOWN;
@@ -37,16 +44,24 @@ public class LeafTickMixin {
                 double d = direction.getOffsetX() == 0 ? random.nextDouble() : 0.5D + (double) direction.getOffsetX() * 0.6D;
                 double f = direction.getOffsetZ() == 0 ? random.nextDouble() : 0.5D + (double) direction.getOffsetZ() * 0.6D;
 
-                int j = MinecraftClient.getInstance().getBlockColors().getColor(state, world, blockPos.offset(Direction.UP), 0);
+                MinecraftClient client = MinecraftClient.getInstance();
+                int j = client.getBlockColors().getColor(state, world, blockPos.offset(Direction.UP), 0);
                 if (j == -1) {
-                    try {
-                        InputStream is = MinecraftClient.getInstance().getResourceManager().getResource(
-                                new Identifier(LeafUtils.spriteToTexture(MinecraftClient.getInstance().getBlockRenderManager().getModel(state).getSprite()))
-                        ).getInputStream();
-                        BufferedImage img = ImageIO.read(is);
-                        j = LeafUtils.averageColor(img, img.getWidth(), img.getHeight()).getRGB();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    String texture = LeafUtils.spriteToTexture(client.getBlockRenderManager().getModel(state).getSprite());
+                    Integer color = textureColor.get(texture);
+
+                    if (color != null) {
+                        j = color;
+                    } else {
+                        try {
+                            try (InputStream is = client.getResourceManager().getResource(new Identifier(texture)).getInputStream()) {
+                                BufferedImage img = ImageIO.read(is);
+                                j = LeafUtils.averageColor(img, img.getWidth(), img.getHeight()).getRGB();
+                                textureColor.put(texture, j); //this shouldn't get too large, right?
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 /*
@@ -79,13 +94,15 @@ public class LeafTickMixin {
                 float m = (float) (j & 255) / 255.0F;
 
                 //Regular leaves
-                for (int leaf = 0; leaf < FallingLeaves.coniferLeaves.length; leaf++) {
-                    if (state.getBlock() == FallingLeaves.coniferLeaves[leaf]) {
-                        world.addParticle(FallingLeavesClient.FALLING_SPRUCE_LEAF, (double)pos.getX() + d, pos.getY(), (double)pos.getZ() + f, k, l, m);
-                    } else {
-                        world.addParticle(FallingLeavesClient.FALLING_LEAF, (double)pos.getX() + d, pos.getY(), (double)pos.getZ() + f, k, l, m);
+                boolean isConifer = false;
+                for (Block b : FallingLeavesClient.coniferLeaves) {
+                    if (state.getBlock() == b) {
+                        isConifer = true;
+                        break;
                     }
                 }
+                world.addParticle(isConifer ? FALLING_SPRUCE_LEAF : FALLING_LEAF, (double)pos.getX() + d, pos.getY(), (double)pos.getZ() + f, k, l, m);
+
                 //Dynamic leaves
                 /*
                 if (world.isClient) {
