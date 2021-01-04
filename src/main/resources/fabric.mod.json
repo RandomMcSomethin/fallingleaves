@@ -10,13 +10,10 @@
   "contact": {},
   "license": "MIT",
   "icon": "assets/fallingleaves/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "fallingleaves.fallingleaves.client.FallingLeavesClient"
-    ],
-    "main": [
-      "fallingleaves.fallingleaves.FallingLeaves"
     ],
     "modmenu": [
       "fallingleaves.fallingleaves.FallingLeavesMenu"

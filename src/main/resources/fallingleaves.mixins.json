@@ -3,10 +3,8 @@
   "minVersion": "0.8",
   "package": "fallingleaves.fallingleaves.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "LeafTickMixin"
-  ],
   "client": [
+    "LeafTickMixin"
   ],
   "injectors": {
     "defaultRequire": 1
