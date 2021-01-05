@@ -1,6 +1,5 @@
 package fallingleaves.fallingleaves.particle;
 
-import fallingleaves.fallingleaves.client.FallingLeavesClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
@@ -8,6 +7,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
+
+import static fallingleaves.fallingleaves.client.FallingLeavesClient.CONFIG;
 
 public class FallingLeafParticle extends SpriteBillboardParticle {
 
@@ -19,7 +20,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
 
         this.collidesWithWorld = true;
         this.gravityStrength = 0.1F;
-        this.maxAge = FallingLeavesClient.config.leafLifespan;
+        this.maxAge = CONFIG.leafLifespan;
 
         this.velocityX *= 0.3F;
         this.velocityY *= 0.0F;
@@ -29,7 +30,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         this.colorGreen = (float) h;
         this.colorBlue = (float) i;
         this.rotateFactor = ((float)Math.random() - 0.5F) * 0.01F;
-        this.scale = (float) FallingLeavesClient.config.leafSize;
+        this.scale = (float) CONFIG.leafSize;
     }
 
     public void tick() {

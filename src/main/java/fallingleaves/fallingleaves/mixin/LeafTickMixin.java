@@ -1,15 +1,13 @@
 package fallingleaves.fallingleaves.mixin;
 
 import fallingleaves.fallingleaves.LeafUtils;
-import fallingleaves.fallingleaves.LeafUtils;
-import fallingleaves.fallingleaves.client.FallingLeavesClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -24,13 +22,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
-import static fallingleaves.fallingleaves.client.FallingLeavesClient.FALLING_LEAF;
-import static fallingleaves.fallingleaves.client.FallingLeavesClient.FALLING_SPRUCE_LEAF;
+import static fallingleaves.fallingleaves.client.FallingLeavesClient.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LeavesBlock.class)
@@ -40,13 +35,11 @@ public abstract class LeafTickMixin {
 
     @Inject(at = @At("HEAD"), method = "randomDisplayTick")
     private void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
-        double rateVar = 1.0;
-        for (int leaf = 0; leaf < FallingLeavesClient.coniferLeaves.length; leaf++) {
-            if (state.getBlock() == FallingLeavesClient.coniferLeaves[leaf])
-                rateVar = FallingLeavesClient.config.coniferLeafRate;
-                    else rateVar = FallingLeavesClient.config.leafRate;
-        }
-        if (rateVar != 0 && random.nextInt((int) (75*rateVar)) == 0) {
+        boolean isConifer = (state.getBlock() == Blocks.SPRUCE_LEAVES);
+
+        double rate = (isConifer ? CONFIG.coniferLeafRate : CONFIG.leafRate);
+
+        if (rate != 0 && random.nextDouble() < 1.0 / (75/rate)) {
             Direction direction = Direction.DOWN;
             BlockPos blockPos = pos.offset(direction);
             BlockState blockState = world.getBlockState(blockPos);
@@ -104,13 +97,6 @@ public abstract class LeafTickMixin {
                 float m = (float) (j & 255) / 255.0F;
 
                 //Regular leaves
-                boolean isConifer = false;
-                for (Block b : FallingLeavesClient.coniferLeaves) {
-                    if (state.getBlock() == b) {
-                        isConifer = true;
-                        break;
-                    }
-                }
                 world.addParticle(isConifer ? FALLING_SPRUCE_LEAF : FALLING_LEAF, (double)pos.getX() + d, pos.getY(), (double)pos.getZ() + f, k, l, m);
 
                 //Dynamic leaves
@@ -118,7 +104,7 @@ public abstract class LeafTickMixin {
                 if (world.isClient) {
                     new DynamicLeafParticle((ClientWorld) world, (double) pos.getX() + d, pos.getY(), (double) pos.getZ() + f, k, l, m, state);
                 }
-                 */
+                */
             }
         }
     }
