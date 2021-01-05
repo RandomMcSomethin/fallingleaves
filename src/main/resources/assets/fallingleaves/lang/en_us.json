@@ -1,0 +1,6 @@
+{
+  "text.autoconfig.fallingleaves.title": "Falling Leaves",
+  "text.autoconfig.fallingleaves.option.leafSize": "Leaf Size",
+  "text.autoconfig.fallingleaves.option.leafSize.@Tooltip": "Default size is 0.10",
+  "text.autoconfig.fallingleaves.option.leafLifespan.@Tooltip": "Default size is 0.10"
+}
