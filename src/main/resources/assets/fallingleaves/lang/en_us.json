@@ -4,8 +4,14 @@
   "text.autoconfig.fallingleaves.option.leafSize.@Tooltip": "Default size is 0.10",
   "text.autoconfig.fallingleaves.option.leafLifespan": "Leaf Life Span (in Ticks)",
   "text.autoconfig.fallingleaves.option.leafLifespan.@Tooltip": "Default is 200 ticks (10 seconds)",
-  "text.autoconfig.fallingleaves.option.leafRate": "Leaf Rate",
+  "text.autoconfig.fallingleaves.option.leafRate": "Leaf Spawn Rate",
   "text.autoconfig.fallingleaves.option.leafRate.@Tooltip": "How fast leaves are spawning. Default is 1.0, maximum is 75",
-  "text.autoconfig.fallingleaves.option.coniferLeafRate": "Conifer Leaf Rate",
-  "text.autoconfig.fallingleaves.option.coniferLeafRate.@Tooltip": "How fast conifer leaves are spawning. Default is 0.0, maximum is 75"
+  "text.autoconfig.fallingleaves.option.coniferLeafRate": "Conifer Leaf Spawn Rate",
+  "text.autoconfig.fallingleaves.option.coniferLeafRate.@Tooltip": "How fast conifer leaves are spawning. Default is 0.0, maximum is 75",
+  "text.autoconfig.fallingleaves.option.coniferLeafIds": "Conifer Block IDs",
+  "text.autoconfig.fallingleaves.option.coniferLeafIds.@Tooltip": "Block IDs which will drop conifer leaves",
+  "text.autoconfig.fallingleaves.option.rateOverrides.@Tooltip": "You can add your own overrides by editing config/fallingleaves.json",
+  "text.autoconfig.fallingleaves.category.fallingleaves.general": "General",
+  "text.autoconfig.fallingleaves.category.fallingleaves.conifer": "Conifers",
+  "text.autoconfig.fallingleaves.category.fallingleaves.overrides": "Spawn Rate Overrides"
 }

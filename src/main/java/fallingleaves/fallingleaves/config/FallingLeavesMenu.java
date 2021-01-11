@@ -1,4 +1,4 @@
-package fallingleaves.fallingleaves;
+package fallingleaves.fallingleaves.config;
 
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;

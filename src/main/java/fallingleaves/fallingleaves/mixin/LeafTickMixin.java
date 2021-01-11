@@ -1,16 +1,16 @@
 package fallingleaves.fallingleaves.mixin;
 
 import fallingleaves.fallingleaves.LeafUtils;
+import fallingleaves.fallingleaves.config.FallingLeavesConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,8 +22,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 import static fallingleaves.fallingleaves.client.FallingLeavesClient.*;
 
@@ -35,9 +34,15 @@ public abstract class LeafTickMixin {
 
     @Inject(at = @At("HEAD"), method = "randomDisplayTick")
     private void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
-        boolean isConifer = (state.getBlock() == Blocks.SPRUCE_LEAVES);
+        String leafId = Registry.BLOCK.getId(state.getBlock()).toString();
+        boolean isConifer = CONFIG.coniferLeafIds.contains(leafId);
 
         double rate = (isConifer ? CONFIG.coniferLeafRate : CONFIG.leafRate);
+
+        // Apply id specific rate overrides
+        Double rateOverride = CONFIG.rateOverrides.get(leafId);
+        if (rateOverride != null)
+            rate = rateOverride;
 
         if (rate != 0 && random.nextDouble() < 1.0 / (75/rate)) {
             Direction direction = Direction.DOWN;
@@ -96,10 +101,10 @@ public abstract class LeafTickMixin {
                 float l = (float) (j >> 8 & 255) / 255.0F;
                 float m = (float) (j & 255) / 255.0F;
 
-                //Regular leaves
+                // Regular leaves
                 world.addParticle(isConifer ? FALLING_SPRUCE_LEAF : FALLING_LEAF, (double)pos.getX() + d, pos.getY(), (double)pos.getZ() + f, k, l, m);
 
-                //Dynamic leaves
+                // Dynamic leaves
                 /*
                 if (world.isClient) {
                     new DynamicLeafParticle((ClientWorld) world, (double) pos.getX() + d, pos.getY(), (double) pos.getZ() + f, k, l, m, state);

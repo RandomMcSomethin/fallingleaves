@@ -16,7 +16,7 @@
       "fallingleaves.fallingleaves.client.FallingLeavesClient"
     ],
     "modmenu": [
-      "fallingleaves.fallingleaves.FallingLeavesMenu"
+      "fallingleaves.fallingleaves.config.FallingLeavesMenu"
     ]
   },
   "mixins": [
