@@ -1,4 +1,4 @@
-package fallingleaves.fallingleaves.particle;
+package randommcsomethin.fallingleaves.particle;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -7,8 +7,9 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
+import randommcsomethin.fallingleaves.LeafUtils;
 
-import static fallingleaves.fallingleaves.client.FallingLeavesClient.CONFIG;
+import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
 public class FallingLeafParticle extends SpriteBillboardParticle {
 
@@ -29,26 +30,33 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         this.colorRed = (float) g;
         this.colorGreen = (float) h;
         this.colorBlue = (float) i;
-        this.rotateFactor = ((float)Math.random() - 0.5F) * 0.01F;
-        this.scale = (float) CONFIG.leafSize;
+        this.rotateFactor = ((float) Math.random() - 0.5F) * 0.01F;
+
+        // As leaf size is now an integer, we divide by 10 to get the float.
+        this.scale = (float) CONFIG.leafSize / 10;
     }
 
     public void tick() {
         super.tick();
+
         if (this.age < 2) {
             this.velocityY = 0;
         }
-        if (this.age > this.maxAge - 1/0.06F) {
+
+        if (this.age > this.maxAge - 1 / 0.06F) {
             if (this.colorAlpha > 0.06F) {
                 this.colorAlpha -= 0.06F;
             } else {
                 this.markDead();
             }
         }
+
         this.prevAngle = this.angle;
+
         if (!this.onGround && !this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
-            this.angle += Math.PI * Math.sin(this.rotateFactor * this.age)/2;
+            this.angle += Math.PI * Math.sin(this.rotateFactor * this.age) / 2;
         }
+
         if (this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
             this.velocityY = 0;
             this.gravityStrength = 0;
@@ -65,15 +73,14 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
     @Environment(EnvType.CLIENT)
     public static class DefaultFactory implements ParticleFactory<DefaultParticleType> {
         private final SpriteProvider provider;
-        //private BlockState block = Blocks.OAK_LEAVES.getDefaultState();
 
         public DefaultFactory(SpriteProvider provider) {
             this.provider = provider;
-            //this.block = block;
         }
 
         @Override
         public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+            LeafUtils.debugLog("Creating new leaf particle at " + x + " " + y + " " + z + ".");
             return new FallingLeafParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.provider);
         }
     }

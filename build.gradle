@@ -1,46 +1,55 @@
 plugins {
-    id 'fabric-loom' version '0.5-SNAPSHOT'
+    id 'java-library'
+    id 'maven'
     id 'maven-publish'
+    id 'fabric-loom' version '0.5-SNAPSHOT'
 }
+
+apply(plugin: "java-library")
+apply(plugin: "maven")
+apply(plugin: "maven-publish")
+apply(plugin: "fabric-loom")
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
+mod_id = project.mod_id
+version = "${project.mod_version}+${project.minecraft_version}"
 group = project.maven_group
 
 dependencies {
-    //to change the versions see the gradle.properties file
+    // Minecraft & Mappings
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+    // Fabric & Fabric API.
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // ModMenu
     modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
 
-    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"){
-        exclude(group: "net.fabricmc.fabric-api")
-    }
+    // Autoconfig & Cloth Config
+    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}") { exclude module: 'fabric-api' }
+    modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { exclude module: 'fabric-api' }
     include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
-    modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
     include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
-
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-    // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-    // You may need to force-disable transitiveness on them.
 }
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "name", project.name
 
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
-        expand "version": project.version
+        expand (
+                "version": project.version,
+                "minecraft_version": project.minecraft_version,
+                "maven_group": project.maven_group,
+                "loader_version": project.fabric_loader_version,
+                "fabric_api_version": project.fabric_api_version,
+                "mod_id": project.mod_id
+        )
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -48,23 +57,22 @@ processResources {
     }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+tasks.withType(JavaCompile).configureEach() {
+    it.options.encoding = "UTF-8"
+    def targetVersion = 8
+    if (JavaVersion.current().isJava9Compatible()) {
+        it.options.release = targetVersion
+    }
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
+java {
+    withSourcesJar()
 }
 
 jar {
-    from "LICENSE"
+    from("LICENSE") {
+        rename { "${it}_${project.mod_id}" }
+    }
 }
 
 // configure the maven publication
@@ -83,7 +91,6 @@ publishing {
 
     // select the repositories you want to publish to
     repositories {
-        // uncomment to publish to the local maven
         // mavenLocal()
     }
 }
