@@ -23,8 +23,8 @@ public class LeafUtils {
             System.out.println("[fallingleaves] " + debugdata);
         }
     }
-    
-    public static double getFallRate(BlockState state) {
+
+    public static double getLeafSpawnRate(BlockState state) {
         String blockId = getBlockId(state);
 
         OverrideEntry overrideEntry = getOverrideConfigEntry(blockId);
@@ -65,15 +65,15 @@ public class LeafUtils {
         return new Identifier("fallingleaves", path);
     }
 
-    public static Color averageColor(BufferedImage image, int width, int height) {
+    public static Color averageColor(BufferedImage image) {
         long r = 0;
         long g = 0;
         long b = 0;
         int n = 0;
 
         // TODO: This entire block feels like it could be simplified.
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
                 int rgb = image.getRGB(x, y);
 
                 if ((rgb >> 24 & 255) == 255) {
@@ -93,18 +93,15 @@ public class LeafUtils {
     }
 
     public static String spriteToTexture(Sprite sprite) {
-        String id = sprite.getId().toString();
-        String newId = "nah";
+        String id = sprite.getId().toString(); // e.g. terrestria:block/sakura_leaves
 
-        for (int i = 0; i < id.length() - 1; i++) {
-            if (id.charAt(i) == ':') {
-                newId = id.substring(0, i + 1) + "textures/block" + id.substring(i + 6) + ".png";
+        int s = id.indexOf(':');
+        assert s != -1;
 
-                LeafUtils.debugLog("Sprite from texture ID: " + newId);
-            }
-        }
+        String modId = id.substring(0, s);
+        String texture = id.substring(s + 1);
 
-        return newId;
+        return modId + ":textures/" + texture + ".png";
     }
 
 }

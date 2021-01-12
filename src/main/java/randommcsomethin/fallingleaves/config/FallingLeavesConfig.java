@@ -4,8 +4,6 @@ import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
 
-import java.util.*;
-
 @Config(name = "fallingleaves")
 public class FallingLeavesConfig implements ConfigData {
 

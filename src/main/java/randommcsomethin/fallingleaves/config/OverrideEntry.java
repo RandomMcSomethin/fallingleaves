@@ -19,7 +19,6 @@ public class OverrideEntry {
         this.identifier = null;
     }
 
-    @SuppressWarnings("ConstantConditions")
     public OverrideEntry(final Identifier identifier) {
         this.identifier = identifier.toString();
         this.block = Registry.BLOCK.get(identifier);

@@ -3,7 +3,6 @@ package randommcsomethin.fallingleaves.config;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.util.registry.Registry;
 import randommcsomethin.fallingleaves.config.annotation.LeafBlockList;
