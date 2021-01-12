@@ -90,7 +90,8 @@ public abstract class LeafTickMixin {
 
         // TODO make more legible, e.g. why do we allow a solid block below pos?
         return blockState.isSideSolidFullSquare(world, belowPos, Direction.UP)
-            || blockState.isTranslucent(world, belowPos) || blockState.isSolidBlock(world, belowPos);
+            || blockState.isTranslucent(world, belowPos)
+            || blockState.isSolidBlock(world, belowPos);
     }
 
 }

@@ -27,7 +27,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // ModMenu
-    modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
+    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") { exclude module: 'fabric-api' }
 
     // Autoconfig & Cloth Config
     modApi("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}") { exclude module: 'fabric-api' }

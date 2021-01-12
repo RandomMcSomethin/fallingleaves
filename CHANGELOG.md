@@ -37,3 +37,5 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[Fourmisain]` - improve readability of `randomDisplayTick()`, refactor `passesCriteria()` into `isBottomLeafBlock()`
 - `[Fourmisain]` - rewrite `spriteToTexture()` to be much simpler and more readable
 - `[Fourmisain]` - use active voice in changelog, e.g. "add" instead of "added" and remove periods
+- `[brekitomasson]` - add `fabric-api` to the exclude list when implementing modmenu
+- `[brekitomasson]` - remove `macos` from the GitHub build action to reduce time spent

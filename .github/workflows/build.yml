@@ -16,8 +16,8 @@ jobs:
             11,   # Current Java LTS
             15    # Latest released version
         ]
-        # Test it on all major platforms; macOS, Linux and Windows:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        # Test it on Linux and Windows:
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository

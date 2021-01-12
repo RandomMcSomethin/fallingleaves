@@ -15,7 +15,10 @@ public class Config {
         FallingLeavesConfig.instance = AutoConfig.register(FallingLeavesConfig.class, GsonConfigSerializer::new).getConfig();
 
         AutoConfig.getGuiRegistry(FallingLeavesConfig.class)
-            .registerPredicateProvider(new OverrideProvider(), (final Field field) -> field.getName().equals("overrideEntries"));
+            .registerPredicateProvider(
+                new OverrideProvider(),
+                (final Field field) -> field.getName().equals("overrideEntries")
+            );
 
         CONFIG = FallingLeavesConfig.instance;
     }
