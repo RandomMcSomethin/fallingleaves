@@ -28,7 +28,7 @@ public class OverrideConfiguration implements ConfigData {
         for (OverrideEntry entry : overrideEntries) {
             entry.isConiferBlock = ConfigDefaults.isConifer(entry);
             entry.spawnRate = ConfigDefaults.spawnRate(entry);
-            entry.useCustomSpawnRate = entry.spawnRate != 1;
+            entry.useCustomSpawnRate = getDefaultUseCustomSpawnRate(entry);
         }
 
         // Apply override values from configuration file.
@@ -53,6 +53,10 @@ public class OverrideConfiguration implements ConfigData {
             })
             .map(OverrideEntry::new)
             .collect(Collectors.toCollection(ObjectLinkedOpenHashSet::new));
+    }
+
+    public static boolean getDefaultUseCustomSpawnRate(OverrideEntry entry) {
+        return (ConfigDefaults.spawnRate(entry) != 1);
     }
 
 }
