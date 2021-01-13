@@ -7,7 +7,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
-import randommcsomethin.fallingleaves.LeafUtils;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
