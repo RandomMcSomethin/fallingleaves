@@ -9,7 +9,10 @@ import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntSliderBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import randommcsomethin.fallingleaves.LeafUtils;
+import randommcsomethin.fallingleaves.util.ModIdentification;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -30,7 +33,9 @@ public class OverrideProvider implements GuiProvider {
                 final Block block = leafBlock.getBlock();
 
                 if (block != null) {
-                    final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()));
+
+                    final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()))
+                        .setTooltip(Text.of(ModIdentification.getModInfo(block).getName()));
 
                     builder.add(0, new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.use_custom_spawn_rate"), leafBlock.useCustomSpawnRate)
                         .setDefaultValue(OverrideConfiguration.getDefaultUseCustomSpawnRate(leafBlock))

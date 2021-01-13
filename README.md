@@ -24,3 +24,10 @@ This Fabric mod for Minecraft 1.16.x adds a neat little particle effect to leaf 
     - Absolutely! Just remember to put a link to our Curseforge page somewhere in your modpack's documentation.
 - What do you get if you jumble the letters in "Falling Leaves Mod"?
     - You get "Five Golden Llamas". We're still not sure if this means anything in particular...
+  
+## Thanks and Credits
+
+All good developers learn from reading code other people have written, and it's only fair to credit those who have inspired us. For that reason, we give thanks to:
+
+- [user11681](https://github.com/user11681/java), whose work in their `limitless` mod was very helpful when developing our own configuration screen.
+- [TehNut](https://github.com/TehNut), whose work in `HWYLA` was very useful in figuring out how to get a mod's name from a block it adds.
