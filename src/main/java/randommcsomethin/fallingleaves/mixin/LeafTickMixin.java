@@ -2,27 +2,35 @@ package randommcsomethin.fallingleaves.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import randommcsomethin.fallingleaves.LeafUtils;
 import randommcsomethin.fallingleaves.TextureCache;
 import randommcsomethin.fallingleaves.init.Leaves;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static randommcsomethin.fallingleaves.LeafUtils.*;
 
@@ -52,23 +60,24 @@ public abstract class LeafTickMixin {
                         // only use cached color when resourcePack matches
                         if (cache != null && resourcePack.equals(cache.resourcePack)) {
                             color = cache.color;
-                            LeafUtils.debugLog("Assigned color: " + color);
+                            LOGGER.debug("{}: Assigned color {}", texture, color);
                         } else {
                             // read and cache texture color
                             try (InputStream is = res.getInputStream()) {
-                                color = averageColor(ImageIO.read(is)).getRGB();
+                                Color average = averageColor(ImageIO.read(is));
+                                color = average.getRGB();
+                                LOGGER.debug("{}: Calculated color {} = {} ", texture, average, color);
                                 TextureCache.INST.put(texture, new TextureCache.Data(color, resourcePack));
                             }
                         }
                     } catch (IOException e) {
-                        LeafUtils.debugLog("Problem accessing resource" + texture + ": " + e.getMessage());
-                        e.printStackTrace();
+                        LOGGER.error("Couldn't access resource {}", texture, e);
                     }
                 }
 
-                float r = (color >> 16 & 255) / 255.0F;
-                float g = (color >> 8  & 255) / 255.0F;
-                float b = (color       & 255) / 255.0F;
+                double r = (color >> 16 & 255) / 255.0;
+                double g = (color >> 8  & 255) / 255.0;
+                double b = (color       & 255) / 255.0;
 
                 double xOffset = random.nextDouble();
                 double zOffset = random.nextDouble();

@@ -8,12 +8,9 @@ import randommcsomethin.fallingleaves.init.Leaves;
 
 @Environment(EnvType.CLIENT)
 public class FallingLeavesClient implements ClientModInitializer {
-
-
     @Override
     public void onInitializeClient() {
         Config.init();
         Leaves.init();
     }
-
 }

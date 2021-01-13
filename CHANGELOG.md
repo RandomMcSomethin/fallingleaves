@@ -39,3 +39,13 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[Fourmisain]` - use active voice in changelog, e.g. "add" instead of "added" and remove periods
 - `[brekitomasson]` - add `fabric-api` to the exclude list when implementing modmenu
 - `[brekitomasson]` - remove `macos` from the GitHub build action to reduce time spent
+- `[Fourmisain]` - rename "overrides" to "leaf settings"
+- `[Fourmisain]` - GUI: "flatten" Leaf Block category
+- `[Fourmisain]` - GUI: sort Leaf Block category by translated name
+- `[Fourmisain]` - `LeafSettingsEntry`: cache translations, add toString()
+- `[Fourmisain]` - use Log4J for logging
+- `[Fourmisain]` - remove some unneeded `final` for increased readability
+- `[Fourmisain]` - only use integer math in `averageColor()` and use `getAlpha()` instead of bit operations
+- `[Fourmisain]` - always insert entries from config file into `LeafSettings.entries` to partially remedy `getRegisteredLeafBlocks()` missing blocks
+- `[Fourmisain]` - move `useCustomSpawnRate()` to `ConfigDefaults`
+- `[Fourmisain]` - `getLeafSettingsEntry()`: use `Set.get()` instead of `.stream().filter()`

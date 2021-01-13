@@ -40,16 +40,20 @@ public class ConfigDefaults {
         "woods_and_mires:pine_leaves"
     );
 
-    public static boolean isConifer(OverrideEntry entry) {
+    public static boolean isConifer(LeafSettingsEntry entry) {
         return CONIFER.contains(entry.identifier);
     }
 
-    public static int spawnRate(OverrideEntry entry) {
+    public static int spawnRate(LeafSettingsEntry entry) {
         if (SPAWNRATE.containsKey(entry.identifier)) {
             return SPAWNRATE.get(entry.identifier);
         }
 
         return 1;
+    }
+
+    public static boolean useCustomSpawnRate(LeafSettingsEntry entry) {
+        return (spawnRate(entry) != 1);
     }
 
 }

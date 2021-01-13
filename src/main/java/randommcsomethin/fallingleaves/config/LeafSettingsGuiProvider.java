@@ -11,64 +11,61 @@ import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import randommcsomethin.fallingleaves.LeafUtils;
 import randommcsomethin.fallingleaves.util.ModIdentification;
 
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.*;
 
-public class OverrideProvider implements GuiProvider {
+public class LeafSettingsGuiProvider implements GuiProvider {
     public static final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
         try {
-            final ObjectLinkedOpenHashSet<OverrideEntry> overrideList = (ObjectLinkedOpenHashSet<OverrideEntry>) field.get(config);
-            final ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[overrideList.size()], 0);
+            ObjectLinkedOpenHashSet<LeafSettingsEntry> leafSettingsList = (ObjectLinkedOpenHashSet<LeafSettingsEntry>) field.get(config);
+            ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[leafSettingsList.size()], 0);
 
-            final SubCategoryBuilder listBuilder = new SubCategoryBuilder(resetKey, new TranslatableText("config.fallingleaves.overrides"));
+            // Insert per-leaf settings ordered by translation name
+            leafSettingsList.stream().sorted(LeafSettingsEntry.TranslationComparator.INSTANCE).forEachOrdered((LeafSettingsEntry leafBlock) -> {
+                Block block = leafBlock.getBlock();
 
-            for (final OverrideEntry leafBlock : overrideList) {
-                final Block block = leafBlock.getBlock();
-
+                // Only insert registered blocks
                 if (block != null) {
-
-                    final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()))
+                    // TODO: I think it'd be great if modified leaf blocks would show an '*' after them. Might be hard to implement
+                    SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()))
                         .setTooltip(Text.of(ModIdentification.getModInfo(block).getName()));
 
-                    builder.add(0, new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.use_custom_spawn_rate"), leafBlock.useCustomSpawnRate)
-                        .setDefaultValue(OverrideConfiguration.getDefaultUseCustomSpawnRate(leafBlock))
-                        .setSaveConsumer((final Boolean useGlobalRate) -> {
+                    builder.add(new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.use_custom_spawn_rate"), leafBlock.useCustomSpawnRate)
+                        .setDefaultValue(ConfigDefaults.useCustomSpawnRate(leafBlock))
+                        .setSaveConsumer((Boolean useGlobalRate) -> {
                             leafBlock.useCustomSpawnRate = useGlobalRate;
                         })
                         .build()
                     );
 
-                    builder.add(1, new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.custom_spawn_rate"), leafBlock.spawnRate, 0, 10)
+                    builder.add(new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.custom_spawn_rate"), leafBlock.spawnRate, 0, 10)
                         .setDefaultValue(ConfigDefaults.spawnRate(leafBlock))
-                        .setSaveConsumer((final Integer spawnRate) -> {
+                        .setSaveConsumer((Integer spawnRate) -> {
                             leafBlock.spawnRate = spawnRate;
                         })
                         .build()
                     );
 
-                    builder.add(2, new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.is_conifer"), leafBlock.isConiferBlock)
+                    builder.add(new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.is_conifer"), leafBlock.isConiferBlock)
                         .setDefaultValue(ConfigDefaults.isConifer(leafBlock))
-                        .setSaveConsumer((final Boolean isConiferBlock) -> {
+                        .setSaveConsumer((Boolean isConiferBlock) -> {
                             leafBlock.isConiferBlock = isConiferBlock;
                         })
                         .build()
                     );
 
-                    listBuilder.add(builder.build());
+                    entries.add(builder.build());
                 }
-            }
-
-            entries.add(listBuilder.build());
+            });
 
             return entries;
-        } catch (final Throwable throwable) {
+        } catch (Throwable throwable) {
             throw new RuntimeException(throwable);
         }
     }

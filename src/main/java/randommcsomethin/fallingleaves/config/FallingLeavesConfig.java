@@ -31,17 +31,13 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(max = 10)
     public int coniferLeafSpawnRate = 0;
 
-    @ConfigEntry.Category("fallingleaves.general")
-    @ConfigEntry.Gui.Excluded
-    public boolean displayDebugData = false;
-
-    @ConfigEntry.Category("fallingleaves.overrides")
+    @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
-    public OverrideConfiguration override = new OverrideConfiguration();
+    public LeafSettings leafSettings = new LeafSettings();
 
     @Override
     public void validatePostLoad() {
-        this.override.validatePostLoad();
+        leafSettings.validatePostLoad();
     }
 
 }

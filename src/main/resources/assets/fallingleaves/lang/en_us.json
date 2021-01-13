@@ -10,10 +10,8 @@
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "How fast conifer leaves spawn. Default: 0",
   "text.autoconfig.fallingleaves.option.coniferLeafIds": "Conifer Block IDs",
   "text.autoconfig.fallingleaves.option.coniferLeafIds.@Tooltip": "Block IDs which will drop conifer leaves",
-  "text.autoconfig.fallingleaves.option.rateOverrides.@Tooltip": "Add your own overrides by editing config/fallingleaves.json",
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "General",
-  "text.autoconfig.fallingleaves.category.fallingleaves.overrides": "Overrides",
-  "config.fallingleaves.overrides": "Overrides",
+  "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "Leaf Settings",
   "config.fallingleaves.use_custom_spawn_rate": "Use custom spawn rate",
   "config.fallingleaves.custom_spawn_rate": "Custom spawnrate (0-10)",
   "config.fallingleaves.is_conifer": "Is this a conifer leaf?"

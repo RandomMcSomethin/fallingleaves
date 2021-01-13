@@ -14,8 +14,8 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
 
     private final float rotateFactor;
 
-    protected FallingLeafParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i, SpriteProvider provider) {
-        super(clientWorld, d, e, f, g, h, i);
+    protected FallingLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
+        super(clientWorld, x, y, z, r, g, b); // Note: will set velocity to (r, g, b)
         this.setSprite(provider);
 
         this.collidesWithWorld = true;
@@ -26,9 +26,9 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         this.velocityY *= 0.0F;
         this.velocityZ *= 0.3F;
 
-        this.colorRed = (float) g;
-        this.colorGreen = (float) h;
-        this.colorBlue = (float) i;
+        this.colorRed   = (float) r;
+        this.colorGreen = (float) g;
+        this.colorBlue  = (float) b;
         this.rotateFactor = ((float) Math.random() - 0.5F) * 0.01F;
 
         // As leaf size is now an integer, we divide by 10 to get the float.

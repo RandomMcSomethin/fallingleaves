@@ -3,7 +3,7 @@ package randommcsomethin.fallingleaves.init;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import randommcsomethin.fallingleaves.config.FallingLeavesConfig;
-import randommcsomethin.fallingleaves.config.OverrideProvider;
+import randommcsomethin.fallingleaves.config.LeafSettingsGuiProvider;
 
 import java.lang.reflect.Field;
 
@@ -16,8 +16,8 @@ public class Config {
 
         AutoConfig.getGuiRegistry(FallingLeavesConfig.class)
             .registerPredicateProvider(
-                new OverrideProvider(),
-                (final Field field) -> field.getName().equals("overrideEntries")
+                new LeafSettingsGuiProvider(),
+                (Field field) -> field.getName().equals("entries")
             );
 
         CONFIG = FallingLeavesConfig.instance;
