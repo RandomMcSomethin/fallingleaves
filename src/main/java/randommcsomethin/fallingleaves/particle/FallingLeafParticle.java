@@ -79,7 +79,6 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
 
         @Override
         public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            LeafUtils.debugLog("Creating new leaf particle at " + x + " " + y + " " + z + ".");
             return new FallingLeafParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.provider);
         }
     }
