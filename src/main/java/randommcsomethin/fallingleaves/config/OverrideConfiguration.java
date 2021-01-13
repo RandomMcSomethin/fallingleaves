@@ -48,9 +48,11 @@ public class OverrideConfiguration implements ConfigData {
         }
     }
 
+    // TODO maybe we should move all this directly into the OverrideEntry constructor
     public static void setDefault(OverrideEntry entry) {
         entry.isConiferBlock = getDefaultIsConifer(entry);
         entry.spawnRate = getDefaultSpawnRate(entry);
+        entry.useCustomSpawnRate = getDefaultUseCustomSpawnRate(entry);
     }
 
     public static boolean getDefaultIsConifer(OverrideEntry entry) {
@@ -80,6 +82,10 @@ public class OverrideConfiguration implements ConfigData {
             default:
                 return 1;
         }
+    }
+
+    public static boolean getDefaultUseCustomSpawnRate(OverrideEntry entry) {
+        return (getDefaultSpawnRate(entry) != 1);
     }
 
 }

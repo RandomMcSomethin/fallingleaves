@@ -10,7 +10,7 @@ public class OverrideEntry {
 
     public int spawnRate;
     public boolean isConiferBlock;
-    public boolean useGlobalRate;
+    public boolean useCustomSpawnRate;
 
     @ConfigEntry.Gui.Excluded
     private transient Block block;
@@ -19,7 +19,7 @@ public class OverrideEntry {
         this.identifier = identifier.toString();
         this.block = Registry.BLOCK.get(identifier);
         this.spawnRate = 1;
-        this.useGlobalRate = true;
+        this.useCustomSpawnRate = false;
         this.isConiferBlock = false;
     }
 

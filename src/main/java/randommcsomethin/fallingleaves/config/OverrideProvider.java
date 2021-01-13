@@ -6,7 +6,6 @@ import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiProvider;
 import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
-import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntSliderBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.block.Block;
@@ -33,18 +32,18 @@ public class OverrideProvider implements GuiProvider {
                 if (block != null) {
                     final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()));
 
-                    builder.add(0, new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.custom_rate"), leafBlock.spawnRate, 0, 10)
-                        .setDefaultValue(OverrideConfiguration.getDefaultSpawnRate(leafBlock))
-                        .setSaveConsumer((final Integer spawnRate) -> {
-                            leafBlock.spawnRate = spawnRate;
+                    builder.add(0, new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.use_custom_spawn_rate"), leafBlock.useCustomSpawnRate)
+                        .setDefaultValue(OverrideConfiguration.getDefaultUseCustomSpawnRate(leafBlock))
+                        .setSaveConsumer((final Boolean useGlobalRate) -> {
+                            leafBlock.useCustomSpawnRate = useGlobalRate;
                         })
                         .build()
                     );
 
-                    builder.add(1, new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.use_global_rate"), leafBlock.useGlobalRate)
-                        .setDefaultValue(true)
-                        .setSaveConsumer((final Boolean useGlobalRate) -> {
-                            leafBlock.useGlobalRate = useGlobalRate;
+                    builder.add(1, new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.custom_spawn_rate"), leafBlock.spawnRate, 0, 10)
+                        .setDefaultValue(OverrideConfiguration.getDefaultSpawnRate(leafBlock))
+                        .setSaveConsumer((final Integer spawnRate) -> {
+                            leafBlock.spawnRate = spawnRate;
                         })
                         .build()
                     );

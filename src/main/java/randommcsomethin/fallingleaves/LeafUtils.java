@@ -29,10 +29,10 @@ public class LeafUtils {
 
         OverrideEntry overrideEntry = getOverrideConfigEntry(blockId);
 
-        if (overrideEntry.useGlobalRate) {
-            return isConifer(blockId) ? CONFIG.coniferLeafSpawnRate : CONFIG.leafSpawnRate;
-        } else {
+        if (overrideEntry.useCustomSpawnRate) {
             return overrideEntry.spawnRate;
+        } else {
+            return isConifer(blockId) ? CONFIG.coniferLeafSpawnRate : CONFIG.leafSpawnRate;
         }
     }
 

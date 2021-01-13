@@ -14,7 +14,7 @@
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "General",
   "text.autoconfig.fallingleaves.category.fallingleaves.overrides": "Overrides",
   "config.fallingleaves.overrides": "Overrides",
-  "config.fallingleaves.custom_rate": "Custom spawnrate (0-10)",
-  "config.fallingleaves.use_global_rate": "Use global setting",
+  "config.fallingleaves.use_custom_spawn_rate": "Use custom spawn rate",
+  "config.fallingleaves.custom_spawn_rate": "Custom spawnrate (0-10)",
   "config.fallingleaves.is_conifer": "Is this a conifer leaf?"
 }
