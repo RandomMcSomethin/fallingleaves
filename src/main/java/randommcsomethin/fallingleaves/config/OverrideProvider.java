@@ -46,7 +46,7 @@ public class OverrideProvider implements GuiProvider {
                     );
 
                     builder.add(1, new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.custom_spawn_rate"), leafBlock.spawnRate, 0, 10)
-                        .setDefaultValue(OverrideConfiguration.getDefaultSpawnRate(leafBlock))
+                        .setDefaultValue(ConfigDefaults.spawnRate(leafBlock))
                         .setSaveConsumer((final Integer spawnRate) -> {
                             leafBlock.spawnRate = spawnRate;
                         })
@@ -54,7 +54,7 @@ public class OverrideProvider implements GuiProvider {
                     );
 
                     builder.add(2, new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.is_conifer"), leafBlock.isConiferBlock)
-                        .setDefaultValue(OverrideConfiguration.getDefaultIsConifer(leafBlock))
+                        .setDefaultValue(ConfigDefaults.isConifer(leafBlock))
                         .setSaveConsumer((final Boolean isConiferBlock) -> {
                             leafBlock.isConiferBlock = isConiferBlock;
                         })
