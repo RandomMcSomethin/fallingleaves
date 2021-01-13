@@ -7,6 +7,7 @@ import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.IntSliderBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.text.TranslatableText;
@@ -17,6 +18,7 @@ import java.util.List;
 public class OverrideProvider implements GuiProvider {
     public static final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
         try {
@@ -31,12 +33,10 @@ public class OverrideProvider implements GuiProvider {
                 if (block != null) {
                     final SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()));
 
-                    builder.add(0, new IntFieldBuilder(resetKey, new TranslatableText("config.fallingleaves.custom_rate"), leafBlock.rate)
-                        .setDefaultValue(1)
-                        .setMin(0)
-                        .setMax(10)
-                        .setSaveConsumer((final Integer rate) -> {
-                            leafBlock.rate = rate;
+                    builder.add(0, new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.custom_rate"), leafBlock.spawnRate, 0, 10)
+                        .setDefaultValue(OverrideConfiguration.getDefaultSpawnRate(leafBlock))
+                        .setSaveConsumer((final Integer spawnRate) -> {
+                            leafBlock.spawnRate = spawnRate;
                         })
                         .build()
                     );
@@ -50,7 +50,7 @@ public class OverrideProvider implements GuiProvider {
                     );
 
                     builder.add(2, new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.is_conifer"), leafBlock.isConiferBlock)
-                        .setDefaultValue(false)
+                        .setDefaultValue(OverrideConfiguration.getDefaultIsConifer(leafBlock))
                         .setSaveConsumer((final Boolean isConiferBlock) -> {
                             leafBlock.isConiferBlock = isConiferBlock;
                         })

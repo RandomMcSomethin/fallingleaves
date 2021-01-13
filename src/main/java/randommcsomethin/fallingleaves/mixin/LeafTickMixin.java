@@ -67,8 +67,8 @@ public abstract class LeafTickMixin {
                 }
 
                 float r = (color >> 16 & 255) / 255.0F;
-                float g = (color >> 8 & 255) / 255.0F;
-                float b = (color & 255) / 255.0F;
+                float g = (color >> 8  & 255) / 255.0F;
+                float b = (color       & 255) / 255.0F;
 
                 double xOffset = random.nextDouble();
                 double zOffset = random.nextDouble();
