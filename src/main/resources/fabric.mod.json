@@ -3,28 +3,29 @@
   "id": "fallingleaves",
   "version": "${version}",
   "name": "Falling Leaves",
-  "description": "\"How the gentle wind \nbeckons through the leaves \nas autumn colors fall,\ndancing in a swirl \nof golden memories:\nthe loveliest lies of all.\"",
-  "authors": [
-    "RandomMcSomethin"
-  ],
-  "contact": {},
+  "description": "\"How the gentle wind beckons through the leaves as autumn colors fall,\ndancing in a swirl of golden memories: the loveliest lies of all.\"",
+  "authors": ["RandomMcSomethin", "BrekiTomasson", "Fourmisain"],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/falling-leaves-fabric",
+    "sources": "https://github.com/RandomMcSomethin/fallingleaves"
+  },
   "license": "MIT",
-  "icon": "assets/fallingleaves/icon.png",
-  "environment": "*",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "client",
   "entrypoints": {
     "client": [
-      "fallingleaves.fallingleaves.client.FallingLeavesClient"
+      "${maven_group}.${mod_id}.FallingLeavesClient"
     ],
-    "main": [
-      "fallingleaves.fallingleaves.FallingLeaves"
+    "modmenu": [
+      "${maven_group}.${mod_id}.config.FallingLeavesMenu"
     ]
   },
   "mixins": [
-    "fallingleaves.mixins.json"
+    "${mod_id}.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.10.6+build.214",
+    "fabricloader": ">=0.10.6",
     "fabric": "*",
-    "minecraft": "1.16.*"
+    "minecraft": "1.16.x"
   }
 }
