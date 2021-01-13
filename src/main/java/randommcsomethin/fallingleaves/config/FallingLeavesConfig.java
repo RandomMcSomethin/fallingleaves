@@ -60,6 +60,11 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.Category("fallingleaves.general")
     public boolean dropFromPlayerPlacedBlocks = true;
 
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
+    public int minimumFreeSpaceBelow = 0;
+
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
     public Map<String, LeafSettingsEntry> leafSettings = new HashMap<>();

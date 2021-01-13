@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -51,7 +51,12 @@ public abstract class LeafTickMixin {
         double spawnChance = leafSettings.getSpawnChance();
 
         if (spawnChance != 0 && random.nextDouble() < spawnChance) {
-            if (isBottomLeafBlock(world, pos)) {
+            // Particle position
+            double x = pos.getX() + random.nextDouble();
+            double y = pos.getY();
+            double z = pos.getZ() + random.nextDouble();
+
+            if (shouldSpawnParticle(world, pos, x, y, z)) {
                 MinecraftClient client = MinecraftClient.getInstance();
 
                 int color = client.getBlockColors().getColor(state, world, pos, 0);
@@ -64,13 +69,10 @@ public abstract class LeafTickMixin {
                 double g = (color >> 8  & 255) / 255.0;
                 double b = (color       & 255) / 255.0;
 
-                double xOffset = random.nextDouble();
-                double zOffset = random.nextDouble();
-
                 // Add the particle.
                 world.addParticle(
                     leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF,
-                    pos.getX() + xOffset, pos.getY(), pos.getZ() + zOffset,
+                    x, y, z,
                     r, g, b
                 );
             }
@@ -107,14 +109,16 @@ public abstract class LeafTickMixin {
     }
 
     @Unique
-    private static boolean isBottomLeafBlock(World world, BlockPos pos) {
-        BlockPos belowPos = pos.down();
-        BlockState blockState = world.getBlockState(belowPos);
+    private static boolean shouldSpawnParticle(World world, BlockPos pos, double x, double y, double z) {
+        // Never spawn a particle if there's a leaf block below
+        // This test is necessary because modded leaf blocks may not have collisions
+        if (world.getBlockState(pos.down()).getBlock() instanceof LeavesBlock) return false;
 
-        // TODO make more legible, e.g. why do we allow a solid block below pos?
-        return blockState.isSideSolidFullSquare(world, belowPos, Direction.UP)
-            || blockState.isTranslucent(world, belowPos)
-            || blockState.isSolidBlock(world, belowPos);
+        double y2 = y - (CONFIG.minimumFreeSpaceBelow > 0 ? CONFIG.minimumFreeSpaceBelow : 0.2);
+        Box collisionBox = new Box(x - 0.1, y, z - 0.1, x + 0.1, y2, z + 0.1);
+
+        // Only spawn the particle if there's enough room for it
+        return !world.getBlockCollisions(null, collisionBox).findAny().isPresent();
     }
 
 }
