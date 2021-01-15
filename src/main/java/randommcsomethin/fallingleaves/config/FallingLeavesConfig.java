@@ -11,6 +11,10 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.Category("fallingleaves.general")
     public transient static FallingLeavesConfig instance;
 
+    @ConfigEntry.Gui.Excluded
+    @ConfigEntry.Category("fallingleaves.general")
+    public boolean displayDebugData = false;
+
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 3)
