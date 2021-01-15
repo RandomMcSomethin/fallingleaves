@@ -31,6 +31,10 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(max = 10)
     public int coniferLeafSpawnRate = 0;
 
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Excluded
+    public boolean displayDebugData = false;
+
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
     public LeafSettings leafSettings = new LeafSettings();
