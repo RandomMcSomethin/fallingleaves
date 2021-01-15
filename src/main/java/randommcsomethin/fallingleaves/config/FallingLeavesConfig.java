@@ -17,8 +17,8 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(max = 3)
-    public int leafSize = 1;
+    @ConfigEntry.BoundedDiscrete(min = 1, max = 10)
+    public int leafSize = 5;
 
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
@@ -28,16 +28,12 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 10)
-    public int leafSpawnRate = 1;
+    public int leafSpawnRate = 5;
 
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 10)
     public int coniferLeafSpawnRate = 0;
-
-    @ConfigEntry.Category("fallingleaves.general")
-    @ConfigEntry.Gui.Excluded
-    public boolean displayDebugData = false;
 
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
@@ -47,5 +43,7 @@ public class FallingLeavesConfig implements ConfigData {
     public void validatePostLoad() {
         leafSettings.validatePostLoad();
     }
+
+
 
 }

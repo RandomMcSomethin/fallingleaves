@@ -49,3 +49,8 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[Fourmisain]` - always insert entries from config file into `LeafSettings.entries` to partially remedy `getRegisteredLeafBlocks()` missing blocks
 - `[Fourmisain]` - move `useCustomSpawnRate()` to `ConfigDefaults`
 - `[Fourmisain]` - `getLeafSettingsEntry()`: use `Set.get()` instead of `.stream().filter()`
+- `[brekitomasson]` - config values default to 5 instead of 1.
+- `[brekitomasson]` - old `LeafUtil` and TextureCache broken down into multiple separate Util files.
+- `[brekitomasson]` - new proxy object for logging.
+
+ 

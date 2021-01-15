@@ -1,4 +1,4 @@
-package randommcsomethin.fallingleaves;
+package randommcsomethin.fallingleaves.util;
 
 import java.util.HashMap;
 

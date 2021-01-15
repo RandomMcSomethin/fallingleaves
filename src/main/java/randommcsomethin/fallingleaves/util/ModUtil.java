@@ -21,7 +21,18 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-public class ModIdentification {
+/**
+ * This Utility class, heavilly inspired by the "ModIdentification" class in
+ * the HWYLA mod, is used to identify whether a block is added by Vanilla
+ * Minecraft or if it comes from a mod, returning the corresponding "clean"
+ * name.
+ *
+ * TODO - There is lots of extra stuff in here that can be removed as we
+ *        refactor this file down to its core purpose, to identify the
+ *        name of the mod that a block comes from.
+ */
+
+public class ModUtil {
 
     private static final Map<String, ModMetadata> CONTAINER_CACHE = Maps.newHashMap();
     private static final ModMetadata MC_MOD_INFO = new DummyModMetadata("minecraft", "Minecraft");
@@ -33,7 +44,9 @@ public class ModIdentification {
     }
 
     public static ModMetadata getModInfo(String namespace) {
-        return CONTAINER_CACHE.computeIfAbsent(namespace, s -> FabricLoader.getInstance().getAllMods().stream()
+        return CONTAINER_CACHE.computeIfAbsent(namespace, s -> FabricLoader.getInstance()
+            .getAllMods()
+            .stream()
             .map(ModContainer::getMetadata)
             .filter(m -> m.getId().equals(s))
             .findFirst()

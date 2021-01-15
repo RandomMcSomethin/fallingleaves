@@ -22,9 +22,10 @@ public class LeafSettings implements ConfigData {
         ObjectLinkedOpenHashSet<LeafSettingsEntry> oldEntries = entries;
 
         // TODO:
-        //  fundamental issue: other mods may not yet have registered their blocks,
-        //  so entries will be missing.
-        //  We may need to postpone getRegisteredLeafBlocks() or alternatively add entries as leaves are discovered
+        //  fundamental issue: other mods may not yet have registered their
+        //  blocks, so entries will be missing. We may need to postpone
+        //  getRegisteredLeafBlocks() or alternatively add entries as leaves
+        //  are discovered.
 
         // Load all registered leaf blocks from Registry
         entries = getRegisteredLeafBlocks();

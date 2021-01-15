@@ -2,37 +2,30 @@ package randommcsomethin.fallingleaves.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import randommcsomethin.fallingleaves.TextureCache;
+import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.init.Leaves;
+import randommcsomethin.fallingleaves.util.TextureCache;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
-import java.util.stream.Stream;
 
-import static randommcsomethin.fallingleaves.LeafUtils.*;
+import static randommcsomethin.fallingleaves.util.LeafUtil.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LeavesBlock.class)
@@ -42,7 +35,7 @@ public abstract class LeafTickMixin {
     private void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
         double spawnRate = getLeafSpawnRate(state);
 
-        if (spawnRate != 0 && random.nextDouble() < 1.0 / (75 / spawnRate)) {
+        if (spawnRate != 0 && random.nextDouble() < 1.0 / (75 / (spawnRate / 5))) {
             if (isBottomLeafBlock(world, pos)) {
                 MinecraftClient client = MinecraftClient.getInstance();
 
@@ -60,24 +53,25 @@ public abstract class LeafTickMixin {
                         // only use cached color when resourcePack matches
                         if (cache != null && resourcePack.equals(cache.resourcePack)) {
                             color = cache.color;
-                            LOGGER.debug("{}: Assigned color {}", texture, color);
+                            FallingLeavesClient.LOGGER.debug(texture + ": Assigned color " + color);
                         } else {
                             // read and cache texture color
                             try (InputStream is = res.getInputStream()) {
                                 Color average = averageColor(ImageIO.read(is));
                                 color = average.getRGB();
-                                LOGGER.debug("{}: Calculated color {} = {} ", texture, average, color);
+                                FallingLeavesClient.LOGGER.debug(texture + ": Calculated color " + average + " = " + color);
                                 TextureCache.INST.put(texture, new TextureCache.Data(color, resourcePack));
                             }
                         }
                     } catch (IOException e) {
-                        LOGGER.error("Couldn't access resource {}", texture, e);
+                        FallingLeavesClient.LOGGER.error("Couldn't access resource " + texture);
+                        FallingLeavesClient.LOGGER.error(e.getMessage());
                     }
                 }
 
                 double r = (color >> 16 & 255) / 255.0;
-                double g = (color >> 8  & 255) / 255.0;
-                double b = (color       & 255) / 255.0;
+                double g = (color >> 8 & 255) / 255.0;
+                double b = (color & 255) / 255.0;
 
                 double xOffset = random.nextDouble();
                 double zOffset = random.nextDouble();

@@ -16,12 +16,12 @@ public class ConfigDefaults {
         {"terrestria:yucca_palm_leaves", 0},
 
         // Autumn Leaves
-        {"traverse:brown_autumnal_leaves", 3},
-        {"traverse:orange_autumnal_leaves", 3},
-        {"traverse:red_autumnal_leaves", 3},
+        {"traverse:brown_autumnal_leaves", 9},
+        {"traverse:orange_autumnal_leaves", 9},
+        {"traverse:red_autumnal_leaves", 9},
 
         // Other / Opinionated
-        {"terrestria:sakura_leaves", 2}
+        {"terrestria:sakura_leaves", 7}
     }).collect(Collectors.toMap(data -> (String) data[0], data -> (Integer) data[1]));
 
     final public static Collection<String> CONIFER = Arrays.asList(
@@ -49,11 +49,11 @@ public class ConfigDefaults {
             return SPAWNRATE.get(entry.identifier);
         }
 
-        return 1;
+        return 5;
     }
 
     public static boolean useCustomSpawnRate(LeafSettingsEntry entry) {
-        return (spawnRate(entry) != 1);
+        return (spawnRate(entry) != 5);
     }
 
 }

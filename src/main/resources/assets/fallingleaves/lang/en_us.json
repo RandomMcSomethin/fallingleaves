@@ -1,11 +1,11 @@
 {
   "text.autoconfig.fallingleaves.title": "Falling Leaves",
   "text.autoconfig.fallingleaves.option.leafSize": "Leaf Size",
-  "text.autoconfig.fallingleaves.option.leafSize.@Tooltip": "Default: 1",
+  "text.autoconfig.fallingleaves.option.leafSize.@Tooltip": "Default: 5",
   "text.autoconfig.fallingleaves.option.leafLifespan": "Leaf Life Span (in Ticks)",
   "text.autoconfig.fallingleaves.option.leafLifespan.@Tooltip": "Default: 200 (~10 seconds)",
   "text.autoconfig.fallingleaves.option.leafSpawnRate": "Leaf Spawn Rate",
-  "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "How fast leaves spawn. Default: 1",
+  "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "How fast leaves spawn. Default: 5",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "Conifer Leaf Spawn Rate",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "How fast conifer leaves spawn. Default: 0",
   "text.autoconfig.fallingleaves.option.coniferLeafIds": "Conifer Block IDs",
