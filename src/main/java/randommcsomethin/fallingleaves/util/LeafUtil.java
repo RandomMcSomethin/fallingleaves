@@ -36,7 +36,7 @@ public class LeafUtil {
 
     public static double getLeafSpawnChance(BlockState blockState) {
         String blockId = RegistryUtil.getBlockId(blockState);
-        LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.entries.get(blockId);
+        LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.get(blockId);
 
         // This should be impossible when called from randomDisplayTick
         if (leafSettingsEntry == null) {
@@ -50,7 +50,7 @@ public class LeafUtil {
 
     public static boolean isConifer(BlockState blockState) {
         String blockId = RegistryUtil.getBlockId(blockState);
-        LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.entries.get(blockId);
+        LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.get(blockId);
 
         // This should be impossible when called from randomDisplayTick
         if (leafSettingsEntry == null) {

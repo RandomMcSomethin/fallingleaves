@@ -71,3 +71,5 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[Fourmisain]` - `LeafSettingsEntry.getTranslation()` -> `TranslationComparator.getTranslation()`
 - `[Fourmisain]` - remove (now) unused `equals()`/`hashCode()` from `LeafSettingsEntry`
 - `[Fourmisain]` - `TranslationComparator` will fall back to comparing keys and putting a warning if there are no translations
+- `[Fourmisain]` - add config migration
+- `[Fourmisain]` - "flatten" `LeafSettings`; `leafSettings.entries` is now just `leafSettings`

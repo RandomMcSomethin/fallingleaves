@@ -7,10 +7,15 @@ import randommcsomethin.fallingleaves.FallingLeavesClient;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
 @Config(name = FallingLeavesClient.MOD_ID)
 public class FallingLeavesConfig implements ConfigData {
+
+    @ConfigEntry.Gui.Excluded
+    @ConfigEntry.Category("fallingleaves.general")
+    public int version = 1;
 
     @ConfigEntry.Gui.Excluded
     @ConfigEntry.Category("fallingleaves.general")
@@ -20,7 +25,6 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = 1, max = 10)
     private int leafSize = 5;
 
-    // In 1.4 leafSize was a float with default 0.1 - effectively unchanged in 1.5
     public float getLeafSize() {
         return leafSize / 50F;
     }
@@ -55,9 +59,34 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
-    public LeafSettings leafSettings = new LeafSettings();
+    public Map<String, LeafSettingsEntry> leafSettings = new HashMap<>();
 
-    public static class LeafSettings implements ConfigData {
-        public Map<String, LeafSettingsEntry> entries = new HashMap<>();
+    public void updateLeafSettings(String blockId, Consumer<LeafSettingsEntry> f) {
+        leafSettings.compute(blockId, (id, entry) -> {
+            if (entry == null)
+                entry = new LeafSettingsEntry(id);
+
+            f.accept(entry);
+
+            return entry;
+        });
     }
+
+    /* Setters only used for config migration right now */
+
+    /** Inverse of getLeafSize() */
+    public void setLeafSize(double leafSize) {
+        this.leafSize = (int)(leafSize * 50.0);
+    }
+
+    /** Inverse of "actualSpawnRate" in getBaseLeafSpawnChance() */
+    public void setLeafSpawnRate(double leafRate) {
+        leafSpawnRate = (int)(leafRate * 10.0);
+    }
+
+    /** Inverse of "actualSpawnRate" in getBaseConiferLeafSpawnChance() */
+    public void setConiferLeafSpawnRate(double coniferLeafRate) {
+        coniferLeafSpawnRate = (int)(coniferLeafRate * 10.0);
+    }
+
 }

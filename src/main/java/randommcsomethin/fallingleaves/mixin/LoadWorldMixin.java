@@ -24,7 +24,7 @@ public abstract class LoadWorldMixin {
         // At this point it has to be guaranteed that all modded blocks are registered,
         // so we add all leaf blocks that weren't already read from the config file
         for (Map.Entry<String, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks().entrySet())
-            CONFIG.leafSettings.entries.computeIfAbsent(registered.getKey(), k -> registered.getValue());
+            CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());
 
         Config.save();
     }
