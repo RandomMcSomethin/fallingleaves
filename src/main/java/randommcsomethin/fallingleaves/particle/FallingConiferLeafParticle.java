@@ -4,7 +4,7 @@ import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 
 public class FallingConiferLeafParticle extends FallingLeafParticle {
-    public FallingConiferLeafParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i, SpriteProvider provider) {
-        super(clientWorld, d, e, f, g, h, i, provider);
+    public FallingConiferLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
+        super(clientWorld, x, y, z, r, g, b, provider);
     }
 }

@@ -31,8 +31,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         this.colorBlue  = (float) b;
         this.rotateFactor = ((float) Math.random() - 0.5F) * 0.01F;
 
-        // As leaf size is now 1-10 with 5 being default instead of 0-3 with 1 being default.
-        this.scale = (float) CONFIG.leafSize / 50;
+        this.scale = CONFIG.getLeafSize();
     }
 
     public void tick() {

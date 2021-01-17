@@ -1,10 +1,10 @@
 package randommcsomethin.fallingleaves.config;
 
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiProvider;
 import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
+import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
+import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntSliderBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
@@ -12,65 +12,83 @@ import net.minecraft.block.Block;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import randommcsomethin.fallingleaves.util.ModUtil;
+import randommcsomethin.fallingleaves.util.TranslationComparator;
 
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.*;
+
+import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
+import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlock;
 
 public class LeafSettingsGuiProvider implements GuiProvider {
-    public static final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
+    private static final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
         try {
-            ObjectLinkedOpenHashSet<LeafSettingsEntry> leafSettingsList = (ObjectLinkedOpenHashSet<LeafSettingsEntry>) field.get(config);
-            ReferenceArrayList<AbstractConfigListEntry> entries = ReferenceArrayList.wrap(new AbstractConfigListEntry[leafSettingsList.size()], 0);
+            Map<String, LeafSettingsEntry> leafSettings = (Map<String, LeafSettingsEntry>) field.get(config);
+            List<AbstractConfigListEntry> entries = new ArrayList<>(leafSettings.size());
 
             // Insert per-leaf settings ordered by translation name
-            leafSettingsList.stream()
-                .sorted(LeafSettingsEntry.TranslationComparator.INSTANCE)
-                .forEachOrdered((LeafSettingsEntry leafBlock) -> {
-                    Block block = leafBlock.getBlock();
+            leafSettings.entrySet().stream()
+                .filter((e) -> getBlock(e.getKey()) != null) // Only insert registered blocks
+                .sorted((e1, e2) -> TranslationComparator.INST.compare(getBlock(e1.getKey()).getTranslationKey(), getBlock(e2.getKey()).getTranslationKey()))
+                .forEachOrdered((e) -> {
+                    String blockId = e.getKey();
+                    LeafSettingsEntry leafEntry = e.getValue();
+                    Block block = getBlock(blockId);
 
-                    // Only insert registered blocks
-                    if (block != null) {
-                        // TODO: I think it'd be great if modified leaf blocks would show an '*' after them.
-                        //       Might be hard to implement. [Fourmisain]
-                        SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()))
-                            .setTooltip(Text.of(ModUtil.getModInfo(block).getName()));
+                    // TODO: I think it'd be great if modified leaf blocks would show an '*' after them.
+                    //       Might be hard to implement. [Fourmisain]
+                    SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()))
+                        .setTooltip(Text.of(ModUtil.getModInfo(block).getName()));
 
-                        builder.add(new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.use_custom_spawn_rate"), leafBlock.useCustomSpawnRate)
-                            .setDefaultValue(ConfigDefaults.useCustomSpawnRate(leafBlock))
-                            .setSaveConsumer((Boolean useGlobalRate) -> {
-                                leafBlock.useCustomSpawnRate = useGlobalRate;
-                            })
-                            .build()
-                        );
+                    builder.add(buildSpawnRateFactorSlider(blockId, leafEntry));
+                    builder.add(buildIsConiferLeavesToggle(blockId, leafEntry));
 
-                        builder.add(new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.custom_spawn_rate"), leafBlock.spawnRate, 0, 10)
-                            .setDefaultValue(ConfigDefaults.spawnRate(leafBlock))
-                            .setSaveConsumer((Integer spawnRate) -> {
-                                leafBlock.spawnRate = spawnRate;
-                            })
-                            .build()
-                        );
-
-                        builder.add(new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.is_conifer"), leafBlock.isConiferBlock)
-                            .setDefaultValue(ConfigDefaults.isConifer(leafBlock))
-                            .setSaveConsumer((Boolean isConiferBlock) -> {
-                                leafBlock.isConiferBlock = isConiferBlock;
-                            })
-                            .build()
-                        );
-
-                        entries.add(builder.build());
-                    }
+                    entries.add(builder.build());
                 });
 
             return entries;
-        } catch (Throwable throwable) {
-            throw new RuntimeException(throwable);
+        } catch (IllegalAccessException e) {
+            LOGGER.error(e);
+            return Collections.emptyList();
         }
+    }
+
+    private static IntegerSliderEntry buildSpawnRateFactorSlider(String blockId, LeafSettingsEntry entry) {
+        // Percentage values
+        int min = 0;
+        int max = 1000;
+        int stepSize = 10;
+        int currentValue = (int)(entry.spawnRateFactor * 100.0);
+        int defaultValue = (int)(ConfigDefaults.spawnRateFactor(blockId) * 100.0);
+
+        min /= stepSize;
+        max /= stepSize;
+        currentValue /= stepSize;
+        defaultValue /= stepSize;
+
+        return new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.spawn_rate_factor"), currentValue, min, max)
+            .setDefaultValue(defaultValue)
+            .setSaveConsumer((Integer value) -> {
+                entry.spawnRateFactor = (value * stepSize) / 100.0;
+            })
+            .setTextGetter((Integer value) -> {
+                return Text.of((value * stepSize) + "%");
+            })
+            .setTooltip(new TranslatableText("config.fallingleaves.spawn_rate_factor.@Tooltip"))
+            .build();
+    }
+
+    private static BooleanListEntry buildIsConiferLeavesToggle(String blockId, LeafSettingsEntry entry) {
+        return new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.is_conifer"), entry.isConiferBlock)
+            .setDefaultValue(ConfigDefaults.isConifer(blockId))
+            .setSaveConsumer((Boolean isConiferBlock) -> {
+                entry.isConiferBlock = isConiferBlock;
+            })
+            .build();
     }
 
 }

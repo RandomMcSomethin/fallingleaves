@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.init.Leaves;
 import randommcsomethin.fallingleaves.util.TextureCache;
 
@@ -25,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
+import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.util.LeafUtil.*;
 
 @Environment(EnvType.CLIENT)
@@ -33,45 +33,21 @@ public abstract class LeafTickMixin {
 
     @Inject(at = @At("HEAD"), method = "randomDisplayTick")
     private void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
-        double spawnRate = getLeafSpawnRate(state);
+        double spawnChance = getLeafSpawnChance(state);
 
-        if (spawnRate != 0 && random.nextDouble() < 1.0 / (75 / (spawnRate / 5))) {
+        if (spawnChance != 0 && random.nextDouble() < spawnChance) {
             if (isBottomLeafBlock(world, pos)) {
                 MinecraftClient client = MinecraftClient.getInstance();
 
                 int color = client.getBlockColors().getColor(state, world, pos, 0);
 
                 // no block color, try to calculate it from it's texture
-                if (color == -1) {
-                    String texture = spriteToTexture(client.getBlockRenderManager().getModel(state).getSprite());
-
-                    try {
-                        Resource res = client.getResourceManager().getResource(new Identifier(texture));
-                        String resourcePack = res.getResourcePackName();
-                        TextureCache.Data cache = TextureCache.INST.get(texture);
-
-                        // only use cached color when resourcePack matches
-                        if (cache != null && resourcePack.equals(cache.resourcePack)) {
-                            color = cache.color;
-                            FallingLeavesClient.LOGGER.debug(texture + ": Assigned color " + color);
-                        } else {
-                            // read and cache texture color
-                            try (InputStream is = res.getInputStream()) {
-                                Color average = averageColor(ImageIO.read(is));
-                                color = average.getRGB();
-                                FallingLeavesClient.LOGGER.debug(texture + ": Calculated color " + average + " = " + color);
-                                TextureCache.INST.put(texture, new TextureCache.Data(color, resourcePack));
-                            }
-                        }
-                    } catch (IOException e) {
-                        FallingLeavesClient.LOGGER.error("Couldn't access resource " + texture);
-                        FallingLeavesClient.LOGGER.error(e.getMessage());
-                    }
-                }
+                if (color == -1)
+                    color = calculateBlockColor(client, state);
 
                 double r = (color >> 16 & 255) / 255.0;
-                double g = (color >> 8 & 255) / 255.0;
-                double b = (color & 255) / 255.0;
+                double g = (color >> 8  & 255) / 255.0;
+                double b = (color       & 255) / 255.0;
 
                 double xOffset = random.nextDouble();
                 double zOffset = random.nextDouble();
@@ -83,6 +59,35 @@ public abstract class LeafTickMixin {
                     r, g, b
                 );
             }
+        }
+    }
+
+    @Unique
+    private static int calculateBlockColor(MinecraftClient client, BlockState state) {
+        String texture = spriteToTexture(client.getBlockRenderManager().getModel(state).getSprite());
+
+        try {
+            Resource res = client.getResourceManager().getResource(new Identifier(texture));
+            String resourcePack = res.getResourcePackName();
+            TextureCache.Data cache = TextureCache.INST.get(texture);
+
+            // only use cached color when resourcePack matches
+            if (cache != null && resourcePack.equals(cache.resourcePack)) {
+                LOGGER.debug("{}: Assigned color {}", texture, cache.color);
+                return cache.color;
+            } else {
+                // read and cache texture color
+                try (InputStream is = res.getInputStream()) {
+                    Color average = averageColor(ImageIO.read(is));
+                    int color = average.getRGB();
+                    LOGGER.debug("{}: Calculated color {} = {} ", texture, average, color);
+                    TextureCache.INST.put(texture, new TextureCache.Data(color, resourcePack));
+                    return color;
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Couldn't access resource {}", texture, e);
+            return -1;
         }
     }
 

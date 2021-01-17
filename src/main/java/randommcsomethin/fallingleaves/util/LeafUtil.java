@@ -1,42 +1,60 @@
 package randommcsomethin.fallingleaves.util;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.texture.Sprite;
-import randommcsomethin.fallingleaves.FallingLeavesClient;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
 public class LeafUtil {
 
-    public static double getLeafSpawnRate(BlockState blockState) {
+    public static Map<String, LeafSettingsEntry> getRegisteredLeafBlocks() {
+        return Registry.BLOCK
+            .getIds()
+            .stream()
+            .filter(entry -> {
+                Block block = Registry.BLOCK.get(entry);
+                return (block instanceof LeavesBlock);
+            })
+            .map(Identifier::toString)
+            .collect(Collectors.toMap(
+                Function.identity(),
+                LeafSettingsEntry::new
+            ));
+    }
+
+    public static double getLeafSpawnChance(BlockState blockState) {
         String blockId = RegistryUtil.getBlockId(blockState);
-        LeafSettingsEntry leafSettingsEntry = ConfigUtil.getLeafSettingsConfig(blockId);
+        LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.entries.get(blockId);
 
+        // This should be impossible when called from randomDisplayTick
         if (leafSettingsEntry == null) {
-            // TODO: see LeafSettings.validatePostLoad()
-            FallingLeavesClient.LOGGER.warn("There is no config entry for " + blockId);
-            // Spawn rates changed from default 1 to default 5.
-            return 5;
+            LOGGER.error("There is no config entry for {}!", blockId);
+            return 0;
         }
 
-        if (leafSettingsEntry.useCustomSpawnRate) {
-            return leafSettingsEntry.spawnRate;
-        }
-
-        return leafSettingsEntry.isConiferBlock ? CONFIG.coniferLeafSpawnRate : CONFIG.leafSpawnRate;
+        double spawnChance = (leafSettingsEntry.isConiferBlock ? CONFIG.getBaseConiferLeafSpawnChance() : CONFIG.getBaseLeafSpawnChance());
+        return leafSettingsEntry.spawnRateFactor * spawnChance;
     }
 
     public static boolean isConifer(BlockState blockState) {
         String blockId = RegistryUtil.getBlockId(blockState);
-        LeafSettingsEntry leafSettingsEntry = ConfigUtil.getLeafSettingsConfig(blockId);
+        LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.entries.get(blockId);
 
+        // This should be impossible when called from randomDisplayTick
         if (leafSettingsEntry == null) {
-            // TODO: see LeafSettings.validatePostLoad()
-            FallingLeavesClient.LOGGER.warn("There is no config entry for " + blockId);
+            LOGGER.error("There is no config entry for {}!", blockId);
             return false;
         }
 
@@ -62,7 +80,6 @@ public class LeafUtil {
                     b += c.getBlue();
                     n++;
                 }
-
             }
         }
 

@@ -52,5 +52,22 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[brekitomasson]` - config values default to 5 instead of 1.
 - `[brekitomasson]` - old `LeafUtil` and TextureCache broken down into multiple separate Util files.
 - `[brekitomasson]` - new proxy object for logging.
-
- 
+- `[Fourmisain]` - change custom spawn rate to a spawn rate factor/multiplier
+- `[Fourmisain]` - use getters in `FallingLeavesConfig` to do the GUI->code value mapping
+- `[Fourmisain]` - refactor `getLeafSpawnRate()` into `getLeafSpawnChance()`
+- `[Fourmisain]` - load all registered leaf blocks on world load
+- `[Fourmisain]` - double the precision of (conifer) leaf spawn rate; move default accordingly
+- `[Fourmisain]` - switch back to using `switch` in `ConfigDefaults`
+- `[Fourmisain]` - remove unused `LeafBlockList` annotation
+- `[Fourmisain]` - remove unused `FallingLeavesConfig.instance`
+- `[Fourmisain]` - remove `LogUtil`
+- `[Fourmisain]` - `randomDisplayTick`: factor out color calculation into `calculateBlockColor()`
+- `[Fourmisain]` - apply `ConfigDefaults` directly in `LeafSettingsEntry` constructor
+- `[Fourmisain]` - replace all fastutil usages, notably switch from `ObjectLinkedOpenHashSet` to `HashMap`
+- `[Fourmisain]` - `LeafSettingsGuiProvider`: factor out GUI construction into own methods for readability
+- `[Fourmisain]` - (re)move all logic from `LeafSettingsEntry`:
+- `[Fourmisain]` - `LeafSettingsEntry.getBlock()` -> `RegistryUtil.getBlock()`
+- `[Fourmisain]` - `LeafSettingsEntry.TranslationComparator` -> `util` package
+- `[Fourmisain]` - `LeafSettingsEntry.getTranslation()` -> `TranslationComparator.getTranslation()`
+- `[Fourmisain]` - remove (now) unused `equals()`/`hashCode()` from `LeafSettingsEntry`
+- `[Fourmisain]` - `TranslationComparator` will fall back to comparing keys and putting a warning if there are no translations

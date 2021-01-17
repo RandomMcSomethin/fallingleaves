@@ -4,7 +4,8 @@
   "package": "randommcsomethin.fallingleaves.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "LeafTickMixin"
+    "LeafTickMixin",
+    "LoadWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

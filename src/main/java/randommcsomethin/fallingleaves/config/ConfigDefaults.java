@@ -1,59 +1,47 @@
 package randommcsomethin.fallingleaves.config;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public class ConfigDefaults {
 
-    final public static Map<String, Integer> SPAWNRATE = Stream.of(new Object[][]{
-        // Shrubs and large leaves
-        {"minecraft:jungle_leaves", 0},
-        {"terrestria:japenese_maple_shrub_leaves", 0},
-        {"terrestria:jungle_palm_leaves", 0},
-        {"terrestria:yucca_palm_leaves", 0},
-
-        // Autumn Leaves
-        {"traverse:brown_autumnal_leaves", 9},
-        {"traverse:orange_autumnal_leaves", 9},
-        {"traverse:red_autumnal_leaves", 9},
-
-        // Other / Opinionated
-        {"terrestria:sakura_leaves", 7}
-    }).collect(Collectors.toMap(data -> (String) data[0], data -> (Integer) data[1]));
-
-    final public static Collection<String> CONIFER = Arrays.asList(
-        "byg:blue_spruce_leaves",
-        "byg:cypress_leaves",
-        "byg:fir_leaves",
-        "byg:orange_spruce_leaves",
-        "byg:pine_leaves",
-        "byg:red_spruce_leaves",
-        "byg:yellow_spruce_leaves",
-        "minecraft:spruce_leaves",
-        "terrestria:cypress_leaves",
-        "terrestria:hemlock_leaves",
-        "terrestria:redwood_leaves",
-        "traverse:fir_leaves",
-        "woods_and_mires:pine_leaves"
-    );
-
-    public static boolean isConifer(LeafSettingsEntry entry) {
-        return CONIFER.contains(entry.identifier);
-    }
-
-    public static int spawnRate(LeafSettingsEntry entry) {
-        if (SPAWNRATE.containsKey(entry.identifier)) {
-            return SPAWNRATE.get(entry.identifier);
+    public static boolean isConifer(String blockId) {
+        switch (blockId) {
+            case "byg:blue_spruce_leaves":
+            case "byg:cypress_leaves":
+            case "byg:fir_leaves":
+            case "byg:orange_spruce_leaves":
+            case "byg:pine_leaves":
+            case "byg:red_spruce_leaves":
+            case "byg:yellow_spruce_leaves":
+            case "minecraft:spruce_leaves":
+            case "terrestria:cypress_leaves":
+            case "terrestria:hemlock_leaves":
+            case "terrestria:redwood_leaves":
+            case "traverse:fir_leaves":
+            case "woods_and_mires:pine_leaves":
+                return true;
+            default:
+                return false;
         }
-
-        return 5;
     }
 
-    public static boolean useCustomSpawnRate(LeafSettingsEntry entry) {
-        return (spawnRate(entry) != 5);
+    public static double spawnRateFactor(String blockId) {
+        switch (blockId) {
+            // Shrubs and large leaved trees
+            case "minecraft:jungle_leaves":
+            case "terrestria:japenese_maple_shrub_leaves":
+            case "terrestria:yucca_palm_leaves":
+            case "terrestria:jungle_palm_leaves":
+                return 0.0;
+            // Autumn Leaves
+            case "traverse:brown_autumnal_leaves":
+            case "traverse:orange_autumnal_leaves":
+            case "traverse:red_autumnal_leaves":
+                return 1.8;
+            // For fun
+            case "terrestria:sakura_leaves":
+                return 1.4; // Note: Version 1.4 had spawn rate 2.0
+            default:
+                return 1.0;
+        }
     }
 
 }
