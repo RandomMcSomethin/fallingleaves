@@ -22,11 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * This Utility class, heavilly inspired by the "ModIdentification" class in
- * the HWYLA mod, is used to identify whether a block is added by Vanilla
- * Minecraft or if it comes from a mod, returning the corresponding "clean"
- * name.
- *
  * TODO - There is lots of extra stuff in here that can be removed as we
  *        refactor this file down to its core purpose, to identify the
  *        name of the mod that a block comes from.
