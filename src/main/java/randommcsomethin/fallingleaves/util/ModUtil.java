@@ -84,6 +84,11 @@ public class ModUtil {
         }
 
         @Override
+        public Collection<String> getProvides() {
+            return null;
+        }
+
+        @Override
         public Version getVersion() {
             return new StringVersion("1");
         }

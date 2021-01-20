@@ -10,6 +10,11 @@ import net.minecraft.util.math.BlockPos;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
+/**
+ * TODO - Plenty of "Magic numbers" in this class that we may want to get rid of
+ *        or, at the very least, define as class constants at the head of the file.
+ */
+
 public class FallingLeafParticle extends SpriteBillboardParticle {
 
     private final float rotateFactor;

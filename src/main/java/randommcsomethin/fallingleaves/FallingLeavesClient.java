@@ -11,7 +11,7 @@ import randommcsomethin.fallingleaves.init.Leaves;
 @Environment(EnvType.CLIENT)
 public class FallingLeavesClient implements ClientModInitializer {
 
-    /** The mod's unique identifier, used to avoid mod conflicts in both the registry and config files */
+    /** The mod's unique identifier, used to avoid mod conflicts in the Registry and config files */
     public static final String MOD_ID = "fallingleaves";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
@@ -21,4 +21,5 @@ public class FallingLeavesClient implements ClientModInitializer {
         Config.init();
         Leaves.init();
     }
+
 }

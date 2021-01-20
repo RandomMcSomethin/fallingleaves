@@ -28,14 +28,15 @@ public class Config {
         configHolder = AutoConfig.register(FallingLeavesConfig.class, GsonConfigSerializer::new);
         CONFIG = configHolder.getConfig();
 
-        if (CONFIG.displayDebugData && LOGGER.getLevel().compareTo(Level.DEBUG) < 0)
+        // Note: Configurator.setLevel() might not be supported in future versions of log4j.
+        if (CONFIG.displayDebugData && LOGGER.getLevel().compareTo(Level.DEBUG) < 0) {
             Configurator.setLevel(LOGGER.getName(), Level.DEBUG);
+        }
 
-        AutoConfig.getGuiRegistry(FallingLeavesConfig.class)
-            .registerPredicateProvider(
-                new LeafSettingsGuiProvider(),
-                (Field field) -> field.getName().equals("leafSettings")
-            );
+        AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(
+            new LeafSettingsGuiProvider(),
+            (Field field) -> field.getName().equals("leafSettings")
+        );
 
         LOGGER.debug("Loaded configuration.");
     }
@@ -58,25 +59,27 @@ public class Config {
         }
 
         // v1 can successfully load as v0, so we test the added version field
-        if (oldConfig.version != 0)
+        if (oldConfig.version != 0) {
             return;
+        }
 
         LOGGER.info("Migrating old v0 config");
 
         FallingLeavesConfig newConfig = new FallingLeavesConfig();
+
         // In 1.4 leafSize was a double with default 0.1, which matches newConfig.getLeafSize()
         newConfig.setLeafSize(oldConfig.leafSize);
+
         // leafLifespan was untouched
         newConfig.leafLifespan = oldConfig.leafLifespan;
+
         // Actual spawn rates did not change
         newConfig.setLeafSpawnRate(oldConfig.leafRate);
         newConfig.setConiferLeafSpawnRate(oldConfig.coniferLeafRate);
 
         // Conifer Leaves were moved to Leaf Settings
         for (String leafId : oldConfig.coniferLeafIds) {
-            newConfig.updateLeafSettings(leafId, (entry) -> {
-                entry.isConiferBlock = true;
-            });
+            newConfig.updateLeafSettings(leafId, (entry) -> entry.isConiferBlock = true);
         }
 
         // Rate Overrides were replaced by Spawn Rate Factors/Multipliers

@@ -1,12 +1,10 @@
 plugins {
     id 'java-library'
-    id 'maven'
     id 'maven-publish'
     id 'fabric-loom' version '0.5-SNAPSHOT'
 }
 
 apply(plugin: "java-library")
-apply(plugin: "maven")
 apply(plugin: "maven-publish")
 apply(plugin: "fabric-loom")
 
@@ -27,11 +25,17 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // ModMenu
-    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") { exclude module: 'fabric-api' }
+    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") {
+        exclude module: 'fabric-api'
+    }
 
     // Auto Config & Cloth Config
-    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}") { exclude module: 'fabric-api' }
-    modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { exclude module: 'fabric-api' }
+    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}") {
+        exclude module: 'fabric-api'
+    }
+    modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
+        exclude module: 'fabric-api'
+    }
     include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
     include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
 }
@@ -42,7 +46,7 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
-        expand (
+        expand(
                 "version": project.version,
                 "minecraft_version": project.minecraft_version,
                 "maven_group": project.maven_group,
@@ -54,6 +58,10 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude "fabric.mod.json"
+    }
+
+    task archive(type: Zip) {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
 
@@ -75,21 +83,14 @@ jar {
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
+            artifact(remapJar) { builtBy remapJar }
+            artifact(sourcesJar) { builtBy remapSourcesJar }
         }
     }
 
-    // select the repositories you want to publish to
     repositories {
         // mavenLocal()
     }
