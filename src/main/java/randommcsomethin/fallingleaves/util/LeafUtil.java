@@ -6,6 +6,7 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 
 import java.awt.*;
@@ -34,33 +35,10 @@ public class LeafUtil {
             ));
     }
 
-    public static double getLeafSpawnChance(BlockState blockState) {
+    @Nullable
+    public static LeafSettingsEntry getLeafSettingsEntry(BlockState blockState) {
         String blockId = RegistryUtil.getBlockId(blockState);
-        LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.get(blockId);
-
-        // This should be impossible when called from randomDisplayTick
-        // TODO - This is triggering "There is no config entry for terrestria:sakura log" for me (Breki).
-        //        Issue #13 opened.
-        if (leafSettingsEntry == null) {
-            LOGGER.error("There is no config entry for {}!", blockId);
-            return 0;
-        }
-
-        double spawnChance = (leafSettingsEntry.isConiferBlock ? CONFIG.getBaseConiferLeafSpawnChance() : CONFIG.getBaseLeafSpawnChance());
-        return leafSettingsEntry.spawnRateFactor * spawnChance;
-    }
-
-    public static boolean isConifer(BlockState blockState) {
-        String blockId = RegistryUtil.getBlockId(blockState);
-        LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.get(blockId);
-
-        // This should be impossible when called from randomDisplayTick
-        if (leafSettingsEntry == null) {
-            LOGGER.error("There is no config entry for {}!", blockId);
-            return false;
-        }
-
-        return leafSettingsEntry.isConiferBlock;
+        return CONFIG.leafSettings.get(blockId);
     }
 
     public static Color averageColor(BufferedImage image) {

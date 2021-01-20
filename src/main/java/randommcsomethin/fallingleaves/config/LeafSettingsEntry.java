@@ -1,5 +1,7 @@
 package randommcsomethin.fallingleaves.config;
 
+import static randommcsomethin.fallingleaves.init.Config.CONFIG;
+
 public class LeafSettingsEntry {
 
     public double spawnRateFactor;
@@ -8,6 +10,11 @@ public class LeafSettingsEntry {
     public LeafSettingsEntry(String identifier) {
         this.spawnRateFactor = ConfigDefaults.spawnRateFactor(identifier);
         this.isConiferBlock = ConfigDefaults.isConifer(identifier);
+    }
+
+    public double getSpawnChance() {
+        double spawnChance = (isConiferBlock ? CONFIG.getBaseConiferLeafSpawnChance() : CONFIG.getBaseLeafSpawnChance());
+        return spawnRateFactor * spawnChance;
     }
 
     @Override

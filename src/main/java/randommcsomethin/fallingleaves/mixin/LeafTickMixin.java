@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.init.Leaves;
 import randommcsomethin.fallingleaves.util.TextureCache;
 
@@ -33,7 +34,13 @@ public abstract class LeafTickMixin {
 
     @Inject(at = @At("HEAD"), method = "randomDisplayTick")
     private void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
-        double spawnChance = getLeafSpawnChance(state);
+        LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
+
+        // Every leaf block has a settings entry, but some blocks are considered leaves when they technically aren't
+        // E.g. terrestria:sakura_log can be "leaf-logged" - in that case, we simply ignore them
+        if (leafSettings == null) return;
+
+        double spawnChance = leafSettings.getSpawnChance();
 
         if (spawnChance != 0 && random.nextDouble() < spawnChance) {
             if (isBottomLeafBlock(world, pos)) {
@@ -54,7 +61,7 @@ public abstract class LeafTickMixin {
 
                 // Add the particle.
                 world.addParticle(
-                    isConifer(state) ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF,
+                    leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF,
                     pos.getX() + xOffset, pos.getY(), pos.getZ() + zOffset,
                     r, g, b
                 );
