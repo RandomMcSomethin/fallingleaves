@@ -73,3 +73,5 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[Fourmisain]` - `TranslationComparator` will fall back to comparing keys and putting a warning if there are no translations
 - `[Fourmisain]` - add config migration
 - `[Fourmisain]` - "flatten" `LeafSettings`; `leafSettings.entries` is now just `leafSettings`
+- `[Fourmisain]` - add option to disable falling leaves from player placed blocks
+- `[Fourmisain]` - new spawn condition using a configurable collision check
