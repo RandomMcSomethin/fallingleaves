@@ -39,6 +39,8 @@ public class LeafUtil {
         LeafSettingsEntry leafSettingsEntry = CONFIG.leafSettings.get(blockId);
 
         // This should be impossible when called from randomDisplayTick
+        // TODO - This is triggering "There is no config entry for terrestria:sakura log" for me (Breki).
+        //        Issue #13 opened.
         if (leafSettingsEntry == null) {
             LOGGER.error("There is no config entry for {}!", blockId);
             return 0;

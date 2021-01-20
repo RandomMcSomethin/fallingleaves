@@ -28,17 +28,25 @@ public class ConfigDefaults {
             // Shrubs and large leaved trees
             case "minecraft:jungle_leaves":
             case "terrestria:japenese_maple_shrub_leaves":
-            case "terrestria:yucca_palm_leaves":
             case "terrestria:jungle_palm_leaves":
+            case "terrestria:yucca_palm_leaves":
                 return 0.0;
+
             // Autumn Leaves
             case "traverse:brown_autumnal_leaves":
             case "traverse:orange_autumnal_leaves":
             case "traverse:red_autumnal_leaves":
+            case "traverse:yellow_autumnal_leaves":
                 return 1.8;
-            // For fun
+
+            // For fun and flavor
+            case "byg:pink_cherry_leaves":
+            case "byg:skyris_leaves":
+            case "byg:white_cherry_leaves":
             case "terrestria:sakura_leaves":
-                return 1.4; // Note: Version 1.4 had spawn rate 2.0
+                return 1.4;
+
+            // If not explicitly referenced
             default:
                 return 1.0;
         }
