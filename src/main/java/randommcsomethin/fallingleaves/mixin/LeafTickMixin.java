@@ -15,7 +15,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import randommcsomethin.fallingleaves.FallingLeavesClient;
+import randommcsomethin.fallingleaves.config.FallingLeavesConfig;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
+import randommcsomethin.fallingleaves.init.Config;
 import randommcsomethin.fallingleaves.init.Leaves;
 import randommcsomethin.fallingleaves.util.TextureCache;
 
@@ -26,6 +29,7 @@ import java.io.InputStream;
 import java.util.Random;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
+import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.util.LeafUtil.*;
 
 @Environment(EnvType.CLIENT)
@@ -38,7 +42,11 @@ public abstract class LeafTickMixin {
 
         // Every leaf block has a settings entry, but some blocks are considered leaves when they technically aren't
         // E.g. terrestria:sakura_log can be "leaf-logged" - in that case, we simply ignore them
-        if (leafSettings == null) return;
+        if (leafSettings == null)
+            return;
+
+        if (!CONFIG.dropFromPlayerPlacedBlocks && state.get(LeavesBlock.PERSISTENT))
+            return;
 
         double spawnChance = leafSettings.getSpawnChance();
 

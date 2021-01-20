@@ -57,6 +57,9 @@ public class FallingLeavesConfig implements ConfigData {
         return actualSpawnRate / 75.0;
     }
 
+    @ConfigEntry.Category("fallingleaves.general")
+    public boolean dropFromPlayerPlacedBlocks = true;
+
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
     public Map<String, LeafSettingsEntry> leafSettings = new HashMap<>();

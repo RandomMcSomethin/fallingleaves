@@ -7,6 +7,7 @@
   "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "How many leaves spawn over time",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "Conifer Leaf Spawn Rate",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "How many conifer leaves spawn over time",
+  "text.autoconfig.fallingleaves.option.dropFromPlayerPlacedBlocks": "Drop leaves from player-placed blocks?",
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "General",
   "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "Leaf Settings",
   "config.fallingleaves.spawn_rate_factor": "Spawn Rate Multiplier",
