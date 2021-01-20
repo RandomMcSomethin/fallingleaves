@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.particle.FallingConiferLeafParticle;
 import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
+import randommcsomethin.fallingleaves.util.CTM;
 import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.RegistryUtil;
 
@@ -59,6 +60,9 @@ public class Leaves {
 
                     partiallyLoadedRegisteredLeafBlocks = true;
                 }
+
+                CTM.parseOptiFineConfig();
+                CTM.readBiomeTextures(resourceManager);
             }
 
             @Override

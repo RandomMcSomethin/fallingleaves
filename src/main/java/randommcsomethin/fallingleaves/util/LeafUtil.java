@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
+import static randommcsomethin.fallingleaves.util.RegistryUtil.getBiome;
 import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlockId;
 
 public class LeafUtil {
@@ -50,7 +51,18 @@ public class LeafUtil {
             boolean shouldColor = quads.isEmpty() || quads.get(0).hasColor();
 
             int blockColor = client.getBlockColors().getColor(state, world, pos, 0);
-            Identifier texture = spriteToTexture(model.getSprite());
+            Identifier texture = null;
+
+            if (CTM.isEnabled()) {
+                // try to get OptiFine's biome specific texture
+                Identifier biome = getBiome(world, pos);
+                Identifier blockId = getBlockId(state);
+                texture = TextureCache.biomeTextures.get(Pair.of(biome, blockId));
+                LOGGER.debug("get (biome: {}, block id: {}) -> biome texture: {}", biome, blockId, texture);
+            }
+
+            if (texture == null)
+                texture = spriteToTexture(model.getSprite());
 
             double[] color = calculateLeafColor(texture, shouldColor, blockColor, client);
 

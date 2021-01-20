@@ -1,8 +1,10 @@
 package randommcsomethin.fallingleaves.util;
 
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class TextureCache {
     public static final class Data {
@@ -25,7 +27,8 @@ public class TextureCache {
         }
     }
 
-    public static final HashMap<Identifier, Data> INST = new HashMap<>();
+    public static final Map<Identifier, Data> INST = new HashMap<>();
+    public static final Map<Pair<Identifier, Identifier>, Identifier> biomeTextures = new HashMap<>();
 
     private TextureCache() {}
 

@@ -5,7 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
 
@@ -41,6 +43,10 @@ public class RegistryUtil {
     public static Block getBlock(Identifier blockId) {
         Optional<Block> maybeBlock = Registry.BLOCK.getOrEmpty(blockId);
         return maybeBlock.orElse(null);
+    }
+
+    public static Identifier getBiome(World world, BlockPos pos) {
+        return world.getRegistryManager().get(Registry.BIOME_KEY).getId(world.getBiome(pos));
     }
 
 }
