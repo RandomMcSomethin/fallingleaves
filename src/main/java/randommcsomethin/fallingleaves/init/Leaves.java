@@ -2,11 +2,16 @@ package randommcsomethin.fallingleaves.init;
 
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -16,14 +21,19 @@ import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
 import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.RegistryUtil;
 
+import java.util.Map;
 import java.util.Random;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
+import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
+import static randommcsomethin.fallingleaves.util.RegistryUtil.makeNewIdentifier;
 
 public class Leaves {
     public static DefaultParticleType FALLING_LEAF;
     public static DefaultParticleType FALLING_CONIFER_LEAF;
+
+    private static boolean partiallyLoadedRegisteredLeafBlocks = false;
 
     public static void init() {
         LOGGER.debug("Registering leaf particles.");
@@ -34,10 +44,31 @@ public class Leaves {
         ParticleFactoryRegistry.getInstance().register(FALLING_LEAF, FallingLeafParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(FALLING_CONIFER_LEAF, FallingConiferLeafParticle.DefaultFactory::new);
 
+        registerReloadListener();
         registerAttackBlockLeaves();
     }
 
-    /** spawn between 0 and 3 leaves on hitting a leaf block */
+    private static void registerReloadListener() {
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+            @Override
+            public void apply(ResourceManager resourceManager) {
+                // This is a pretty good point to load registered leaf blocks, it may be good enough to replace LoadWorldMixin
+                if (!partiallyLoadedRegisteredLeafBlocks) {
+                    for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks().entrySet())
+                        CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());
+
+                    partiallyLoadedRegisteredLeafBlocks = true;
+                }
+            }
+
+            @Override
+            public Identifier getFabricId() {
+                return makeNewIdentifier("resource_reload_listener");
+            }
+        });
+    }
+
+    /** Spawn between 0 and 3 leaves on hitting a leaf block */
     private static void registerAttackBlockLeaves() {
         Random random = new Random();
 

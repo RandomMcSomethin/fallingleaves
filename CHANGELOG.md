@@ -84,3 +84,5 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[brekitomasson]` - update versions of: Minecraft, Yarn Mappings, Fabric Loader, Fabric API
 - `[brekitomasson]` - add two additional textures to 'normal' leaves and modified one of the previous ones very slightly
 - `[Fourmisain]` - add German translation
+- `[Fourmisain]` - change `String` ids to `Identifier`s
+- `[Fourmisain]` - load registered leaf blocks after first resource reload event as well

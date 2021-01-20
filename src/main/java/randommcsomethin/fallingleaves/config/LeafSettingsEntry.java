@@ -1,5 +1,7 @@
 package randommcsomethin.fallingleaves.config;
 
+import net.minecraft.util.Identifier;
+
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
 public class LeafSettingsEntry {
@@ -7,7 +9,7 @@ public class LeafSettingsEntry {
     public double spawnRateFactor;
     public boolean isConiferBlock;
 
-    public LeafSettingsEntry(String identifier) {
+    public LeafSettingsEntry(Identifier identifier) {
         this.spawnRateFactor = ConfigDefaults.spawnRateFactor(identifier);
         this.isConiferBlock = ConfigDefaults.isConifer(identifier);
     }

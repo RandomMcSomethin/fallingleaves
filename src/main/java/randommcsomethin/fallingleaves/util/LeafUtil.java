@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
+import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlockId;
 
 public class LeafUtil {
 
@@ -42,8 +43,10 @@ public class LeafUtil {
             int color = client.getBlockColors().getColor(state, world, pos, 0);
 
             // no block color, try to calculate it from it's texture
-            if (color == -1)
-                color = calculateBlockColor(client, state);
+            if (color == -1) {
+                Identifier texture = spriteToTexture(client.getBlockRenderManager().getModel(state).getSprite());
+                color = calculateBlockColor(texture, client, state);
+            }
 
             double r = (color >> 16 & 255) / 255.0;
             double g = (color >> 8  & 255) / 255.0;
@@ -58,9 +61,7 @@ public class LeafUtil {
         }
     }
 
-    private static int calculateBlockColor(MinecraftClient client, BlockState state) {
-        Identifier texture = spriteToTexture(client.getBlockRenderManager().getModel(state).getSprite());
-
+    private static int calculateBlockColor(Identifier texture, MinecraftClient client, BlockState state) {
         try {
             Resource res = client.getResourceManager().getResource(texture);
             String resourcePack = res.getResourcePackName();
@@ -98,7 +99,7 @@ public class LeafUtil {
         return !world.getBlockCollisions(null, collisionBox).findAny().isPresent();
     }
 
-    public static Map<String, LeafSettingsEntry> getRegisteredLeafBlocks() {
+    public static Map<Identifier, LeafSettingsEntry> getRegisteredLeafBlocks() {
         return Registry.BLOCK
             .getIds()
             .stream()
@@ -106,7 +107,6 @@ public class LeafUtil {
                 Block block = Registry.BLOCK.get(entry);
                 return (block instanceof LeavesBlock);
             })
-            .map(Identifier::toString)
             .collect(Collectors.toMap(
                 Function.identity(),
                 LeafSettingsEntry::new
@@ -115,8 +115,7 @@ public class LeafUtil {
 
     @Nullable
     public static LeafSettingsEntry getLeafSettingsEntry(BlockState blockState) {
-        String blockId = RegistryUtil.getBlockId(blockState);
-        return CONFIG.leafSettings.get(blockId);
+        return CONFIG.leafSettings.get(getBlockId(blockState));
     }
 
     public static Color averageColor(BufferedImage image) {

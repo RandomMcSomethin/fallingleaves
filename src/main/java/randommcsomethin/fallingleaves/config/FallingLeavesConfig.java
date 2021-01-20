@@ -3,6 +3,7 @@ package randommcsomethin.fallingleaves.config;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
+import net.minecraft.util.Identifier;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
 
 import java.util.HashMap;
@@ -67,9 +68,9 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
-    public Map<String, LeafSettingsEntry> leafSettings = new HashMap<>();
+    public Map<Identifier, LeafSettingsEntry> leafSettings = new HashMap<>();
 
-    public void updateLeafSettings(String blockId, Consumer<LeafSettingsEntry> f) {
+    public void updateLeafSettings(Identifier blockId, Consumer<LeafSettingsEntry> f) {
         leafSettings.compute(blockId, (id, entry) -> {
             if (entry == null)
                 entry = new LeafSettingsEntry(id);

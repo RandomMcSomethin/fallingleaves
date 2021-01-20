@@ -11,11 +11,15 @@ import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import randommcsomethin.fallingleaves.util.ModUtil;
 import randommcsomethin.fallingleaves.util.TranslationComparator;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlock;
@@ -27,7 +31,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
     @Override
     public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
         try {
-            Map<String, LeafSettingsEntry> leafSettings = (Map<String, LeafSettingsEntry>) field.get(config);
+            Map<Identifier, LeafSettingsEntry> leafSettings = (Map<Identifier, LeafSettingsEntry>) field.get(config);
             List<AbstractConfigListEntry> entries = new ArrayList<>(leafSettings.size());
 
             // Insert per-leaf settings ordered by translation name
@@ -35,7 +39,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
                 .filter((e) -> getBlock(e.getKey()) != null) // Only insert registered blocks
                 .sorted((e1, e2) -> TranslationComparator.INST.compare(getBlock(e1.getKey()).getTranslationKey(), getBlock(e2.getKey()).getTranslationKey()))
                 .forEachOrdered((e) -> {
-                    String blockId = e.getKey();
+                    Identifier blockId = e.getKey();
                     LeafSettingsEntry leafEntry = e.getValue();
                     Block block = getBlock(blockId);
 
@@ -57,7 +61,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
         }
     }
 
-    private static IntegerSliderEntry buildSpawnRateFactorSlider(String blockId, LeafSettingsEntry entry) {
+    private static IntegerSliderEntry buildSpawnRateFactorSlider(Identifier blockId, LeafSettingsEntry entry) {
         // Percentage values
         int min = 0;
         int max = 1000;
@@ -82,7 +86,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
             .build();
     }
 
-    private static BooleanListEntry buildIsConiferLeavesToggle(String blockId, LeafSettingsEntry entry) {
+    private static BooleanListEntry buildIsConiferLeavesToggle(Identifier blockId, LeafSettingsEntry entry) {
         return new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.is_conifer"), entry.isConiferBlock)
             .setDefaultValue(ConfigDefaults.isConifer(blockId))
             .setSaveConsumer((Boolean isConiferBlock) -> {

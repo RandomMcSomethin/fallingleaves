@@ -1,10 +1,12 @@
 package randommcsomethin.fallingleaves.init;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonParseException;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigHolder;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
@@ -25,7 +27,13 @@ public class Config {
     public static void init() {
         migrateOldConfig();
 
-        configHolder = AutoConfig.register(FallingLeavesConfig.class, GsonConfigSerializer::new);
+        configHolder = AutoConfig.register(FallingLeavesConfig.class, (definition, configClass) -> {
+            return new GsonConfigSerializer<>(definition, configClass, new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .registerTypeAdapter(Identifier.class, IdentifierTypeAdapter.INST)
+                .create());
+        });
         CONFIG = configHolder.getConfig();
 
         // Note: Configurator.setLevel() might not be supported in future versions of log4j.
@@ -79,12 +87,12 @@ public class Config {
 
         // Conifer Leaves were moved to Leaf Settings
         for (String leafId : oldConfig.coniferLeafIds) {
-            newConfig.updateLeafSettings(leafId, (entry) -> entry.isConiferBlock = true);
+            newConfig.updateLeafSettings(new Identifier(leafId), (entry) -> entry.isConiferBlock = true);
         }
 
         // Rate Overrides were replaced by Spawn Rate Factors/Multipliers
         for (Map.Entry<String, Double> oldEntry : oldConfig.rateOverrides.entrySet()) {
-            newConfig.updateLeafSettings(oldEntry.getKey(), (newEntry) -> {
+            newConfig.updateLeafSettings(new Identifier(oldEntry.getKey()), (newEntry) -> {
                 double oldRateOverride = oldEntry.getValue();
 
                 // Set the new factor according the the override and base rate

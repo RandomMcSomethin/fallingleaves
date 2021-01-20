@@ -1,9 +1,11 @@
 package randommcsomethin.fallingleaves.config;
 
+import net.minecraft.util.Identifier;
+
 public class ConfigDefaults {
 
-    public static boolean isConifer(String blockId) {
-        switch (blockId) {
+    public static boolean isConifer(Identifier blockId) {
+        switch (blockId.toString()) {
             case "byg:blue_spruce_leaves":
             case "byg:cypress_leaves":
             case "byg:fir_leaves":
@@ -23,8 +25,8 @@ public class ConfigDefaults {
         }
     }
 
-    public static double spawnRateFactor(String blockId) {
-        switch (blockId) {
+    public static double spawnRateFactor(Identifier blockId) {
+        switch (blockId.toString()) {
             // Shrubs and large leaved trees
             case "minecraft:jungle_leaves":
             case "terrestria:japenese_maple_shrub_leaves":

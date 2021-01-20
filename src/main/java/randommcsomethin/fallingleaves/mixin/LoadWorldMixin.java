@@ -1,6 +1,7 @@
 package randommcsomethin.fallingleaves.mixin;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +24,7 @@ public abstract class LoadWorldMixin {
 
         // At this point it has to be guaranteed that all modded blocks are registered,
         // so we add all leaf blocks that weren't already read from the config file
-        for (Map.Entry<String, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks().entrySet())
+        for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks().entrySet())
             CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());
 
         Config.save();

@@ -33,13 +33,13 @@ public class RegistryUtil {
         return new Identifier(FallingLeavesClient.MOD_ID, identifierName);
     }
 
-    public static String getBlockId(BlockState blockState) {
-        return Registry.BLOCK.getId(blockState.getBlock()).toString();
+    public static Identifier getBlockId(BlockState blockState) {
+        return Registry.BLOCK.getId(blockState.getBlock());
     }
 
     @Nullable
-    public static Block getBlock(String blockId) {
-        Optional<Block> maybeBlock = Registry.BLOCK.getOrEmpty(new Identifier(blockId));
+    public static Block getBlock(Identifier blockId) {
+        Optional<Block> maybeBlock = Registry.BLOCK.getOrEmpty(blockId);
         return maybeBlock.orElse(null);
     }
 
