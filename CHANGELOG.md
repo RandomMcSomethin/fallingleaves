@@ -75,3 +75,11 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[Fourmisain]` - "flatten" `LeafSettings`; `leafSettings.entries` is now just `leafSettings`
 - `[Fourmisain]` - add option to disable falling leaves from player placed blocks
 - `[Fourmisain]` - new spawn condition using a configurable collision check
+- `[Fourmisain]` - spawn a few leaves when hitting a block (independent of spawn rate)
+- `[Fourmisain]` - extract some methods from LeafTickMixin to LeafUtil
+- `[Fourmisain]` - simplify spriteToTexture()
+- `[brekitomasson]` - add more defaults from Traverse and BYG
+- `[brekitomasson]` - add block to support future Gradle 7 deprecations
+- `[brekitomasson]` - remove `maven` dependency, as `maven-publish` contains what we need
+- `[brekitomasson]` - update versions of: Minecraft, Yarn Mappings, Fabric Loader, Fabric API
+- `[brekitomasson]` - add two additional textures to 'normal' leaves and modified one of the previous ones very slightly

@@ -59,10 +59,10 @@ public class LeafUtil {
     }
 
     private static int calculateBlockColor(MinecraftClient client, BlockState state) {
-        String texture = spriteToTexture(client.getBlockRenderManager().getModel(state).getSprite());
+        Identifier texture = spriteToTexture(client.getBlockRenderManager().getModel(state).getSprite());
 
         try {
-            Resource res = client.getResourceManager().getResource(new Identifier(texture));
+            Resource res = client.getResourceManager().getResource(texture);
             String resourcePack = res.getResourcePackName();
             TextureCache.Data cache = TextureCache.INST.get(texture);
 
@@ -148,10 +148,9 @@ public class LeafUtil {
         );
     }
 
-    public static String spriteToTexture(Sprite sprite) {
-        String modId = sprite.getId().getNamespace();
-        String texture = sprite.getId().getPath();
-        return modId + ":textures/" + texture + ".png";
+    public static Identifier spriteToTexture(Sprite sprite) {
+        String texture = sprite.getId().getPath(); // e.g. block/sakura_leaves
+        return new Identifier(sprite.getId().getNamespace(), "textures/" + texture + ".png");
     }
 
 }
