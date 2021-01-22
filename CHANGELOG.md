@@ -83,3 +83,4 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[brekitomasson]` - remove `maven` dependency, as `maven-publish` contains what we need
 - `[brekitomasson]` - update versions of: Minecraft, Yarn Mappings, Fabric Loader, Fabric API
 - `[brekitomasson]` - add two additional textures to 'normal' leaves and modified one of the previous ones very slightly
+- `[Fourmisain]` - add German translation

@@ -21,17 +21,19 @@ public class TranslationComparator implements Comparator<String> {
     @Nullable
     public String getTranslation(String translationKey) {
         Language language = Language.getInstance();
+
+        if (language != cachedLanguage) {
+            translations.clear();
+            cachedLanguage = language;
+        }
+
         String cachedTranslation = translations.get(translationKey);
 
         // Update translation when needed
-        if (cachedTranslation == null || language != cachedLanguage) {
-            cachedLanguage = language;
-
-            if (language.hasTranslation(translationKey)) {
-                String translation = language.get(translationKey);
-                translations.put(translationKey, translation);
-                return translation;
-            }
+        if (cachedTranslation == null && language.hasTranslation(translationKey)) {
+            String translation = language.get(translationKey);
+            translations.put(translationKey, translation);
+            return translation;
         }
 
         return cachedTranslation;

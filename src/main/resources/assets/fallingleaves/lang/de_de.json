@@ -1,0 +1,18 @@
+{
+  "text.autoconfig.fallingleaves.title": "Falling Leaves",
+  "text.autoconfig.fallingleaves.option.leafSize": "Blättergröße",
+  "text.autoconfig.fallingleaves.option.leafLifespan": "Blätter-Lebensspanne (in Ticks)",
+  "text.autoconfig.fallingleaves.option.leafLifespan.@Tooltip": "20 Ticks sind ca. 1 Sekunde",
+  "text.autoconfig.fallingleaves.option.leafSpawnRate": "Blätter-Spawnrate",
+  "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "Wieviele Blätter über Zeit spawnen",
+  "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "Nadelblatt-Spawnrate",
+  "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "Wieviele Nadelblätter über Zeit spawnen",
+  "text.autoconfig.fallingleaves.option.dropFromPlayerPlacedBlocks": "Fallen Blätter von Spieler-platzierten Blöcken?",
+  "text.autoconfig.fallingleaves.option.minimumFreeSpaceBelow": "Nötiger vertikaler Freiraum (in Blöcken)",
+  "text.autoconfig.fallingleaves.option.minimumFreeSpaceBelow.@Tooltip": "Blätter spawnen nur, wenn genügend Platz nach unten frei ist",
+  "text.autoconfig.fallingleaves.category.fallingleaves.general": "Allgemein",
+  "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "Blätter-Einstellungen",
+  "config.fallingleaves.spawn_rate_factor": "Spawnrate-Multiplikator",
+  "config.fallingleaves.spawn_rate_factor.@Tooltip": "0% deaktiviert fallende Blätter, 100% heißt Grund-Spawnrate",
+  "config.fallingleaves.is_conifer": "Ist dies ein Nadelblatt?"
+}
