@@ -86,3 +86,4 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[Fourmisain]` - add German translation
 - `[Fourmisain]` - change `String` ids to `Identifier`s
 - `[Fourmisain]` - load registered leaf blocks after first resource reload event as well
+- `[Fourmisain]` - implement accurate leaf color calculation

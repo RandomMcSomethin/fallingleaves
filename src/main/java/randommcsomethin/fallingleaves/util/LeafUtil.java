@@ -4,11 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +23,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
@@ -40,17 +44,19 @@ public class LeafUtil {
         if (shouldSpawnParticle(world, pos, x, y, z)) {
             MinecraftClient client = MinecraftClient.getInstance();
 
-            int color = client.getBlockColors().getColor(state, world, pos, 0);
+            // read the bottom quad to determine whether we should color the texture
+            BakedModel model = client.getBlockRenderManager().getModel(state);
+            List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, random);
+            boolean shouldColor = quads.isEmpty() || quads.get(0).hasColor();
 
-            // no block color, try to calculate it from it's texture
-            if (color == -1) {
-                Identifier texture = spriteToTexture(client.getBlockRenderManager().getModel(state).getSprite());
-                color = calculateBlockColor(texture, client, state);
-            }
+            int blockColor = client.getBlockColors().getColor(state, world, pos, 0);
+            Identifier texture = spriteToTexture(model.getSprite());
 
-            double r = (color >> 16 & 255) / 255.0;
-            double g = (color >> 8  & 255) / 255.0;
-            double b = (color       & 255) / 255.0;
+            double[] color = calculateLeafColor(texture, shouldColor, blockColor, client);
+
+            double r = color[0];
+            double g = color[1];
+            double b = color[2];
 
             // Add the particle.
             world.addParticle(
@@ -61,29 +67,36 @@ public class LeafUtil {
         }
     }
 
-    private static int calculateBlockColor(Identifier texture, MinecraftClient client, BlockState state) {
+    private static double[] calculateLeafColor(Identifier texture, boolean shouldColor, int blockColor, MinecraftClient client) {
         try {
             Resource res = client.getResourceManager().getResource(texture);
             String resourcePack = res.getResourcePackName();
             TextureCache.Data cache = TextureCache.INST.get(texture);
+            double[] textureColor;
 
-            // only use cached color when resourcePack matches
+            // only use cached texture color when resourcePack matches
             if (cache != null && resourcePack.equals(cache.resourcePack)) {
-                LOGGER.debug("{}: Assigned color {}", texture, cache.color);
-                return cache.color;
+                textureColor = cache.getColor();
             } else {
                 // read and cache texture color
                 try (InputStream is = res.getInputStream()) {
-                    Color average = averageColor(ImageIO.read(is));
-                    int color = average.getRGB();
-                    LOGGER.debug("{}: Calculated color {} = {} ", texture, average, color);
-                    TextureCache.INST.put(texture, new TextureCache.Data(color, resourcePack));
-                    return color;
+                    textureColor = averageColor(ImageIO.read(is));
+                    TextureCache.INST.put(texture, new TextureCache.Data(textureColor, resourcePack));
+                    LOGGER.debug("{}: Calculated texture color {} ", texture, textureColor);
                 }
             }
+
+            if (shouldColor && blockColor != -1) {
+                // multiply texture and block color RGB values (in range 0-1)
+                textureColor[0] *= (blockColor >> 16 & 255) / 255.0;
+                textureColor[1] *= (blockColor >> 8  & 255) / 255.0;
+                textureColor[2] *= (blockColor       & 255) / 255.0;
+            }
+
+            return textureColor;
         } catch (IOException e) {
             LOGGER.error("Couldn't access resource {}", texture, e);
-            return -1;
+            return new double[] { 1, 1, 1 };
         }
     }
 
@@ -118,10 +131,10 @@ public class LeafUtil {
         return CONFIG.leafSettings.get(getBlockId(blockState));
     }
 
-    public static Color averageColor(BufferedImage image) {
-        long r = 0;
-        long g = 0;
-        long b = 0;
+    public static double[] averageColor(BufferedImage image) {
+        double r = 0;
+        double g = 0;
+        double b = 0;
         int n = 0;
 
         // TODO: This entire block feels like it could be simplified or broken down into
@@ -140,11 +153,11 @@ public class LeafUtil {
             }
         }
 
-        return new Color(
-            (int) (r / n),
-            (int) (g / n),
-            (int) (b / n)
-        );
+        return new double[] {
+            (r / n) / 255.0,
+            (g / n) / 255.0,
+            (b / n) / 255.0
+        };
     }
 
     public static Identifier spriteToTexture(Sprite sprite) {
