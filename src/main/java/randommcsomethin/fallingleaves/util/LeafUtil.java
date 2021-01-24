@@ -105,7 +105,7 @@ public class LeafUtil {
         // This test is necessary because modded leaf blocks may not have collisions
         if (world.getBlockState(pos.down()).getBlock() instanceof LeavesBlock) return false;
 
-        double y2 = y - (CONFIG.minimumFreeSpaceBelow > 0 ? CONFIG.minimumFreeSpaceBelow : 0.2);
+        double y2 = y - CONFIG.minimumFreeSpaceBelow * 0.5;
         Box collisionBox = new Box(x - 0.1, y, z - 0.1, x + 0.1, y2, z + 0.1);
 
         // Only spawn the particle if there's enough room for it

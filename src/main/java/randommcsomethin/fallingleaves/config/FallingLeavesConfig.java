@@ -63,8 +63,8 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
-    public int minimumFreeSpaceBelow = 0;
+    @ConfigEntry.BoundedDiscrete(min = 1, max = 20)
+    public int minimumFreeSpaceBelow = 1;
 
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
@@ -96,6 +96,11 @@ public class FallingLeavesConfig implements ConfigData {
     /** Inverse of "actualSpawnRate" in getBaseConiferLeafSpawnChance() */
     public void setConiferLeafSpawnRate(double coniferLeafRate) {
         coniferLeafSpawnRate = (int)(coniferLeafRate * 10.0);
+    }
+
+    @Override
+    public void validatePostLoad() throws ConfigData.ValidationException {
+        minimumFreeSpaceBelow = Math.max(minimumFreeSpaceBelow, 1);
     }
 
 }
