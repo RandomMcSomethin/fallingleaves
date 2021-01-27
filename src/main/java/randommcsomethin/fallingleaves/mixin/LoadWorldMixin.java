@@ -22,9 +22,10 @@ public abstract class LoadWorldMixin {
     protected void loadWorld(CallbackInfo ci) {
         LOGGER.info("Loading all registered leaf blocks.");
 
-        // At this point it has to be guaranteed that all modded blocks are registered,
-        // so we add all leaf blocks that weren't already read from the config file
-        for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks().entrySet())
+        // At this point it has to be guaranteed that all modded blocks are registered and block tags are useable
+        // (This is actually pretty much the earliest point in time where we can use block tags)
+        // So we add all leaf blocks that weren't already read from the config file or preloaded in our ReloadListener
+        for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks(true).entrySet())
             CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());
 
         Config.save();

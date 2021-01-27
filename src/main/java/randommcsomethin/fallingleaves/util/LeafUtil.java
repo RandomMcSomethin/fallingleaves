@@ -8,6 +8,8 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.resource.Resource;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -112,13 +114,14 @@ public class LeafUtil {
         return !world.getBlockCollisions(null, collisionBox).findAny().isPresent();
     }
 
-    public static Map<Identifier, LeafSettingsEntry> getRegisteredLeafBlocks() {
+    /** Block tags can only be used once the integrated server is started */
+    public static Map<Identifier, LeafSettingsEntry> getRegisteredLeafBlocks(boolean useBlockTags) {
         return Registry.BLOCK
             .getIds()
             .stream()
             .filter(entry -> {
                 Block block = Registry.BLOCK.get(entry);
-                return (block instanceof LeavesBlock);
+                return (block instanceof LeavesBlock) || (useBlockTags && block.isIn(BlockTags.LEAVES));
             })
             .collect(Collectors.toMap(
                 Function.identity(),

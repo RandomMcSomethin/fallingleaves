@@ -33,7 +33,7 @@ public class Leaves {
     public static DefaultParticleType FALLING_LEAF;
     public static DefaultParticleType FALLING_CONIFER_LEAF;
 
-    private static boolean partiallyLoadedRegisteredLeafBlocks = false;
+    private static boolean preLoadedRegisteredLeafBlocks = false;
 
     public static void init() {
         LOGGER.debug("Registering leaf particles.");
@@ -52,12 +52,13 @@ public class Leaves {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public void apply(ResourceManager resourceManager) {
-                // This is a pretty good point to load registered leaf blocks, it may be good enough to replace LoadWorldMixin
-                if (!partiallyLoadedRegisteredLeafBlocks) {
-                    for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks().entrySet())
+                // This is called before the integrated server is started and block tags are useable,
+                // so we'll get an incomplete list of leaf blocks, but that's fine
+                if (!preLoadedRegisteredLeafBlocks) {
+                    for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks(false).entrySet())
                         CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());
 
-                    partiallyLoadedRegisteredLeafBlocks = true;
+                    preLoadedRegisteredLeafBlocks = true;
                 }
             }
 
