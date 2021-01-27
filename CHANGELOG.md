@@ -87,3 +87,4 @@ The version history attempts to follow [Semantic Versioning](https://semver.org/
 - `[Fourmisain]` - change `String` ids to `Identifier`s
 - `[Fourmisain]` - load registered leaf blocks after first resource reload event as well
 - `[Fourmisain]` - implement accurate leaf color calculation
+- `[Fourmisain]` - support for blocks that have the `LEAVES` block tag and call `LeavesBlock.randomDisplayTick` (specifically Terraform's `ExtendedLeavesBlock` used in Terrestria/Traverse)
