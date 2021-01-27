@@ -47,7 +47,7 @@ public class LeafUtil {
             // read the bottom quad to determine whether we should color the texture
             BakedModel model = client.getBlockRenderManager().getModel(state);
             List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, random);
-            boolean shouldColor = quads.isEmpty() || quads.get(0).hasColor();
+            boolean shouldColor = quads.isEmpty() || quads.stream().anyMatch(BakedQuad::hasColor);
 
             int blockColor = client.getBlockColors().getColor(state, world, pos, 0);
             Identifier texture = spriteToTexture(model.getSprite());
