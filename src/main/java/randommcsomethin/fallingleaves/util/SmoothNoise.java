@@ -26,14 +26,9 @@ public class SmoothNoise {
     protected double lastRandom;
 
     protected double nextRandom() {
-//        return 2 * rng.nextDouble() - 1;
-
-        double newRandom;
-
-        double y = rng.nextDouble();
-
         // the smaller lastRandom is, the likelier we drift towards 0
-        if (y < 0.4 - lastRandom) {
+        double newRandom;
+        if (rng.nextDouble() < 0.4 - lastRandom) {
             newRandom = lastRandom / 2.0;
         } else {
             newRandom = VAR * rng.nextDouble() + OFF; // maybe use rng.nextGaussian() instead?
