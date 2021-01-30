@@ -22,13 +22,13 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
     // tick() is last called when age = maxAge + 1 (Mojang, pls fix)
     // therefore, the lifespan of a particle is actually maxAge + 2
 
-    protected static final double AIR_DENSITY = 1.2041;
     protected static final double DT = 1 / 20.0;
-
+    protected static final double AIR_DENSITY = 1.2041;
     protected static final float GRAVITY_STRENGTH = 0.1F;
     protected static final int FADE_DURATION = 16; // in ticks
+
     protected double mass;
-    protected double dragCoefficient = 0.1;
+    protected double dragCoefficient;
 
     protected final float rotateFactor;
 
@@ -50,7 +50,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
     }
 
     protected FallingLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
-        super(clientWorld, x, y - 0.2, z, 0.0, 0.0, 0.0); // TODO: temporary collision workaround
+        super(clientWorld, x, y - 0.2, z, 0.0, 0.0, 0.0); // temporary collision workaround TODO
         this.setSprite(provider);
 
         String path = this.sprite.getId().getPath();
@@ -100,63 +100,65 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         super.tick();
 
         // fade-in animation
-        if (this.age <= FADE_DURATION) {
-            this.colorAlpha += 1F / FADE_DURATION;
+        if (age <= FADE_DURATION) {
+            colorAlpha += 1F / FADE_DURATION;
         }
 
         // fade-out animation
-        if (this.age >= this.maxAge + 1 - FADE_DURATION) {
-            this.colorAlpha -= 1F / FADE_DURATION;
+        if (age >= maxAge + 1 - FADE_DURATION) {
+            colorAlpha -= 1F / FADE_DURATION;
         }
 
         // prevent tick() from being called when age = maxAge + 1 (prevent negative colorAlpha)
-        if (this.age == this.maxAge)
+        if (age == maxAge)
             this.markDead();
 
-        this.prevAngle = this.angle;
+        prevAngle = angle;
 
-        if (this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
+        if (world.getFluidState(new BlockPos(x, y, z)).isIn(FluidTags.WATER)) {
             // float on water
-            this.velocityY = 0.0;
-            this.gravityStrength = 0.0F;
+            velocityY = 0.0;
+            gravityStrength = 0.0F;
         } else {
             // slowly fall to the ground
-            this.gravityStrength = GRAVITY_STRENGTH;
+            gravityStrength = GRAVITY_STRENGTH;
 
             // spin when in the air
-            if (!this.onGround) {
-                this.angle += Math.PI * MathHelper.sin(this.rotateFactor * this.age) / 2F;
+            if (!onGround) {
+                angle += Math.PI * MathHelper.sin(rotateFactor * age) / 2F;
             }
 
             // TODO: field_21507 inside move() makes particles stop permanently once they fall on the ground
-            //       that is nice sometimes, but some leaves should still get blown along the ground
+            //       that is nice sometimes, but some/most leaves should still get blown along the ground by the wind
 
-            // apply wind force / integrate wind acceleration
-            this.velocityX += ((windX / mass) * DT) * DT; // the last DT is because velocity is in blocks / tick
-            this.velocityZ += ((windZ / mass) * DT) * DT;
+            // apply wind force / integrate wind acceleration (the last DT is because velocity is in blocks / tick)
+            velocityX += ((windX / mass) * DT) * DT;
+            velocityZ += ((windZ / mass) * DT) * DT;
 
             // calculate drag force (air resistance)
-            // TODO: the drag seems to be practically negligible, it might be better to only use different leaf masses
+            // TODO: the drag seems to be pretty negligible, it might be better to only use different leaf masses
             // TODO: not sure about using the particle velocity here because flow velocity should be the
             //       velocity relative to the medium, i.e. the wind
-            double flowVelocityX = velocityX / DT;
+            //       but if leaves are pushed by wind and flow velocity is relative to it,
+            //       drag will even more negligible
+            double flowVelocityX = velocityX / DT; // blocks / s
             double flowVelocityZ = velocityZ / DT;
             double flowVelocitySq = flowVelocityX*flowVelocityX + flowVelocityZ*flowVelocityZ;
 
             if (flowVelocitySq > 0.001) {
-                double area = 1; // CONFIG.getLeafSize();
+                double area = 1; // CONFIG.getLeafSize()
                 double dragMagnitude = dragCoefficient * area * AIR_DENSITY * flowVelocitySq / 2.0;
 
-                // drag force points in the opposite direction of
+                // drag force points in the opposite direction of flow
                 double invNorm = MathHelper.fastInverseSqrt(flowVelocitySq); // 1 / |flow|
                 double dragX = -(flowVelocityX * invNorm) * dragMagnitude;
                 double dragZ = -(flowVelocityZ * invNorm) * dragMagnitude;
 
 //                FallingLeavesClient.LOGGER.printf(Level.DEBUG, "%.6f -> %.6f", Math.sqrt(flowVelocitySq), dragMagnitude);
 
-                // apply drag force (air resistance)
-                this.velocityX += ((dragX / mass) * DT) * DT;
-                this.velocityZ += ((dragZ / mass) * DT) * DT;
+                // apply drag force
+                velocityX += ((dragX / mass) * DT) * DT;
+                velocityZ += ((dragZ / mass) * DT) * DT;
             }
         }
     }
