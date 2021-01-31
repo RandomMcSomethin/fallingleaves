@@ -70,8 +70,7 @@ public class LeafUtil {
     }
 
     private static double[] calculateLeafColor(Identifier texture, boolean shouldColor, int blockColor, MinecraftClient client) {
-        try {
-            Resource res = client.getResourceManager().getResource(texture);
+        try (Resource res = client.getResourceManager().getResource(texture)) {
             String resourcePack = res.getResourcePackName();
             TextureCache.Data cache = TextureCache.INST.get(texture);
             double[] textureColor;
