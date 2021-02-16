@@ -4,12 +4,7 @@ plugins {
     id 'fabric-loom' version '0.6-SNAPSHOT'
 }
 
-apply(plugin: "java-library")
-apply(plugin: "maven-publish")
-apply(plugin: "fabric-loom")
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = sourceCompatibility = JavaVersion.VERSION_1_8
 
 mod_id = project.mod_id
 version = "${project.mod_version}+${project.minecraft_version}"
@@ -44,9 +39,7 @@ processResources {
     inputs.property "version", project.version
     inputs.property "name", project.name
 
-    from(sourceSets.main.resources.srcDirs) {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        include "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
         expand(
                 "version": project.version,
                 "minecraft_version": project.minecraft_version,
@@ -58,7 +51,7 @@ processResources {
     }
 }
 
-tasks.withType(JavaCompile).configureEach() {
+tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
     def targetVersion = 8
     if (JavaVersion.current().isJava9Compatible()) {
