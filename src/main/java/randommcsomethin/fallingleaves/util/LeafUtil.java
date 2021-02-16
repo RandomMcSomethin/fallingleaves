@@ -104,7 +104,7 @@ public class LeafUtil {
     private static boolean shouldSpawnParticle(World world, BlockPos pos, double x, double y, double z) {
         // Never spawn a particle if there's a leaf block below
         // This test is necessary because modded leaf blocks may not have collisions
-        if (world.getBlockState(pos.down()).getBlock() instanceof LeavesBlock) return false;
+        if (isLeafBlock(world.getBlockState(pos.down()).getBlock(), true)) return false;
 
         double y2 = y - CONFIG.minimumFreeSpaceBelow * 0.5;
         Box collisionBox = new Box(x - 0.1, y, z - 0.1, x + 0.1, y2, z + 0.1);
@@ -113,19 +113,20 @@ public class LeafUtil {
         return !world.getBlockCollisions(null, collisionBox).findAny().isPresent();
     }
 
-    /** Block tags can only be used once the integrated server is started */
     public static Map<Identifier, LeafSettingsEntry> getRegisteredLeafBlocks(boolean useBlockTags) {
         return Registry.BLOCK
             .getIds()
             .stream()
-            .filter(entry -> {
-                Block block = Registry.BLOCK.get(entry);
-                return (block instanceof LeavesBlock) || (useBlockTags && block.isIn(BlockTags.LEAVES));
-            })
+            .filter(entry -> isLeafBlock(Registry.BLOCK.get(entry), useBlockTags))
             .collect(Collectors.toMap(
                 Function.identity(),
                 LeafSettingsEntry::new
             ));
+    }
+
+    /** Block tags can only be used once the integrated server is started */
+    public static boolean isLeafBlock(Block block, boolean useBlockTags) {
+        return (block instanceof LeavesBlock) || (useBlockTags && block.isIn(BlockTags.LEAVES));
     }
 
     @Nullable
