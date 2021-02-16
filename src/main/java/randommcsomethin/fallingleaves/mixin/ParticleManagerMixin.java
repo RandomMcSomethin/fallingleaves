@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
+import randommcsomethin.fallingleaves.util.Wind;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ParticleManager.class)
@@ -15,7 +15,7 @@ public class ParticleManagerMixin {
 
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo ci) {
-        FallingLeafParticle.tickWind();
+        Wind.tick();
     }
 
 }
