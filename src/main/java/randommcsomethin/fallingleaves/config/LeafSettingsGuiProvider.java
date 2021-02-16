@@ -1,7 +1,7 @@
 package randommcsomethin.fallingleaves.config;
 
-import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiProvider;
-import me.sargunvohra.mcmods.autoconfig1u.gui.registry.api.GuiRegistryAccess;
+import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;
+import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
 import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;

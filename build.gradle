@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'fabric-loom' version '0.5-SNAPSHOT'
+    id 'fabric-loom' version '0.6-SNAPSHOT'
 }
 
 apply(plugin: "java-library")
@@ -15,6 +15,11 @@ mod_id = project.mod_id
 version = "${project.mod_version}+${project.minecraft_version}"
 group = project.maven_group
 
+repositories {
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/" }
+}
+
 dependencies {
     // Minecraft & Mappings
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -25,19 +30,14 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // ModMenu
-    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") {
-        exclude module: 'fabric-api'
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
     }
 
-    // Auto Config & Cloth Config
-    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}") {
-        exclude module: 'fabric-api'
+    // Cloth Config (including Auto Config)
+    include modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
     }
-    modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
-        exclude module: 'fabric-api'
-    }
-    include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
-    include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
 }
 
 processResources {
@@ -45,6 +45,7 @@ processResources {
     inputs.property "name", project.name
 
     from(sourceSets.main.resources.srcDirs) {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
         include "fabric.mod.json"
         expand(
                 "version": project.version,
@@ -54,14 +55,6 @@ processResources {
                 "fabric_api_version": project.fabric_api_version,
                 "mod_id": project.mod_id
         )
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
-    }
-
-    task archive(type: Zip) {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
 
