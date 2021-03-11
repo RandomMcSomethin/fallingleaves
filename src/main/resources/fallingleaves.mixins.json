@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "LeafTickMixin",
-    "LoadWorldMixin"
+    "ClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

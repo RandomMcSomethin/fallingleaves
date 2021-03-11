@@ -52,8 +52,8 @@ public class Leaves {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public void apply(ResourceManager resourceManager) {
-                // This is called before the integrated server is started and block tags are useable,
-                // so we'll get an incomplete list of leaf blocks, but that's fine
+                // This is called before the block tags are useable, so we'll get an incomplete list of leaf blocks
+                // Still better than having an empty settings menu on first launch
                 if (!preLoadedRegisteredLeafBlocks) {
                     for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks(false).entrySet())
                         CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());

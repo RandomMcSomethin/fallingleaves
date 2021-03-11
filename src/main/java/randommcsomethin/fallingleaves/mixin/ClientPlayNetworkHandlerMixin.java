@@ -1,6 +1,9 @@
 package randommcsomethin.fallingleaves.mixin;
 
-import net.minecraft.server.MinecraftServer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.packet.s2c.play.SynchronizeTagsS2CPacket;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,15 +18,15 @@ import java.util.Map;
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
-@Mixin(MinecraftServer.class)
-public abstract class LoadWorldMixin {
+@Environment(EnvType.CLIENT)
+@Mixin(ClientPlayNetworkHandler.class)
+public abstract class ClientPlayNetworkHandlerMixin {
 
-    @Inject(at = @At("RETURN"), method = "loadWorld")
-    protected void loadWorld(CallbackInfo ci) {
+    @Inject(at = @At("RETURN"), method = "onSynchronizeTags")
+    public void onSynchronizeTags(SynchronizeTagsS2CPacket packet, CallbackInfo ci) {
         LOGGER.info("Loading all registered leaf blocks.");
 
-        // At this point it has to be guaranteed that all modded blocks are registered and block tags are useable
-        // (This is actually pretty much the earliest point in time where we can use block tags)
+        // This is pretty much the earliest point in time where we can use block tags
         // So we add all leaf blocks that weren't already read from the config file or preloaded in our ReloadListener
         for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks(true).entrySet())
             CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());
