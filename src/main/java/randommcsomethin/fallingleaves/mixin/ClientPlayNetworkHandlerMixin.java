@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.init.Config;
 import randommcsomethin.fallingleaves.util.LeafUtil;
-import randommcsomethin.fallingleaves.util.Wind;
 
 import java.util.Map;
 
@@ -33,8 +32,6 @@ public abstract class ClientPlayNetworkHandlerMixin {
             CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());
 
         Config.save();
-
-        Wind.init();
     }
 
 }

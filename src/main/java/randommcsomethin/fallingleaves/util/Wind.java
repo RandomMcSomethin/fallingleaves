@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.MathHelper;
-import org.apache.logging.log4j.Level;
 import randommcsomethin.fallingleaves.math.SmoothNoise;
 import randommcsomethin.fallingleaves.math.TriangularDistribution;
 
@@ -13,23 +12,23 @@ import java.util.Random;
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 
 public class Wind {
+    protected static Random rng = new Random();
+
     public static void debug() {
         state = State.values()[(state.ordinal() + 1) % State.values().length];
         ChatHud chatHud = MinecraftClient.getInstance().inGameHud.getChatHud();
         chatHud.addMessage(new LiteralText("set wind state to " + state));
     }
 
-    protected static Random rng = new Random();
-
     protected enum State {
-        CALM(  0.025f, 0.025f, 0.1f),
-        WINDY( 0.025f,   0.15f,   0.35f),
-        STORMY(0.025f,   0.3f,   0.55f); // TODO: only when raining/thundering
+        CALM(  0.05f, 0.05f, 0.2f),
+        WINDY( 0.05f, 0.3f,  0.70f),
+        STORMY(0.05f, 0.6f,   1.1f); // TODO: only when raining/thundering
 
-        public TriangularDistribution strengthDistribution;
+        public TriangularDistribution velocityDistribution;
 
-        State(float minStrength, float likelyStrength, float maxStrength) {
-            this.strengthDistribution = new TriangularDistribution(minStrength, maxStrength, likelyStrength, rng);
+        State(float minSpeed, float likelySpeed, float maxSpeed) {
+            this.velocityDistribution = new TriangularDistribution(minSpeed, maxSpeed, likelySpeed, rng);
         }
     }
 
@@ -38,7 +37,7 @@ public class Wind {
     public static float windX;
     public static float windZ;
 
-    protected static SmoothNoise strengthNoise;
+    protected static SmoothNoise velocityNoise;
     protected static SmoothNoise directionTrendNoise;
     protected static SmoothNoise directionNoise;
 
@@ -50,8 +49,8 @@ public class Wind {
         stateDuration = 0;
         updateState();
         windX = windZ = 0;
-        strengthNoise = new SmoothNoise(2 * 20, 0, (old) -> {
-            return state.strengthDistribution.sample();
+        velocityNoise = new SmoothNoise(2 * 20, 0, (old) -> {
+            return state.velocityDistribution.sample();
         });
         directionTrendNoise = new SmoothNoise(30 * 60 * 20, rng.nextFloat() * TAU, (old) -> {
             return rng.nextFloat() * TAU;
@@ -73,11 +72,11 @@ public class Wind {
     public static void tick() {
         updateState();
 
-        strengthNoise.tick();
+        velocityNoise.tick();
         directionTrendNoise.tick();
         directionNoise.tick();
 
-        float strength = strengthNoise.getNoise();
+        float strength = velocityNoise.getNoise();
         float direction = directionTrendNoise.getLerp() + directionNoise.getNoise();
 
         /**
@@ -91,7 +90,7 @@ public class Wind {
             directionTrendNoise.getRightNoise() * 360.0 / TAU);
         /**/
 
-        // calculate wind force (blocks / tick² when multiplied by mass)
+        // calculate wind velocity (in blocks / tick)
         windX = strength * MathHelper.cos(direction);
         windZ = strength * MathHelper.sin(direction);
     }

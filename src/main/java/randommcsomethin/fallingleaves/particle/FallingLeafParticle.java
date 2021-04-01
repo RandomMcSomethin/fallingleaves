@@ -2,38 +2,36 @@ package randommcsomethin.fallingleaves.particle;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.collection.ReusableStream;
+import net.minecraft.util.math.*;
 import randommcsomethin.fallingleaves.util.Wind;
+
+import java.util.stream.Stream;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
 public class FallingLeafParticle extends SpriteBillboardParticle {
 
-    // how particle age/maxAge works:
-    // particles start out with age 0 when constructed
-    // tick() is first called when age is 1
-    // tick() is last called when age = maxAge + 1 (Mojang, pls fix)
-    // therefore, the lifespan of a particle is actually maxAge + 2
-
-    protected static final double DT = 1 / 20.0;
     protected static final int FADE_DURATION = 16; // in ticks
+    protected static final double FRICTION       = 1 - 0.30;
+    protected static final double WATER_FRICTION = 1 - 0.05;
 
-    protected float mass;
-    protected float windCoefficient; // to emulate drag/lift
+    protected final float windCoefficient; // to emulate drag/lift
 
     protected final float rotateFactor;
 
     protected FallingLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
-        super(clientWorld, x, y - 0.2, z, 0.0, 0.0, 0.0); // temporary collision workaround TODO
+        super(clientWorld, x, y, z, 0.0, 0.0, 0.0);
         this.setSprite(provider);
 
-        this.mass = 0.08f + (float)Math.random() * 0.04f;
-        this.windCoefficient = 0.9f + (float)Math.random() * 0.2f;
+        this.gravityStrength = 0.08f + (float)Math.random() * 0.04f;
+        this.windCoefficient = 0.6f + (float)Math.random() * 0.4f;
 
         // the Particle constructor adds random noise to the velocity which we don't want
         this.velocityX = 0.0;
@@ -41,7 +39,6 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         this.velocityZ = 0.0;
 
         this.collidesWithWorld = true; // TODO: is it possible to turn off collisions with leaf blocks?
-        this.gravityStrength = mass;
         this.maxAge = CONFIG.leafLifespan;
 
         this.colorRed   = (float) r;
@@ -51,51 +48,55 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         this.rotateFactor = ((float) Math.random() - 0.5F) * 0.01F;
 
         this.scale = CONFIG.getLeafSize();
-
-        this.colorAlpha = 0.0F; // will be faded in
     }
 
     @Override
     public void tick() {
-        super.tick();
+        prevPosX = x;
+        prevPosY = y;
+        prevPosZ = z;
+        prevAngle = angle;
 
-        // fade-in animation
-        if (age <= FADE_DURATION) {
-            colorAlpha += 1F / FADE_DURATION;
-        }
+        age++;
 
         // fade-out animation
         if (age >= maxAge + 1 - FADE_DURATION) {
             colorAlpha -= 1F / FADE_DURATION;
         }
 
-        // prevent tick() from being called when age = maxAge + 1 (prevent negative colorAlpha)
-        if (age == maxAge)
-            this.markDead();
-
-        prevAngle = angle;
+        if (age >= maxAge) {
+            markDead();
+            return;
+        }
 
         if (world.getFluidState(new BlockPos(x, y, z)).isIn(FluidTags.WATER)) {
             // float on water
             velocityY = 0.0;
-            gravityStrength = 0.0F;
+
+            velocityX *= WATER_FRICTION;
+            velocityZ *= WATER_FRICTION;
         } else {
-            // slowly fall to the ground
-            gravityStrength = mass;
+            // apply gravity
+            velocityY -= 0.04 * gravityStrength;
 
             // spin when in the air
             if (!onGround) {
                 angle += Math.PI * MathHelper.sin(rotateFactor * age) / 2F;
+            } else {
+                velocityX *= FRICTION;
+                velocityZ *= FRICTION;
             }
 
             // TODO: field_21507 inside move() makes particles stop permanently once they fall on the ground
             //       that is nice sometimes, but some/most leaves should still get blown along the ground by the wind
             //       Leaves on water get blown along it, though they barely speed down
 
-            // apply wind force / integrate wind acceleration (the last DT is because velocity is in blocks / tick)
-            velocityX += ((Wind.windX * windCoefficient / mass) * DT) * DT;
-            velocityZ += ((Wind.windZ * windCoefficient / mass) * DT) * DT;
+            // approach the wind speed over time
+            velocityX += (Wind.windX - velocityX) * windCoefficient / 60.0f;
+            velocityZ += (Wind.windZ - velocityZ) * windCoefficient / 60.0f;
         }
+
+        move(velocityX, velocityY, velocityZ);
     }
 
     @Override
@@ -116,4 +117,5 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
             return new FallingLeafParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.provider);
         }
     }
+
 }

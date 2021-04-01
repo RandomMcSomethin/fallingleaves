@@ -26,6 +26,7 @@ public class FallingLeavesClient implements ClientModInitializer {
     public void onInitializeClient() {
         Config.init();
         Leaves.init();
+        Wind.init(); // probably not needed anymore, just to be sure
 
         // TODO: remove
         KeyBinding debug = KeyBindingHelper.registerKeyBinding(new KeyBinding(
