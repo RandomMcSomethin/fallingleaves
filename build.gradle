@@ -20,11 +20,11 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
-    // Fabric & Fabric API.
+    // Fabric & Fabric API
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    // ModMenu
+    // Mod Menu
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
@@ -52,7 +52,9 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
+    it.options.compilerArgs.add('-Xlint:deprecation')
     it.options.encoding = "UTF-8"
+
     def targetVersion = 8
     if (JavaVersion.current().isJava9Compatible()) {
         it.options.release = targetVersion
