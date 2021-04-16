@@ -5,9 +5,6 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.MathHelper;
-import randommcsomethin.fallingleaves.FallingLeavesClient;
-import randommcsomethin.fallingleaves.config.FallingLeavesConfig;
-import randommcsomethin.fallingleaves.init.Config;
 import randommcsomethin.fallingleaves.math.SmoothNoise;
 import randommcsomethin.fallingleaves.math.TriangularDistribution;
 
