@@ -45,9 +45,9 @@ public class LeafUtil {
 
         if (shouldSpawnParticle(world, pos, x, y, z)) {
             MinecraftClient client = MinecraftClient.getInstance();
+            BakedModel model = client.getBlockRenderManager().getModel(state);
 
             // read the bottom quad to determine whether we should color the texture
-            BakedModel model = client.getBlockRenderManager().getModel(state);
             List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, random);
             boolean shouldColor = quads.isEmpty() || quads.stream().anyMatch(BakedQuad::hasColor);
 

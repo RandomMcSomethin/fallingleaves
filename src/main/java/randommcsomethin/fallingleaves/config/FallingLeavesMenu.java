@@ -15,19 +15,7 @@ public class FallingLeavesMenu implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> {
-            Optional<Supplier<Screen>> optionalScreen = getConfigScreen(parent);
-
-            if (optionalScreen.isPresent()) {
-                return optionalScreen.get().get();
-            }
-
-            return parent;
-        };
-    }
-
-    public Optional<Supplier<Screen>> getConfigScreen(Screen screen) {
-        return Optional.of(AutoConfig.getConfigScreen(FallingLeavesConfig.class, screen));
+        return parent -> AutoConfig.getConfigScreen(FallingLeavesConfig.class, parent).get();
     }
 
 }
