@@ -51,7 +51,7 @@ public class Leaves {
     private static void registerReloadListener() {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
-            public void apply(ResourceManager resourceManager) {
+            public void reload(ResourceManager resourceManager) {
                 // This is called before the block tags are usable, so we'll get an incomplete list of leaf blocks
                 // Still better than having an empty settings menu on first launch
                 if (!preLoadedRegisteredLeafBlocks) {
