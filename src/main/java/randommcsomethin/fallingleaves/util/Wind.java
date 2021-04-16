@@ -2,14 +2,19 @@ package randommcsomethin.fallingleaves.util;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.MathHelper;
+import randommcsomethin.fallingleaves.FallingLeavesClient;
+import randommcsomethin.fallingleaves.config.FallingLeavesConfig;
+import randommcsomethin.fallingleaves.init.Config;
 import randommcsomethin.fallingleaves.math.SmoothNoise;
 import randommcsomethin.fallingleaves.math.TriangularDistribution;
 
 import java.util.Random;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
+import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
 public class Wind {
     protected static Random rng = new Random();
@@ -22,8 +27,8 @@ public class Wind {
 
     protected enum State {
         CALM(  0.05f, 0.05f, 0.2f),
-        WINDY( 0.05f, 0.3f,  0.70f),
-        STORMY(0.05f, 0.6f,   1.1f); // TODO: only when raining/thundering
+        WINDY( 0.05f, 0.3f,  0.7f),
+        STORMY(0.05f, 0.6f,  1.1f);
 
         public TriangularDistribution velocityDistribution;
 
@@ -41,14 +46,21 @@ public class Wind {
     protected static SmoothNoise directionTrendNoise;
     protected static SmoothNoise directionNoise;
 
+    protected static boolean wasRaining;
+    protected static boolean wasThundering;
     protected static State state;
     protected static int stateDuration; // ticks
 
     public static void init() {
         LOGGER.debug("Wind.init");
+
+        wasRaining = false;
+        wasThundering = false;
+        state = State.CALM;
         stateDuration = 0;
-        updateState();
+
         windX = windZ = 0;
+
         velocityNoise = new SmoothNoise(2 * 20, 0, (old) -> {
             return state.velocityDistribution.sample();
         });
@@ -60,17 +72,39 @@ public class Wind {
         });
     }
 
-    protected static void updateState() {
-        stateDuration--;
-        if (stateDuration <= 0) {
-            state = State.values()[rng.nextInt(State.values().length)];
-            LOGGER.debug("new wind state {}", state);
-            stateDuration = 6 * 60 * 20; // change state every 6 minutes
+    public static void changeState(boolean isRaining, boolean isThundering) {
+        if (!CONFIG.windEnabled) {
+            state = State.CALM;
+        } else if (isThundering) {
+            state = State.STORMY;
+        } else {
+            // windy and stormy when raining, calm and windy otherwise
+            int index = rng.nextInt(2);
+            state = State.values()[(isRaining ? index + 1 : index)];
         }
+
+        LOGGER.debug("new wind state {}", state);
+
+        stateDuration = 6 * 60 * 20; // change state every 6 minutes
     }
 
-    public static void tick() {
-        updateState();
+    protected static void tickState(ClientWorld world) {
+        boolean isRaining = world.getLevelProperties().isRaining();
+        boolean isThundering = world.isThundering();
+        boolean weatherChanged = wasRaining != isRaining || wasThundering != isThundering;
+
+        if (weatherChanged || --stateDuration <= 0) {
+            changeState(isRaining, isThundering);
+        }
+
+        wasRaining = isRaining;
+        wasThundering = isThundering;
+    }
+
+    public static void tick(ClientWorld world) {
+        if (CONFIG.windEnabled) {
+            tickState(world);
+        }
 
         velocityNoise.tick();
         directionTrendNoise.tick();

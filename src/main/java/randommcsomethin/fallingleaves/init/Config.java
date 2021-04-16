@@ -6,11 +6,13 @@ import com.google.gson.JsonParseException;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.config.*;
+import randommcsomethin.fallingleaves.util.Wind;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -35,6 +37,11 @@ public class Config {
                 .create());
         });
         CONFIG = configHolder.getConfig();
+
+        configHolder.registerSaveListener((manager, data) -> {
+            Wind.init();
+            return ActionResult.PASS;
+        });
 
         // Note: Configurator.setLevel() might not be supported in future versions of log4j.
         if (CONFIG.displayDebugData && LOGGER.getLevel().compareTo(Level.DEBUG) < 0) {

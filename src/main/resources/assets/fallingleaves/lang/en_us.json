@@ -10,6 +10,8 @@
   "text.autoconfig.fallingleaves.option.dropFromPlayerPlacedBlocks": "Drop leaves from player-placed blocks?",
   "text.autoconfig.fallingleaves.option.minimumFreeSpaceBelow": "Needed vertical space (in half-blocks)",
   "text.autoconfig.fallingleaves.option.minimumFreeSpaceBelow.@Tooltip": "Leaves only fall from a block if there's enough free space below",
+  "text.autoconfig.fallingleaves.option.windEnabled": "Enable Wind?",
+  "text.autoconfig.fallingleaves.option.windEnabled.@Tooltip": "There's always some wind, this option allows for stronger wind",
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "General",
   "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "Leaf Settings",
   "config.fallingleaves.spawn_rate_factor": "Spawn Rate Multiplier",

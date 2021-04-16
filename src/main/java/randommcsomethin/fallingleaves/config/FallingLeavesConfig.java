@@ -66,6 +66,10 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = 1, max = 20)
     public int minimumFreeSpaceBelow = 1;
 
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    public boolean windEnabled = true;
+
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
     public Map<Identifier, LeafSettingsEntry> leafSettings = new HashMap<>();

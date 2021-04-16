@@ -89,7 +89,6 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
 
             // TODO: field_21507 inside move() makes particles stop permanently once they fall on the ground
             //       that is nice sometimes, but some/most leaves should still get blown along the ground by the wind
-            //       Leaves on water get blown along it, though they barely speed down
 
             // approach the wind speed over time
             velocityX += (Wind.windX - velocityX) * windCoefficient / 60.0f;
