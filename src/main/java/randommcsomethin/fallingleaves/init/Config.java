@@ -12,11 +12,20 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.config.*;
+import randommcsomethin.fallingleaves.config.gson.GsonConfigHelper;
+import randommcsomethin.fallingleaves.config.gson.IdentifierTypeAdapter;
+import randommcsomethin.fallingleaves.config.gui.IdentifierGuiProvider;
+import randommcsomethin.fallingleaves.config.gui.IdentifierSetGuiProvider;
+import randommcsomethin.fallingleaves.config.gui.LeafSettingsGuiProvider;
 import randommcsomethin.fallingleaves.util.Wind;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Map;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 
@@ -50,7 +59,17 @@ public class Config {
 
         AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(
             new LeafSettingsGuiProvider(),
-            (Field field) -> field.getName().equals("leafSettings")
+            field -> field.getName().equals("leafSettings")
+        );
+
+        AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(
+            new IdentifierSetGuiProvider(),
+            field -> field.getName().equals("windlessDimensions") // could be more generic
+        );
+
+        AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerTypeProvider(
+            new IdentifierGuiProvider(),
+            Identifier.class
         );
 
         LOGGER.debug("Loaded configuration.");

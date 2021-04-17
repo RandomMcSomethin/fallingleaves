@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import randommcsomethin.fallingleaves.math.SmoothNoise;
 import randommcsomethin.fallingleaves.math.TriangularDistribution;
@@ -46,6 +47,7 @@ public class Wind {
     protected static boolean wasRaining;
     protected static boolean wasThundering;
     protected static State state;
+    protected static State originalState;
     protected static int stateDuration; // ticks
 
     public static void init() {
@@ -69,29 +71,39 @@ public class Wind {
         });
     }
 
-    public static void changeState(boolean isRaining, boolean isThundering) {
-        if (!CONFIG.windEnabled) {
+    protected static void tickState(ClientWorld world) {
+        --stateDuration;
+
+        Identifier dimension = world.getRegistryKey().getValue();
+
+        if (!CONFIG.windEnabled || CONFIG.windlessDimensions.contains(dimension)) {
+            // override state to calm when there is no wind
+            originalState = state;
             state = State.CALM;
-        } else if (isThundering) {
-            state = State.STORMY;
-        } else {
-            // windy and stormy when raining, calm and windy otherwise
-            int index = rng.nextInt(2);
-            state = State.values()[(isRaining ? index + 1 : index)];
+            return;
         }
 
-        LOGGER.debug("new wind state {}", state);
+        // restore overridden state
+        if (originalState != null) {
+            state = originalState;
+            originalState = null;
+        }
 
-        stateDuration = 6 * 60 * 20; // change state every 6 minutes
-    }
-
-    protected static void tickState(ClientWorld world) {
         boolean isRaining = world.getLevelProperties().isRaining();
         boolean isThundering = world.isThundering();
         boolean weatherChanged = wasRaining != isRaining || wasThundering != isThundering;
 
-        if (weatherChanged || --stateDuration <= 0) {
-            changeState(isRaining, isThundering);
+        if (weatherChanged || stateDuration <= 0) {
+            if (isThundering) {
+                state = State.STORMY;
+            } else {
+                // windy and stormy when raining, calm and windy otherwise
+                int index = rng.nextInt(2);
+                state = State.values()[(isRaining ? index + 1 : index)];
+            }
+
+            stateDuration = 6 * 60 * 20; // change state every 6 minutes
+            LOGGER.debug("new wind state {}", state);
         }
 
         wasRaining = isRaining;
@@ -99,9 +111,7 @@ public class Wind {
     }
 
     public static void tick(ClientWorld world) {
-        if (CONFIG.windEnabled) {
-            tickState(world);
-        }
+        tickState(world);
 
         velocityNoise.tick();
         directionTrendNoise.tick();
