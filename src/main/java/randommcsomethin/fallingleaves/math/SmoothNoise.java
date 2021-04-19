@@ -11,7 +11,7 @@ public class SmoothNoise {
     protected final FloatFunction nextNoise;
 
     /** Smoothly goes from 0 to 1 when t increases from 0 and 1. Defined for t in [0, 1]. */
-    protected static float smoothstep(float t) {
+    public static float smoothstep(float t) {
         return t * t * (3 - 2 * t);
     }
 

@@ -70,7 +70,6 @@ public class FallingLeavesConfig implements ConfigData {
     public boolean windEnabled = true;
 
     @ConfigEntry.Category("fallingleaves.general")
-    @ConfigEntry.Gui.Tooltip
     public Set<Identifier> windlessDimensions = new HashSet<>(Arrays.asList(
         new Identifier("the_nether"), new Identifier("the_end")));
 
