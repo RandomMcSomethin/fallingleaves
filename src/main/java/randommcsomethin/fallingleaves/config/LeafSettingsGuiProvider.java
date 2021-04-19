@@ -46,7 +46,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
                     // TODO: I think it'd be great if modified leaf blocks would show an '*' after them.
                     //       Might be hard to implement. [Fourmisain]
                     SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()))
-                        .setTooltip(Text.of(ModUtil.getModInfo(block).getName()));
+                        .setTooltip(Text.of(ModUtil.getModName(block)));
 
                     builder.add(buildSpawnRateFactorSlider(blockId, leafEntry));
                     builder.add(buildIsConiferLeavesToggle(blockId, leafEntry));
