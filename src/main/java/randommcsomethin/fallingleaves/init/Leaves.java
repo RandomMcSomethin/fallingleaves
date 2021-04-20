@@ -27,7 +27,7 @@ import java.util.Random;
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
-import static randommcsomethin.fallingleaves.util.RegistryUtil.makeNewIdentifier;
+import static randommcsomethin.fallingleaves.util.RegistryUtil.makeId;
 
 public class Leaves {
     public static DefaultParticleType FALLING_LEAF;
@@ -52,7 +52,7 @@ public class Leaves {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public void apply(ResourceManager resourceManager) {
-                // This is called before the block tags are useable, so we'll get an incomplete list of leaf blocks
+                // This is called before the block tags are usable, so we'll get an incomplete list of leaf blocks
                 // Still better than having an empty settings menu on first launch
                 if (!preLoadedRegisteredLeafBlocks) {
                     for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks(false).entrySet())
@@ -64,7 +64,7 @@ public class Leaves {
 
             @Override
             public Identifier getFabricId() {
-                return makeNewIdentifier("resource_reload_listener");
+                return makeId("resource_reload_listener");
             }
         });
     }

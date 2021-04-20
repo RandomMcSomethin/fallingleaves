@@ -9,7 +9,6 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.resource.Resource;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -51,8 +50,8 @@ public class LeafUtil {
             List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, random);
             boolean shouldColor = quads.isEmpty() || quads.stream().anyMatch(BakedQuad::hasColor);
 
-            int blockColor = client.getBlockColors().getColor(state, world, pos, 0);
             Identifier texture = spriteToTexture(model.getSprite());
+            int blockColor = client.getBlockColors().getColor(state, world, pos, 0);
 
             double[] color = calculateLeafColor(texture, shouldColor, blockColor, client);
 
@@ -60,7 +59,6 @@ public class LeafUtil {
             double g = color[1];
             double b = color[2];
 
-            // Add the particle.
             world.addParticle(
                 leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF,
                 x, y, z,

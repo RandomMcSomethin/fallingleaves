@@ -24,13 +24,13 @@ public class RegistryUtil {
 
         return Registry.register(
             Registry.PARTICLE_TYPE,
-            makeNewIdentifier(leafParticleName),
+            makeId(leafParticleName),
             FabricParticleTypes.simple()
         );
     }
 
-    public static Identifier makeNewIdentifier(String identifierName) {
-        return new Identifier(FallingLeavesClient.MOD_ID, identifierName);
+    public static Identifier makeId(String path) {
+        return new Identifier(FallingLeavesClient.MOD_ID, path);
     }
 
     public static Identifier getBlockId(BlockState blockState) {
