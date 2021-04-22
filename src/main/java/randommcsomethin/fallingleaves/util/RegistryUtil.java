@@ -13,10 +13,6 @@ import java.util.Optional;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 
-/**
- * TODO - Explore ParticleTypes in the registry. Should we be using it to
- *        define more precisely what kind of particles we are adding?
- */
 public class RegistryUtil {
 
     public static DefaultParticleType registerNewLeafParticle(String leafParticleName) {
@@ -25,7 +21,7 @@ public class RegistryUtil {
         return Registry.register(
             Registry.PARTICLE_TYPE,
             makeId(leafParticleName),
-            FabricParticleTypes.simple()
+            FabricParticleTypes.simple(true)
         );
     }
 
