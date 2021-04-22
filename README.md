@@ -6,8 +6,6 @@ This Fabric mod for Minecraft 1.16.x adds a neat little particle effect to leaf 
 
 ## Toubleshooting aka "Why are no leaves falling?"
 
-First, make sure Particles are set to "All" or "Decreased" in your video settings.
-
 Some trees do not drop leaves by default, these are: conifer trees (like spruce and pine), large leaved trees (like jungle trees and palms) and shrubs.
 
 You can change this as you like by adjusting "Conifer Leaf Spawn Rate" in the Mod Menu settings and adjusting the spawn rates for specific trees under  "Leaf Settings".
