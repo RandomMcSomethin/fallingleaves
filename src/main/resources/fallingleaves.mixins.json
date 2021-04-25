@@ -4,10 +4,14 @@
   "package": "randommcsomethin.fallingleaves.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "ClientPlayNetworkHandlerMixin",
     "LeafTickMixin",
-    "ClientPlayNetworkHandlerMixin"
+    "ParticleManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "MinecraftClientMixin"
+  ]
 }

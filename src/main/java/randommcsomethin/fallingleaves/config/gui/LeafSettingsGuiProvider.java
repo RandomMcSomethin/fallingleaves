@@ -1,4 +1,4 @@
-package randommcsomethin.fallingleaves.config;
+package randommcsomethin.fallingleaves.config.gui;
 
 import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
@@ -12,6 +12,8 @@ import net.minecraft.block.Block;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import randommcsomethin.fallingleaves.config.ConfigDefaults;
+import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.util.ModUtil;
 import randommcsomethin.fallingleaves.util.TranslationComparator;
 

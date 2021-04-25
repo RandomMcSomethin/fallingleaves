@@ -1,4 +1,4 @@
-package randommcsomethin.fallingleaves.config;
+package randommcsomethin.fallingleaves.config.gson;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

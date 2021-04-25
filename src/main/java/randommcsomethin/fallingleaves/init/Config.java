@@ -6,15 +6,21 @@ import com.google.gson.JsonParseException;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.config.*;
+import randommcsomethin.fallingleaves.config.gson.GsonConfigHelper;
+import randommcsomethin.fallingleaves.config.gson.IdentifierTypeAdapter;
+import randommcsomethin.fallingleaves.config.gui.IdentifierGuiProvider;
+import randommcsomethin.fallingleaves.config.gui.IdentifierSetGuiProvider;
+import randommcsomethin.fallingleaves.config.gui.LeafSettingsGuiProvider;
+import randommcsomethin.fallingleaves.util.Wind;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Map;
+import java.util.*;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 
@@ -36,6 +42,11 @@ public class Config {
         });
         CONFIG = configHolder.getConfig();
 
+        configHolder.registerSaveListener((manager, data) -> {
+            Wind.init();
+            return ActionResult.PASS;
+        });
+
         // Note: Configurator.setLevel() might not be supported in future versions of log4j.
         if (CONFIG.displayDebugData && LOGGER.getLevel().compareTo(Level.DEBUG) < 0) {
             Configurator.setLevel(LOGGER.getName(), Level.DEBUG);
@@ -43,7 +54,17 @@ public class Config {
 
         AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(
             new LeafSettingsGuiProvider(),
-            (Field field) -> field.getName().equals("leafSettings")
+            field -> field.getName().equals("leafSettings")
+        );
+
+        AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(
+            new IdentifierSetGuiProvider(),
+            field -> field.getName().equals("windlessDimensions") // could be more generic
+        );
+
+        AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerTypeProvider(
+            new IdentifierGuiProvider(),
+            Identifier.class
         );
 
         LOGGER.debug("Loaded configuration.");

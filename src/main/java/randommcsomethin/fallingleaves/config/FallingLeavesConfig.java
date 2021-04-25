@@ -6,8 +6,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.minecraft.util.Identifier;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
@@ -65,6 +64,14 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(min = 1, max = 20)
     public int minimumFreeSpaceBelow = 1;
+
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    public boolean windEnabled = true;
+
+    @ConfigEntry.Category("fallingleaves.general")
+    public Set<Identifier> windlessDimensions = new HashSet<>(Arrays.asList(
+        new Identifier("the_nether"), new Identifier("the_end")));
 
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject

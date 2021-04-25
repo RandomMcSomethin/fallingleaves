@@ -22,7 +22,7 @@
       "randommcsomethin.fallingleaves.FallingLeavesClient"
     ],
     "modmenu": [
-      "randommcsomethin.fallingleaves.config.FallingLeavesMenu"
+      "randommcsomethin.fallingleaves.config.gui.FallingLeavesMenu"
     ]
   },
   "mixins": [

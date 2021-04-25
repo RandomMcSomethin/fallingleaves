@@ -7,65 +7,108 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
+import randommcsomethin.fallingleaves.util.Wind;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
-/**
- * TODO - Plenty of "Magic numbers" in this class that we may want to get rid of
- *        or, at the very least, define as class constants at the head of the file.
- */
-
 public class FallingLeafParticle extends SpriteBillboardParticle {
 
-    private final float rotateFactor;
+    protected static final float TAU = (float)(2 * Math.PI); // 1 rotation
+
+    protected static final int FADE_DURATION = 16; // ticks
+    // protected static final double FRICTION       = 0.30;
+    protected static final double WATER_FRICTION = 0.05;
+
+    protected final float windCoefficient; // to emulate drag/lift
+
+    protected final float maxRotateSpeed; // rotations / tick
+    protected final int maxRotateTime;
+    protected int rotateTime = 0;
 
     protected FallingLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
-        super(clientWorld, x, y, z, r, g, b); // Note: will set velocity to (r, g, b)
+        super(clientWorld, x, y, z, 0.0, 0.0, 0.0);
         this.setSprite(provider);
 
-        this.collidesWithWorld = true;
-        this.gravityStrength = 0.1F;
-        this.maxAge = CONFIG.leafLifespan;
+        this.gravityStrength = 0.08f + random.nextFloat() * 0.04f;
+        this.windCoefficient = 0.6f + random.nextFloat() * 0.4f;
 
-        this.velocityX *= 0.3F;
-        this.velocityY *= 0.0F;
-        this.velocityZ *= 0.3F;
+        // the Particle constructor adds random noise to the velocity which we don't want
+        this.velocityX = 0.0;
+        this.velocityY = 0.0;
+        this.velocityZ = 0.0;
+
+        this.collidesWithWorld = true; // TODO: is it possible to turn off collisions with leaf blocks?
+        this.maxAge = CONFIG.leafLifespan;
 
         this.colorRed   = (float) r;
         this.colorGreen = (float) g;
         this.colorBlue  = (float) b;
-        this.rotateFactor = ((float) Math.random() - 0.5F) * 0.01F;
+
+        // accelerate over 3-7 seconds to at most 2.5 rotations per second
+        this.maxRotateTime = (3 + random.nextInt(4 + 1)) * 20;
+        this.maxRotateSpeed = (random.nextBoolean() ? -1 : 1) * (0.1f + 2.4f * random.nextFloat()) * TAU / 20f;
+
+        this.angle = this.prevAngle = random.nextFloat() * TAU;
 
         this.scale = CONFIG.getLeafSize();
     }
 
+    @Override
     public void tick() {
-        super.tick();
+        prevPosX = x;
+        prevPosY = y;
+        prevPosZ = z;
+        prevAngle = angle;
 
-        if (this.age < 2) {
-            this.velocityY = 0;
+        age++;
+
+        // fade-out animation
+        if (age >= maxAge + 1 - FADE_DURATION) {
+            colorAlpha -= 1F / FADE_DURATION;
         }
 
-        if (this.age > this.maxAge - 1 / 0.06F) {
-            if (this.colorAlpha > 0.06F) {
-                this.colorAlpha -= 0.06F;
-            } else {
-                this.markDead();
-            }
+        if (age >= maxAge) {
+            markDead();
+            return;
         }
 
-        this.prevAngle = this.angle;
+        if (world.getFluidState(new BlockPos(x, y, z)).isIn(FluidTags.WATER)) {
+            // float on water
+            velocityY = 0.0;
+            rotateTime = 0;
 
-        if (!this.onGround && !this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
-            this.angle += Math.PI * Math.sin(this.rotateFactor * this.age) / 2;
-        }
-
-        if (this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
-            this.velocityY = 0;
-            this.gravityStrength = 0;
+            velocityX *= (1 - WATER_FRICTION);
+            velocityZ *= (1 - WATER_FRICTION);
         } else {
-            this.gravityStrength = 0.1F;
+            // apply gravity
+            velocityY -= 0.04 * gravityStrength;
+
+            if (!onGround) {
+                // spin when in the air
+                rotateTime = Math.min(rotateTime + 1, maxRotateTime);
+                angle += (rotateTime / (float) maxRotateTime) * maxRotateSpeed;
+            } else {
+                rotateTime = 0;
+
+                // TODO: field_21507 inside move() makes particles stop permanently once they fall on the ground
+                //       that is nice sometimes, but some/most leaves should still get blown along the ground by the wind
+                // velocityX *= (1 - FRICTION);
+                // velocityZ *= (1 - FRICTION);
+            }
+
+            // approach the target wind velocity over time via vel += (target - vel) * f, where f is in (0, 1)
+            // after n ticks, the distance closes to a factor of 1 - (1 - f)^n.
+            // for f = 1 / 2, it would only take 4 ticks to close the distance by 90%
+            // for f = 1 / 60, it takes ~2 seconds to halve the distance, ~5 seconds to reach 80%
+            //
+            // the wind coefficient is just another factor in (0, 1) to add some variance between leaves.
+            // this implementation lags behind the actual wind speed and will never reach it fully,
+            // so wind speeds needs to be adjusted accordingly
+            velocityX += (Wind.windX - velocityX) * windCoefficient / 60.0f;
+            velocityZ += (Wind.windZ - velocityZ) * windCoefficient / 60.0f;
         }
+
+        move(velocityX, velocityY, velocityZ);
     }
 
     @Override
@@ -82,8 +125,9 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         }
 
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new FallingLeafParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.provider);
+        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double r, double g, double b) {
+            return new FallingLeafParticle(world, x, y, z, r, g, b, provider);
         }
     }
+
 }

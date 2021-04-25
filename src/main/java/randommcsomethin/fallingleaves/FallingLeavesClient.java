@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import randommcsomethin.fallingleaves.init.Config;
 import randommcsomethin.fallingleaves.init.Leaves;
+import randommcsomethin.fallingleaves.util.Wind;
 
 @Environment(EnvType.CLIENT)
 public class FallingLeavesClient implements ClientModInitializer {
@@ -20,6 +21,7 @@ public class FallingLeavesClient implements ClientModInitializer {
     public void onInitializeClient() {
         Config.init();
         Leaves.init();
+        Wind.init(); // probably not needed anymore, just to be sure
     }
 
 }
