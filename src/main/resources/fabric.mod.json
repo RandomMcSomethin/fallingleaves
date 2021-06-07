@@ -29,8 +29,9 @@
     "fallingleaves.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.11.1",
-    "fabric": ">=0.29.0",
-    "minecraft": ">=1.16.2"
+    "fabricloader": "*",
+    "fabric": "*",
+    "minecraft": ">=1.17.0",
+    "cloth-config2": "*"
   }
 }

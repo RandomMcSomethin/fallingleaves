@@ -15,7 +15,7 @@ import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
 public class Wind {
-    protected static Random rng = new Random();
+    protected static final Random rng = new Random();
 
     public static void debug() {
         state = State.values()[(state.ordinal() + 1) % State.values().length];
@@ -28,14 +28,14 @@ public class Wind {
         WINDY( 0.05f, 0.3f,  0.7f),
         STORMY(0.05f, 0.6f,  1.1f);
 
-        public TriangularDistribution velocityDistribution;
+        public final TriangularDistribution velocityDistribution;
 
         State(float minSpeed, float likelySpeed, float maxSpeed) {
             this.velocityDistribution = new TriangularDistribution(minSpeed, maxSpeed, likelySpeed, rng);
         }
     }
 
-    protected static float TAU = (float)(2 * Math.PI);
+    protected static final float TAU = (float)(2 * Math.PI);
 
     public static float windX;
     public static float windZ;

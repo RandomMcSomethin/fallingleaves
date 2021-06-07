@@ -4,7 +4,7 @@ plugins {
     id 'fabric-loom' version '0.8-SNAPSHOT'
 }
 
-targetCompatibility = sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = sourceCompatibility = JavaVersion.VERSION_16
 
 mod_id = project.mod_id
 version = "${project.mod_version}+${project.minecraft_version}"
@@ -30,7 +30,7 @@ dependencies {
     }
 
     // Cloth Config (including Auto Config)
-    include modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 }
@@ -54,11 +54,7 @@ processResources {
 tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs.add('-Xlint:deprecation')
     it.options.encoding = "UTF-8"
-
-    def targetVersion = 8
-    if (JavaVersion.current().isJava9Compatible()) {
-        it.options.release = targetVersion
-    }
+    it.options.release = 16
 }
 
 java {

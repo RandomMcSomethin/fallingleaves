@@ -108,11 +108,11 @@ public class Config {
 
         // Conifer Leaves were moved to Leaf Settings
         for (String leafId : oldConfig.coniferLeafIds) {
-            newConfig.updateLeafSettings(new Identifier(leafId), (entry) -> entry.isConiferBlock = true);
+            newConfig.updateLeafSettings(new Identifier(leafId), (entry) -> entry.isConiferBlock= true);
         }
 
         // Rate Overrides were replaced by Spawn Rate Factors/Multipliers
-        for (Map.Entry<String, Double> oldEntry : oldConfig.rateOverrides.entrySet()) {
+        for (var oldEntry : oldConfig.rateOverrides.entrySet()) {
             newConfig.updateLeafSettings(new Identifier(oldEntry.getKey()), (newEntry) -> {
                 double oldRateOverride = oldEntry.getValue();
 

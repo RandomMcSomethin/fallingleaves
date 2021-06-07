@@ -21,7 +21,6 @@ import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
 import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.RegistryUtil;
 
-import java.util.Map;
 import java.util.Random;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
@@ -55,7 +54,7 @@ public class Leaves {
                 // This is called before the block tags are usable, so we'll get an incomplete list of leaf blocks
                 // Still better than having an empty settings menu on first launch
                 if (!preLoadedRegisteredLeafBlocks) {
-                    for (Map.Entry<Identifier, LeafSettingsEntry> registered : LeafUtil.getRegisteredLeafBlocks(false).entrySet())
+                    for (var registered : LeafUtil.getRegisteredLeafBlocks(false).entrySet())
                         CONFIG.leafSettings.computeIfAbsent(registered.getKey(), k -> registered.getValue());
 
                     preLoadedRegisteredLeafBlocks = true;
