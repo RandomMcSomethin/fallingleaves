@@ -6,12 +6,14 @@ public class ConfigDefaults {
 
     public static boolean isConifer(Identifier blockId) {
         switch (blockId.toString()) {
+            case "biomemakeover:swamp_cypress_leaves":
             case "byg:blue_spruce_leaves":
             case "byg:cypress_leaves":
             case "byg:fir_leaves":
             case "byg:orange_spruce_leaves":
             case "byg:pine_leaves":
             case "byg:red_spruce_leaves":
+            case "byg:redwood_leaves":
             case "byg:yellow_spruce_leaves":
             case "minecraft:spruce_leaves":
             case "terrestria:cypress_leaves":
@@ -28,6 +30,7 @@ public class ConfigDefaults {
     public static double spawnRateFactor(Identifier blockId) {
         switch (blockId.toString()) {
             // Shrubs and large leaved trees
+            case "byg:palm_leaves":
             case "minecraft:jungle_leaves":
             case "terrestria:japenese_maple_shrub_leaves":
             case "terrestria:jungle_palm_leaves":
