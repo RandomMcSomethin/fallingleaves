@@ -17,12 +17,6 @@ import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 public class Wind {
     protected static final Random rng = new Random();
 
-    public static void debug() {
-        state = State.values()[(state.ordinal() + 1) % State.values().length];
-        ChatHud chatHud = MinecraftClient.getInstance().inGameHud.getChatHud();
-        chatHud.addMessage(new LiteralText("set wind state to " + state));
-    }
-
     protected enum State {
         CALM(  0.05f, 0.05f, 0.2f),
         WINDY( 0.05f, 0.3f,  0.7f),
@@ -119,17 +113,6 @@ public class Wind {
 
         float strength = velocityNoise.getNoise();
         float direction = directionTrendNoise.getLerp() + directionNoise.getNoise();
-
-        /**
-        LOGGER.printf(Level.DEBUG, "state %s strength %.2f -> %.2f direction var %.2f° -> %.2f°, trend %.2f° -> %.2f°",
-            state.toString(),
-            strengthNoise.getNoise(),
-            strengthNoise.getRightNoise(),
-            directionNoise.getNoise() * 360.0 / TAU,
-            directionNoise.getRightNoise() * 360.0 / TAU,
-            directionTrendNoise.getLerp() * 360.0 / TAU,
-            directionTrendNoise.getRightNoise() * 360.0 / TAU);
-        /**/
 
         // calculate wind velocity (in blocks / tick)
         windX = strength * MathHelper.cos(direction);

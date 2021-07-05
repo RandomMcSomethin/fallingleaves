@@ -20,6 +20,7 @@ import randommcsomethin.fallingleaves.particle.FallingConiferLeafParticle;
 import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
 import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.RegistryUtil;
+import randommcsomethin.fallingleaves.util.TextureCache;
 
 import java.util.Random;
 
@@ -59,6 +60,8 @@ public class Leaves {
 
                     preLoadedRegisteredLeafBlocks = true;
                 }
+
+                TextureCache.INST.clear();
             }
 
             @Override

@@ -6,8 +6,8 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.resource.Resource;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -15,15 +15,14 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.system.MemoryUtil;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.init.Leaves;
+import randommcsomethin.fallingleaves.mixin.NativeImageAccessor;
+import randommcsomethin.fallingleaves.mixin.SpriteAccessor;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -36,6 +35,8 @@ import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlockId;
 
 public class LeafUtil {
 
+    private static final Random renderRandom = new Random();
+
     public static void trySpawnLeafParticle(BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
         // Particle position
         double x = pos.getX() + random.nextDouble();
@@ -46,14 +47,27 @@ public class LeafUtil {
             MinecraftClient client = MinecraftClient.getInstance();
             BakedModel model = client.getBlockRenderManager().getModel(state);
 
-            // read the bottom quad to determine whether we should color the texture
-            List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, random);
-            boolean shouldColor = quads.isEmpty() || quads.stream().anyMatch(BakedQuad::hasColor);
+            renderRandom.setSeed(state.getRenderingSeed(pos));
+            List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, renderRandom);
 
-            Identifier texture = spriteToTexture(model.getSprite());
-            int blockColor = client.getBlockColors().getColor(state, world, pos, 0);
+            Sprite sprite;
+            boolean shouldColor;
 
-            double[] color = calculateLeafColor(texture, shouldColor, blockColor, client);
+            // read data from the first bottom quad if possible
+            if (!quads.isEmpty()) {
+                BakedQuad quad = quads.get(0);
+                sprite = quad.getSprite();
+                shouldColor = quad.hasColor();
+            } else {
+                sprite = model.getSprite();
+                shouldColor = true;
+            }
+
+            Identifier spriteId = sprite.getId();
+            NativeImage texture = ((SpriteAccessor) sprite).getImages()[0]; // directly extract texture
+            int blockColor = (shouldColor ? client.getBlockColors().getColor(state, world, pos, 0) : -1);
+
+            double[] color = calculateLeafColor(spriteId, texture, blockColor);
 
             double r = color[0];
             double g = color[1];
@@ -67,36 +81,27 @@ public class LeafUtil {
         }
     }
 
-    private static double[] calculateLeafColor(Identifier texture, boolean shouldColor, int blockColor, MinecraftClient client) {
-        try (Resource res = client.getResourceManager().getResource(texture)) {
-            String resourcePack = res.getResourcePackName();
-            TextureCache.Data cache = TextureCache.INST.get(texture);
-            double[] textureColor;
+    private static double[] calculateLeafColor(Identifier spriteId, NativeImage texture, int blockColor) {
+        TextureCache.Data cache = TextureCache.INST.get(spriteId);
+        double[] textureColor;
 
-            // only use cached texture color when resourcePack matches
-            if (cache != null && resourcePack.equals(cache.resourcePack)) {
-                textureColor = cache.getColor();
-            } else {
-                // read and cache texture color
-                try (InputStream is = res.getInputStream()) {
-                    textureColor = averageColor(ImageIO.read(is));
-                    TextureCache.INST.put(texture, new TextureCache.Data(textureColor, resourcePack));
-                    LOGGER.debug("{}: Calculated texture color {} ", texture, textureColor);
-                }
-            }
-
-            if (shouldColor && blockColor != -1) {
-                // multiply texture and block color RGB values (in range 0-1)
-                textureColor[0] *= (blockColor >> 16 & 255) / 255.0;
-                textureColor[1] *= (blockColor >> 8  & 255) / 255.0;
-                textureColor[2] *= (blockColor       & 255) / 255.0;
-            }
-
-            return textureColor;
-        } catch (IOException e) {
-            LOGGER.error("Couldn't access resource {}", texture, e);
-            return new double[] { 1, 1, 1 };
+        if (cache != null) {
+            textureColor = cache.getColor();
+        } else {
+            // calculate and cache texture color
+            textureColor = averageColor(texture);
+            TextureCache.INST.put(spriteId, new TextureCache.Data(textureColor));
+            LOGGER.debug("{}: Calculated texture color {} ", spriteId, textureColor);
         }
+
+        if (blockColor != -1) {
+            // multiply texture and block color RGB values (in range 0-1)
+            textureColor[0] *= (blockColor >> 16 & 255) / 255.0;
+            textureColor[1] *= (blockColor >> 8  & 255) / 255.0;
+            textureColor[2] *= (blockColor       & 255) / 255.0;
+        }
+
+        return textureColor;
     }
 
     private static boolean shouldSpawnParticle(World world, BlockPos pos, double x, double y, double z) {
@@ -132,25 +137,43 @@ public class LeafUtil {
         return CONFIG.leafSettings.get(getBlockId(blockState));
     }
 
-    public static double[] averageColor(BufferedImage image) {
+    public static double[] averageColor(NativeImage image) {
+        if (image.getFormat() != NativeImage.Format.ABGR) {
+            LOGGER.error("RGBA image required, was {}", image.getFormat());
+            return new double[] {1, 1, 1};
+        }
+
+        NativeImageAccessor imageAcc = (NativeImageAccessor) (Object) image;
+        long pointer = imageAcc.getPointer();
+
+        if (pointer == 0) {
+            LOGGER.error("image is not allocated");
+            return new double[] {1, 1, 1};
+        }
+
         double r = 0;
         double g = 0;
         double b = 0;
         int n = 0;
 
-        // TODO: This entire block feels like it could be simplified or broken down into
-        //       more manageable parts.
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                Color c = new Color(image.getRGB(x, y), true);
+        int width = image.getWidth();
+        int height = image.getHeight();
 
-                // Only take completely opaque pixels into account
-                if (c.getAlpha() == 255) {
-                    r += c.getRed();
-                    g += c.getGreen();
-                    b += c.getBlue();
-                    n++;
-                }
+        // add up all opaque color values (this variant is much faster than using image.getPixelColor(x, y))
+        for (int i = 0; i < width * height; i++) {
+            int c = MemoryUtil.memGetInt(pointer + 4L * i);
+
+            // RGBA format
+            int cr = (c       & 255);
+            int cg = (c >> 8  & 255);
+            int cb = (c >> 16 & 255);
+            int ca = (c >> 24 & 255);
+
+            if (ca == 255) {
+                r += cr;
+                g += cg;
+                b += cb;
+                n++;
             }
         }
 
@@ -159,11 +182,6 @@ public class LeafUtil {
             (g / n) / 255.0,
             (b / n) / 255.0
         };
-    }
-
-    public static Identifier spriteToTexture(Sprite sprite) {
-        String texture = sprite.getId().getPath(); // e.g. block/sakura_leaves
-        return new Identifier(sprite.getId().getNamespace(), "textures/" + texture + ".png");
     }
 
 }
