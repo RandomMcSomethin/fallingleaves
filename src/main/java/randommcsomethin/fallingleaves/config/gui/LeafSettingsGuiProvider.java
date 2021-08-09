@@ -27,7 +27,7 @@ import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlock;
 
 public class LeafSettingsGuiProvider implements GuiProvider {
-    private static final TranslatableText resetKey = new TranslatableText("text.cloth-config.reset_value");
+    private static final TranslatableText RESET_TEXT = new TranslatableText("text.cloth-config.reset_value");
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
@@ -47,7 +47,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
 
                     // TODO: I think it'd be great if modified leaf blocks would show an '*' after them.
                     //       Might be hard to implement. [Fourmisain]
-                    SubCategoryBuilder builder = new SubCategoryBuilder(resetKey, new TranslatableText(block.getTranslationKey()))
+                    SubCategoryBuilder builder = new SubCategoryBuilder(RESET_TEXT, new TranslatableText(block.getTranslationKey()))
                         .setTooltip(Text.of(ModUtil.getModName(block)));
 
                     builder.add(buildSpawnRateFactorSlider(blockId, leafEntry));
@@ -76,7 +76,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
         currentValue /= stepSize;
         defaultValue /= stepSize;
 
-        return new IntSliderBuilder(resetKey, new TranslatableText("config.fallingleaves.spawn_rate_factor"), currentValue, min, max)
+        return new IntSliderBuilder(RESET_TEXT, new TranslatableText("config.fallingleaves.spawn_rate_factor"), currentValue, min, max)
             .setDefaultValue(defaultValue)
             .setSaveConsumer((Integer value) -> {
                 entry.spawnRateFactor = (value * stepSize) / 100.0;
@@ -89,7 +89,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
     }
 
     private static BooleanListEntry buildIsConiferLeavesToggle(Identifier blockId, LeafSettingsEntry entry) {
-        return new BooleanToggleBuilder(resetKey, new TranslatableText("config.fallingleaves.is_conifer"), entry.isConiferBlock)
+        return new BooleanToggleBuilder(RESET_TEXT, new TranslatableText("config.fallingleaves.is_conifer"), entry.isConiferBlock)
             .setDefaultValue(ConfigDefaults.isConifer(blockId))
             .setSaveConsumer((Boolean isConiferBlock) -> {
                 entry.isConiferBlock = isConiferBlock;

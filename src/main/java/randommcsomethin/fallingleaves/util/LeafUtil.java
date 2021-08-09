@@ -15,7 +15,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.MemoryUtil;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
@@ -113,7 +112,7 @@ public class LeafUtil {
         Box collisionBox = new Box(x - 0.1, y, z - 0.1, x + 0.1, y2, z + 0.1);
 
         // Only spawn the particle if there's enough room for it
-        return !world.getBlockCollisions(null, collisionBox).findAny().isPresent();
+        return world.getBlockCollisions(null, collisionBox).findAny().isEmpty();
     }
 
     public static Map<Identifier, LeafSettingsEntry> getRegisteredLeafBlocks(boolean useBlockTags) {

@@ -20,7 +20,6 @@ import randommcsomethin.fallingleaves.config.gui.LeafSettingsGuiProvider;
 import randommcsomethin.fallingleaves.util.Wind;
 
 import java.io.IOException;
-import java.util.*;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 

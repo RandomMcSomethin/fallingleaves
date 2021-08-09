@@ -1,9 +1,6 @@
 package randommcsomethin.fallingleaves.util;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import randommcsomethin.fallingleaves.math.SmoothNoise;
@@ -17,7 +14,7 @@ import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 public class Wind {
     protected static final Random rng = new Random();
 
-    protected enum State {
+    public enum State {
         CALM(  0.05f, 0.05f, 0.2f),
         WINDY( 0.05f, 0.3f,  0.7f),
         STORMY(0.05f, 0.6f,  1.1f);
