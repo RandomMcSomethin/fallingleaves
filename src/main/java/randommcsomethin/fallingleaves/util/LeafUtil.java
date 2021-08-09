@@ -168,7 +168,7 @@ public class LeafUtil {
             int cb = (c >> 16 & 255);
             int ca = (c >> 24 & 255);
 
-            if (ca == 255) {
+            if (ca != 0) {
                 r += cr;
                 g += cg;
                 b += cb;
