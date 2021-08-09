@@ -75,14 +75,16 @@ public class Leaves {
         Random random = new Random();
 
         AttackBlockCallback.EVENT.register((PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) -> {
-            BlockState state = world.getBlockState(pos);
-            LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
+            if (world.isClient) {
+                BlockState state = world.getBlockState(pos);
+                LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
 
-            if (leafSettings != null) {
-                // binomial distribution - extremes (0 or 3 leaves) are less likely
-                for (int i = 0; i < 3; i++) {
-                    if (random.nextBoolean()) {
-                        LeafUtil.trySpawnLeafParticle(state, world, pos, random, leafSettings);
+                if (leafSettings != null) {
+                    // binomial distribution - extremes (0 or 3 leaves) are less likely
+                    for (int i = 0; i < 3; i++) {
+                        if (random.nextBoolean()) {
+                            LeafUtil.trySpawnLeafParticle(state, world, pos, random, leafSettings);
+                        }
                     }
                 }
             }
