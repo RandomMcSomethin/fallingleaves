@@ -58,7 +58,7 @@ public class LeafUtil {
                 sprite = quad.getSprite();
                 shouldColor = quad.hasColor();
             } else {
-                sprite = model.getSprite();
+                sprite = model.getParticleSprite();
                 shouldColor = true;
             }
 
