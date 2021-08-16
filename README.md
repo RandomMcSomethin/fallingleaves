@@ -2,15 +2,17 @@
 
 This Fabric mod for Minecraft 1.17.x adds a neat little particle effect to leaf blocks. Users can configure which types of leaf blocks will drop leaves and the frequency that these leaves are dropped at.
 
-![](https://i.imgur.com/Tek7xJe.gif)
+Requires [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config).
+
+![](https://i.imgur.com/Y6zGq33.gif)
 
 ## Toubleshooting aka "Why are no leaves falling?"
 
 Some trees do not drop leaves by default, these are: conifer trees (like spruce and pine), large leaved trees (like jungle trees and palms) and shrubs.
 
-You can change this as you like by adjusting "Conifer Leaf Spawn Rate" in the Mod Menu settings and adjusting the spawn rates for specific trees under  "Leaf Settings".
+You can change this as you like by adjusting "Conifer Leaf Spawn Rate" in the Mod Menu settings and adjusting the spawn rates for specific trees under "Leaf Settings".
 
-A complete list of all conifer trees is found [here](https://github.com/RandomMcSomethin/fallingleaves/blob/d5cc5ac3074ef513cab6af56d886c9f1424f2d5d/src/main/java/randommcsomethin/fallingleaves/config/ConfigDefaults.java#L9-L21) and a list of all trees with adjusted spawn rates is found [here](https://github.com/RandomMcSomethin/fallingleaves/blob/d5cc5ac3074ef513cab6af56d886c9f1424f2d5d/src/main/java/randommcsomethin/fallingleaves/config/ConfigDefaults.java#L30-L49).
+A complete list of all conifer trees is found [here](https://github.com/RandomMcSomethin/fallingleaves/blob/1.17/src/main/java/randommcsomethin/fallingleaves/config/ConfigDefaults.java#L9-L23) and a list of all trees with adjusted spawn rates is found [here](https://github.com/RandomMcSomethin/fallingleaves/blob/1.17/src/main/java/randommcsomethin/fallingleaves/config/ConfigDefaults.java#L32-L52).
 
 ## FAQ
 
@@ -21,7 +23,7 @@ A complete list of all conifer trees is found [here](https://github.com/RandomMc
 - Lol fabric suxxx gief forge plx.
   - That's not a question. Also, no. Feel free to port it to Forge if you want to, though!
 - Do you have any screenshots I could look at before I install this?
-  - Sure! Check out the [images section](https://www.curseforge.com/minecraft/mc-mods/falling-leaves-fabric/screenshots) of this mod's Curseforge page.
+  - Sure! Check out the [images section](https://www.curseforge.com/minecraft/mc-mods/falling-leaves-fabric/screenshots) of this mod's Curseforge page. (Note that they are slightly out of date.)
 - I enjoy old things. Can you backport this to Minecraft v1.7?
   - No. We will only focus on supporting the most recently released version of Minecraft.
 - I found a problem! Do I just post a comment on your CurseForge page?
