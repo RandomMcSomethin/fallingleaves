@@ -19,11 +19,15 @@ public class LeafSettingsEntry {
         return spawnRateFactor * spawnChance;
     }
 
+    public boolean isDefault(Identifier identifier) {
+        return spawnRateFactor == ConfigDefaults.spawnRateFactor(identifier)
+            && isConiferBlock == ConfigDefaults.isConifer(identifier);
+    }
+
     @Override
     public String toString() {
         return String.format("LeafSettingsEntry{spawnRateFactor=%s, isConiferBlock=%s}",
             spawnRateFactor,
             isConiferBlock);
     }
-
 }

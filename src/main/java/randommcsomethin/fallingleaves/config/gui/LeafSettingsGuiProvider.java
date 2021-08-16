@@ -45,9 +45,12 @@ public class LeafSettingsGuiProvider implements GuiProvider {
                     LeafSettingsEntry leafEntry = e.getValue();
                     Block block = getBlock(blockId);
 
-                    // TODO: I think it'd be great if modified leaf blocks would show an '*' after them.
-                    //       Might be hard to implement. [Fourmisain]
-                    SubCategoryBuilder builder = new SubCategoryBuilder(RESET_TEXT, new TranslatableText(block.getTranslationKey()))
+                    TranslatableText text = new TranslatableText(block.getTranslationKey());
+                    if (!leafEntry.isDefault(blockId)) {
+                        text.append("*");
+                    }
+
+                    SubCategoryBuilder builder = new SubCategoryBuilder(RESET_TEXT, text)
                         .setTooltip(Text.of(ModUtil.getModName(block)));
 
                     builder.add(buildSpawnRateFactorSlider(blockId, leafEntry));
