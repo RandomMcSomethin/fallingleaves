@@ -3,6 +3,7 @@ package randommcsomethin.fallingleaves.config;
 import java.util.*;
 
 /** Old v0 config format used in versions 1.0 to 1.4 */
+@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
 public class FallingLeavesConfigV0 {
     public int version = 0; // added to be able to differentiate between v1
     public double leafSize = 0.10;

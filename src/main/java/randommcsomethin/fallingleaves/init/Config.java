@@ -115,7 +115,7 @@ public class Config {
             newConfig.updateLeafSettings(new Identifier(oldEntry.getKey()), (newEntry) -> {
                 double oldRateOverride = oldEntry.getValue();
 
-                // Set the new factor according the the override and base rate
+                // Set the new factor according the override and base rate
                 if (newEntry.isConiferBlock) {
                     // Effective change: leaf rate 0 now means no leaves will spawn at all
                     if (oldConfig.coniferLeafRate != 0) {

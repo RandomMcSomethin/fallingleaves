@@ -13,11 +13,11 @@ import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
 public class FallingLeafParticle extends SpriteBillboardParticle {
 
-    protected static final float TAU = (float)(2 * Math.PI); // 1 rotation
+    public static final float TAU = (float)(2 * Math.PI); // 1 rotation
 
-    protected static final int FADE_DURATION = 16; // ticks
-    // protected static final double FRICTION       = 0.30;
-    protected static final double WATER_FRICTION = 0.05;
+    public static final int FADE_DURATION = 16; // ticks
+    // public static final double FRICTION       = 0.30;
+    public static final double WATER_FRICTION = 0.05;
 
     protected final float windCoefficient; // to emulate drag/lift
 
@@ -25,7 +25,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
     protected final int maxRotateTime;
     protected int rotateTime = 0;
 
-    protected FallingLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
+    public FallingLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
         super(clientWorld, x, y, z, 0.0, 0.0, 0.0);
         this.setSprite(provider);
 

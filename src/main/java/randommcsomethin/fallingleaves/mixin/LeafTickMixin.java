@@ -23,7 +23,7 @@ import static randommcsomethin.fallingleaves.util.LeafUtil.trySpawnLeafParticle;
 public abstract class LeafTickMixin {
 
     @Inject(at = @At("HEAD"), method = "randomDisplayTick")
-    private void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
+    private void randomLeafBlockTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
         LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
 
         // Every leaf block has a settings entry, but some blocks are considered leaves when they technically aren't

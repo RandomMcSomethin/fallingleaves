@@ -26,7 +26,7 @@ public class Wind {
         }
     }
 
-    protected static final float TAU = (float)(2 * Math.PI);
+    public static final float TAU = (float)(2 * Math.PI);
 
     public static float windX;
     public static float windZ;

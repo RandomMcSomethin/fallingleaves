@@ -13,13 +13,13 @@ import randommcsomethin.fallingleaves.util.Wind;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ParticleManager.class)
-public class ParticleManagerMixin {
+public abstract class ParticleManagerMixin {
 
     @Shadow
     protected ClientWorld world;
 
     @Inject(at = @At("HEAD"), method = "tick")
-    public void tick(CallbackInfo ci) {
+    public void tickWind(CallbackInfo ci) {
         Wind.tick(world);
     }
 

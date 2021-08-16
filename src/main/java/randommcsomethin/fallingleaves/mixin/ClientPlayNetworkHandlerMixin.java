@@ -19,7 +19,7 @@ import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 public abstract class ClientPlayNetworkHandlerMixin {
 
     @Inject(at = @At("RETURN"), method = "onSynchronizeTags")
-    public void onSynchronizeTags(SynchronizeTagsS2CPacket packet, CallbackInfo ci) {
+    public void loadRegisteredLeafBlocks(SynchronizeTagsS2CPacket packet, CallbackInfo ci) {
         LOGGER.info("Loading all registered leaf blocks.");
 
         // This is pretty much the earliest point in time where we can use block tags

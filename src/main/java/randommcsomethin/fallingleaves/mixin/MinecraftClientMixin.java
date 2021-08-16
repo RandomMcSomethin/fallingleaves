@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import randommcsomethin.fallingleaves.util.Wind;
 
 @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin {
+public abstract class MinecraftClientMixin {
 
     @Inject(method = "joinWorld", at = @At("HEAD"))
-    public void joinWorld(ClientWorld world, CallbackInfo ci) {
+    public void initWind(ClientWorld world, CallbackInfo ci) {
         Wind.init();
     }
 
