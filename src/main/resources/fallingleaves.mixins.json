@@ -6,14 +6,12 @@
   "client": [
     "ClientPlayNetworkHandlerMixin",
     "LeafTickMixin",
-    "ParticleManagerMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "mixins": [
+    "ParticleManagerMixin",
     "MinecraftClientMixin",
     "NativeImageAccessor",
     "SpriteAccessor"
-  ]
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
