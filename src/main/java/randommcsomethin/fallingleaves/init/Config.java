@@ -58,7 +58,7 @@ public class Config {
 
         AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(
             new IdentifierSetGuiProvider(),
-            field -> field.getName().equals("windlessDimensions") // could be more generic
+            IdentifierSetGuiProvider::predicate
         );
 
         AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerTypeProvider(
