@@ -137,7 +137,7 @@ public class LeafUtil {
     }
 
     public static double[] averageColor(NativeImage image) {
-        if (image.getFormat() != NativeImage.Format.ABGR) {
+        if (image.getFormat() != NativeImage.Format.RGBA) {
             LOGGER.error("RGBA image required, was {}", image.getFormat());
             return new double[] {1, 1, 1};
         }
