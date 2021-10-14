@@ -54,7 +54,19 @@ public class LeafUtil {
 
             // read data from the first bottom quad if possible
             if (!quads.isEmpty()) {
-                BakedQuad quad = quads.get(0);
+                boolean useFirstQuad = true;
+
+                Identifier id = Registry.BLOCK.getId(state.getBlock());
+                if (id.getNamespace().equals("byg")) {
+                    /*
+                     * some BYG leaves have their actual tinted leaf texture in an "overlay" that comes second, full list:
+                     * flowering_orchard_leaves, joshua_leaves, mahogany_leaves, maple_leaves, orchard_leaves,
+                     * rainbow_eucalyptus_leaves, ripe_joshua_leaves, ripe_orchard_leaves, willow_leaves
+                     */
+                    useFirstQuad = false;
+                }
+
+                BakedQuad quad = quads.get(useFirstQuad ? 0 : quads.size() - 1);
                 sprite = quad.getSprite();
                 shouldColor = quad.hasColor();
             } else {
