@@ -2,12 +2,20 @@ package randommcsomethin.fallingleaves.particle;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
+import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.util.Wind;
+
+import java.util.stream.Stream;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
@@ -24,6 +32,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
     protected final float maxRotateSpeed; // rotations / tick
     protected final int maxRotateTime;
     protected int rotateTime = 0;
+    protected boolean stuckInGround = false;
 
     public FallingLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
         super(clientWorld, x, y, z, 0.0, 0.0, 0.0);
@@ -37,7 +46,6 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         this.velocityY = 0.0;
         this.velocityZ = 0.0;
 
-        this.collidesWithWorld = true; // TODO: is it possible to turn off collisions with leaf blocks?
         this.maxAge = CONFIG.leafLifespan;
 
         this.colorRed   = (float) r;
@@ -90,8 +98,8 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
             } else {
                 rotateTime = 0;
 
-                // TODO: field_21507 inside move() makes particles stop permanently once they fall on the ground
-                //       that is nice sometimes, but some/most leaves should still get blown along the ground by the wind
+                // TODO: leaves get stuck in the ground which is nice sometimes, but some/most leaves should
+                //       still get blown by the wind / tumble over the ground
                 // velocityX *= (1 - FRICTION);
                 // velocityZ *= (1 - FRICTION);
             }
@@ -109,6 +117,50 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         }
 
         move(velocityX, velocityY, velocityZ);
+    }
+
+    @Override
+    public void move(double dx, double dy, double dz) {
+        if (dx == 0.0 && dy == 0.0 && dz == 0.0) return;
+
+        double oldDx = dx;
+        double oldDy = dy;
+        double oldDz = dz;
+
+        // TODO: is it possible to turn off collisions with leaf blocks?
+        Vec3d vec3d = Entity.adjustMovementForCollisions(null, new Vec3d(dx, dy, dz), getBoundingBox(), world, ShapeContext.absent(), new ReusableStream<>(Stream.empty()));
+        dx = vec3d.x;
+        dy = vec3d.y;
+        dz = vec3d.z;
+
+        // lose horizontal velocity on collision
+        if (oldDx != dx) velocityX = 0.0;
+        if (oldDz != dz) velocityZ = 0.0;
+
+        onGround = oldDy != dy && oldDy < 0.0;
+
+        if (!onGround) {
+            stuckInGround = false;
+        } else {
+            // get stuck if slow enough
+            if (!stuckInGround && Math.abs(dy) < 1E-5) {
+                stuckInGround = true;
+            }
+        }
+
+        if (stuckInGround) {
+            // don't accumulate speed over time
+            velocityX = 0.0;
+            velocityY = 0.0;
+            velocityZ = 0.0;
+
+            return;
+        }
+
+        if (dx != 0.0 || dy != 0.0 || dz != 0.0) {
+            setBoundingBox(getBoundingBox().offset(dx, dy, dz));
+            repositionFromBoundingBox();
+        }
     }
 
     @Override
