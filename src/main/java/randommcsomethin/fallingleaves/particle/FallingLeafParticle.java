@@ -8,12 +8,12 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
-import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import randommcsomethin.fallingleaves.util.Wind;
 
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.List;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
@@ -126,7 +126,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
         double oldDz = dz;
 
         // TODO: is it possible to turn off collisions with leaf blocks?
-        Vec3d vec3d = Entity.adjustMovementForCollisions(null, new Vec3d(dx, dy, dz), getBoundingBox(), world, ShapeContext.absent(), new ReusableStream<>(Stream.empty()));
+        Vec3d vec3d = Entity.adjustMovementForCollisions(null, new Vec3d(dx, dy, dz), getBoundingBox(), world, ShapeContext.absent(), List.of());
         dx = vec3d.x;
         dy = vec3d.y;
         dz = vec3d.z;

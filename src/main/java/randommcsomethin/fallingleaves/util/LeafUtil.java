@@ -125,7 +125,7 @@ public class LeafUtil {
         Box collisionBox = new Box(x - 0.1, y, z - 0.1, x + 0.1, y2, z + 0.1);
 
         // Only spawn the particle if there's enough room for it
-        return world.getBlockCollisions(null, collisionBox).findAny().isEmpty();
+        return !world.getBlockCollisions(null, collisionBox).iterator().hasNext();
     }
 
     public static Map<Identifier, LeafSettingsEntry> getRegisteredLeafBlocks(boolean useBlockTags) {
