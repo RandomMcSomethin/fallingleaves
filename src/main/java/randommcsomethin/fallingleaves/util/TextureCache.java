@@ -2,6 +2,7 @@ package randommcsomethin.fallingleaves.util;
 
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class TextureCache {
@@ -10,14 +11,11 @@ public class TextureCache {
             if (color.length != 3)
                 throw new IllegalArgumentException("texture color should have 3 components");
 
-            this.color = new double[3];
-            System.arraycopy(color, 0, this.color, 0, 3);
+            this.color = Arrays.copyOf(color, color.length);
         }
 
         public double[] getColor() {
-            double[] copy = new double[3];
-            System.arraycopy(color, 0, copy, 0, 3);
-            return copy;
+            return Arrays.copyOf(color, color.length);
         }
     }
 

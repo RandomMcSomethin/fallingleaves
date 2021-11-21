@@ -70,6 +70,7 @@ public class LeafUtil {
                 sprite = quad.getSprite();
                 shouldColor = quad.hasColor();
             } else {
+                // fall back to block breaking particle
                 sprite = model.getParticleSprite();
                 shouldColor = true;
             }

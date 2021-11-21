@@ -107,6 +107,8 @@ public class FallingLeavesConfig implements ConfigData {
 
     @Override
     public void validatePostLoad() throws ConfigData.ValidationException {
+        version = 1;
+        leafSize = Math.max(leafSize, 1);
         minimumFreeSpaceBelow = Math.max(minimumFreeSpaceBelow, 1);
     }
 

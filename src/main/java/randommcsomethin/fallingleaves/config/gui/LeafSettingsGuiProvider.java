@@ -29,7 +29,7 @@ import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlock;
 public class LeafSettingsGuiProvider implements GuiProvider {
     private static final TranslatableText RESET_TEXT = new TranslatableText("text.cloth-config.reset_value");
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked", "ConstantConditions"})
     @Override
     public List<AbstractConfigListEntry> get(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
         try {

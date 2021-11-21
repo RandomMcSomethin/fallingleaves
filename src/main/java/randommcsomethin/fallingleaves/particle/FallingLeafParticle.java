@@ -11,8 +11,6 @@ import net.minecraft.tag.FluidTags;
 import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.util.Wind;
 
 import java.util.stream.Stream;
@@ -154,6 +152,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
             velocityY = 0.0;
             velocityZ = 0.0;
 
+            // don't move
             return;
         }
 

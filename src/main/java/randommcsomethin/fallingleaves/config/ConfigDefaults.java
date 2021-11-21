@@ -22,6 +22,7 @@ public class ConfigDefaults {
             case "traverse:fir_leaves":
             case "woods_and_mires:pine_leaves":
                 return true;
+
             default:
                 return false;
         }
@@ -51,7 +52,6 @@ public class ConfigDefaults {
             case "terrestria:sakura_leaves":
                 return 1.4;
 
-            // If not explicitly referenced
             default:
                 return 1.0;
         }
