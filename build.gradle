@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.9-SNAPSHOT'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -44,7 +44,6 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs.add('-Xlint:deprecation')
-    it.options.encoding = "UTF-8"
     it.options.release = 16
 }
 
@@ -61,8 +60,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact(remapJar) { builtBy remapJar }
-            artifact(sourcesJar) { builtBy remapSourcesJar }
+            from components.java
         }
     }
 
