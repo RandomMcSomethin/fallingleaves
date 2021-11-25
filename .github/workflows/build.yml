@@ -12,7 +12,7 @@ jobs:
       matrix:
         # Use these Java versions:
         java: [
-            16
+            17
         ]
         # Test it on Linux and Windows:
         os: [ubuntu-latest, windows-latest]
@@ -33,7 +33,7 @@ jobs:
         run: ./gradlew build
       - name: capture build artifacts
         # We only want to generate & upload artifacts built on one OS
-        if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
+        if: ${{ runner.os == 'Linux' && matrix.java == '17' }}
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
