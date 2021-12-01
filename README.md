@@ -1,6 +1,6 @@
 # Falling Leaves
 
-This Fabric mod for Minecraft 1.17.x adds a neat little particle effect to leaf blocks. Users can configure which types of leaf blocks will drop leaves and the frequency that these leaves are dropped at.
+This Fabric mod for Minecraft 1.18.x adds a neat little particle effect to leaf blocks. Users can configure which types of leaf blocks will drop leaves and the frequency that these leaves are dropped at.
 
 Requires [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config).
 
