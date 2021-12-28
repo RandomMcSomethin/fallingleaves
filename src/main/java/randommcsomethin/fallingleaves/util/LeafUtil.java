@@ -1,5 +1,8 @@
 package randommcsomethin.fallingleaves.util;
 
+import io.github.lucaargolo.seasons.FabricSeasons;
+import io.github.lucaargolo.seasons.utils.Season;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
@@ -35,6 +38,22 @@ import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlockId;
 public class LeafUtil {
 
     private static final Random renderRandom = new Random();
+
+    public static double getModifiedSpawnChance(LeafSettingsEntry leafSettings) {
+        double spawnChance = leafSettings.getSpawnChance();
+
+        if (FabricLoader.getInstance().isModLoaded("seasons")) {
+            if (FabricSeasons.getCurrentSeason() == Season.FALL) {
+                // TODO this is a bit weird because some trees like Traverse's autumnal leaves already have boosted values
+                // double autumn, what does it mean?
+                spawnChance *= CONFIG.fallSpawnRateFactor;
+            } else if (FabricSeasons.getCurrentSeason() == Season.WINTER) {
+                spawnChance *= CONFIG.winterSpawnRateFactor;
+            }
+        }
+
+        return spawnChance;
+    }
 
     public static void trySpawnLeafParticle(BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
         // Particle position

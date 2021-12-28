@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
+import randommcsomethin.fallingleaves.util.LeafUtil;
 
 import java.util.Objects;
 import java.util.Random;
@@ -31,7 +32,7 @@ public class BlockMixin {
 
         // every leaf spawner should have a settings entry
         LeafSettingsEntry leafSettings = Objects.requireNonNull(getLeafSettingsEntry(state));
-        double spawnChance = leafSettings.getSpawnChance();
+        double spawnChance = LeafUtil.getModifiedSpawnChance(leafSettings);
 
         if (spawnChance != 0 && random.nextDouble() < spawnChance) {
             trySpawnLeafParticle(state, world, pos, random, leafSettings);

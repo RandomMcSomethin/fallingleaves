@@ -81,6 +81,14 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 2)
     public Set<Identifier> leafSpawners = new HashSet<>();
 
+    @ConfigEntry.Category("fallingleaves.experimental")
+    @ConfigEntry.Gui.Tooltip
+    public double fallSpawnRateFactor = 1.8;
+
+    @ConfigEntry.Category("fallingleaves.experimental")
+    @ConfigEntry.Gui.Tooltip
+    public double winterSpawnRateFactor = 0.1;
+
     public void updateLeafSettings(Identifier blockId, Consumer<LeafSettingsEntry> f) {
         leafSettings.compute(blockId, (id, entry) -> {
             if (entry == null)
