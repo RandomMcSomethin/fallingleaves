@@ -12,6 +12,7 @@ group = project.maven_group
 repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/" }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -32,6 +33,8 @@ dependencies {
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+
+    modImplementation "com.github.Fourmisain:fabric-seasons:jitpack-SNAPSHOT"
 }
 
 processResources {
