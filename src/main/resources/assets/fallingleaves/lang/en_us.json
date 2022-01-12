@@ -13,8 +13,12 @@
   "text.autoconfig.fallingleaves.option.windEnabled": "Enable Wind?",
   "text.autoconfig.fallingleaves.option.windEnabled.@Tooltip": "There's always some amount of wind, this option allows for stronger wind",
   "text.autoconfig.fallingleaves.option.windlessDimensions": "Windless Dimensions",
+  "text.autoconfig.fallingleaves.option.leafSpawners": "Additional blocks that drop leaves",
+  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "E.g. minecraft:pink_wool.",
+  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[1]": "After enabling this setting, a restart is required!",
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "General",
   "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "Leaf Settings",
+  "text.autoconfig.fallingleaves.category.fallingleaves.experimental": "Experimental",
   "config.fallingleaves.spawn_rate_factor": "Spawn Rate Multiplier",
   "config.fallingleaves.spawn_rate_factor.@Tooltip": "0% turns spawning off, 100% means base spawn rate",
   "config.fallingleaves.is_conifer": "Is this a conifer leaf?"

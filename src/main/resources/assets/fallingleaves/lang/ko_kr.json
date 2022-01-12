@@ -13,8 +13,12 @@
   "text.autoconfig.fallingleaves.option.windEnabled": "바람이 부나요?",
   "text.autoconfig.fallingleaves.option.windEnabled.@Tooltip": "항상 약간의 바람이 불기 때문에 이 옵션은 바람을 더 강하게 불도록 합니다.",
   "text.autoconfig.fallingleaves.option.windlessDimensions": "바람이 없는 차원",
+  "text.autoconfig.fallingleaves.option.leafSpawners": "나뭇잎을 떨어뜨리는 추가 블록",
+  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "예를 들어 minecraft:pink_wool.",
+  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[1]": "이 설정을 활성화한 후 다시 시작해야 합니다!",
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "일반",
   "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "잎 설정",
+  "text.autoconfig.fallingleaves.category.fallingleaves.experimental": "실험적인",
   "config.fallingleaves.spawn_rate_factor": "스폰율 배율",
   "config.fallingleaves.spawn_rate_factor.@Tooltip": "0%는 스폰을 하지 않도록 합니다. 100%는 기본 스폰율 입니다.",
   "config.fallingleaves.is_conifer": "이건 침엽수인가요?"

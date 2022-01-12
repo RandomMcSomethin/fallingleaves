@@ -78,7 +78,7 @@ public class FallingLeavesConfig implements ConfigData {
     public Map<Identifier, LeafSettingsEntry> leafSettings = new HashMap<>();
 
     @ConfigEntry.Category("fallingleaves.experimental")
-    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.Tooltip(count = 2)
     public Set<Identifier> leafSpawners = new HashSet<>();
 
     public void updateLeafSettings(Identifier blockId, Consumer<LeafSettingsEntry> f) {
