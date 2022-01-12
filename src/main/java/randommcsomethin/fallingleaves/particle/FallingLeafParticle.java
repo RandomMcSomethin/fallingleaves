@@ -44,9 +44,9 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
 
         this.maxAge = CONFIG.leafLifespan;
 
-        this.colorRed   = (float) r;
-        this.colorGreen = (float) g;
-        this.colorBlue  = (float) b;
+        this.red   = (float) r;
+        this.green = (float) g;
+        this.blue  = (float) b;
 
         // accelerate over 3-7 seconds to at most 2.5 rotations per second
         this.maxRotateTime = (3 + random.nextInt(4 + 1)) * 20;
@@ -68,7 +68,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
 
         // fade-out animation
         if (age >= maxAge + 1 - FADE_DURATION) {
-            colorAlpha -= 1F / FADE_DURATION;
+            alpha -= 1F / FADE_DURATION;
         }
 
         if (age >= maxAge) {
