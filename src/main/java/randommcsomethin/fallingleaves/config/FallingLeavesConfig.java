@@ -77,6 +77,10 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     public Map<Identifier, LeafSettingsEntry> leafSettings = new HashMap<>();
 
+    @ConfigEntry.Category("fallingleaves.experimental")
+    @ConfigEntry.Gui.Tooltip
+    public Set<Identifier> leafSpawners = new HashSet<>();
+
     public void updateLeafSettings(Identifier blockId, Consumer<LeafSettingsEntry> f) {
         leafSettings.compute(blockId, (id, entry) -> {
             if (entry == null)
@@ -110,6 +114,9 @@ public class FallingLeavesConfig implements ConfigData {
         version = 1;
         leafSize = Math.max(leafSize, 1);
         minimumFreeSpaceBelow = Math.max(minimumFreeSpaceBelow, 1);
+
+        for (var spawner : leafSpawners)
+            leafSettings.computeIfAbsent(spawner, LeafSettingsEntry::new);
     }
 
 }

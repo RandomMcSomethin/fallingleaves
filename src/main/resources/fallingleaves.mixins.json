@@ -3,7 +3,9 @@
   "minVersion": "0.8",
   "package": "randommcsomethin.fallingleaves.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "randommcsomethin.fallingleaves.init.MixinConfig",
   "client": [
+    "BlockMixin",
     "ClientPlayNetworkHandlerMixin",
     "LeafTickMixin",
     "MinecraftClientMixin",

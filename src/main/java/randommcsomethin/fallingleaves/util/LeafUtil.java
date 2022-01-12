@@ -39,7 +39,7 @@ public class LeafUtil {
     public static void trySpawnLeafParticle(BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
         // Particle position
         double x = pos.getX() + random.nextDouble();
-        double y = pos.getY();
+        double y = pos.getY() - (state.isOpaque() ? 0.1 : 0); // don't spawn inside the block if it is opaque (to prevent leaves appearing black)
         double z = pos.getZ() + random.nextDouble();
 
         if (shouldSpawnParticle(world, pos, x, y, z)) {

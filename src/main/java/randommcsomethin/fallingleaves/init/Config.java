@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonParseException;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.util.ActionResult;
@@ -42,6 +43,9 @@ public class Config {
         CONFIG = configHolder.getConfig();
 
         configHolder.registerSaveListener((manager, data) -> {
+            try {
+                data.validatePostLoad();
+            } catch (ConfigData.ValidationException ignored) { }
             Wind.init();
             return ActionResult.PASS;
         });
