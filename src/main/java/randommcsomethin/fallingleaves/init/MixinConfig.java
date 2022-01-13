@@ -7,7 +7,6 @@ import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.config.gson.GsonConfigHelper;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

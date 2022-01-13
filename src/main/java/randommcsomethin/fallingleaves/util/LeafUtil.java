@@ -11,6 +11,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -62,54 +63,56 @@ public class LeafUtil {
         double z = pos.getZ() + random.nextDouble();
 
         if (shouldSpawnParticle(world, pos, x, y, z)) {
-            MinecraftClient client = MinecraftClient.getInstance();
-            BakedModel model = client.getBlockRenderManager().getModel(state);
-
-            renderRandom.setSeed(state.getRenderingSeed(pos));
-            List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, renderRandom);
-
-            Sprite sprite;
-            boolean shouldColor;
-
-            // read data from the first bottom quad if possible
-            if (!quads.isEmpty()) {
-                boolean useFirstQuad = true;
-
-                Identifier id = Registry.BLOCK.getId(state.getBlock());
-                if (id.getNamespace().equals("byg")) {
-                    /*
-                     * some BYG leaves have their actual tinted leaf texture in an "overlay" that comes second, full list:
-                     * flowering_orchard_leaves, joshua_leaves, mahogany_leaves, maple_leaves, orchard_leaves,
-                     * rainbow_eucalyptus_leaves, ripe_joshua_leaves, ripe_orchard_leaves, willow_leaves
-                     */
-                    useFirstQuad = false;
-                }
-
-                BakedQuad quad = quads.get(useFirstQuad ? 0 : quads.size() - 1);
-                sprite = quad.getSprite();
-                shouldColor = quad.hasColor();
-            } else {
-                // fall back to block breaking particle
-                sprite = model.getParticleSprite();
-                shouldColor = true;
-            }
-
-            Identifier spriteId = sprite.getId();
-            NativeImage texture = ((SpriteAccessor) sprite).getImages()[0]; // directly extract texture
-            int blockColor = (shouldColor ? client.getBlockColors().getColor(state, world, pos, 0) : -1);
-
-            double[] color = calculateLeafColor(spriteId, texture, blockColor);
+            double[] color = getBlockTextureColor(state, world, pos);
 
             double r = color[0];
             double g = color[1];
             double b = color[2];
 
-            world.addParticle(
-                leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF,
-                x, y, z,
-                r, g, b
-            );
+            BlockStateParticleEffect params = new BlockStateParticleEffect(leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF, state);
+
+            world.addParticle(params, x, y, z, r, g, b);
         }
+    }
+
+    public static double[] getBlockTextureColor(BlockState state, World world, BlockPos pos) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        BakedModel model = client.getBlockRenderManager().getModel(state);
+
+        renderRandom.setSeed(state.getRenderingSeed(pos));
+        List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, renderRandom);
+
+        Sprite sprite;
+        boolean shouldColor;
+
+        // read data from the first bottom quad if possible
+        if (!quads.isEmpty()) {
+            boolean useFirstQuad = true;
+
+            Identifier id = Registry.BLOCK.getId(state.getBlock());
+            if (id.getNamespace().equals("byg")) {
+                /*
+                 * some BYG leaves have their actual tinted leaf texture in an "overlay" that comes second, full list:
+                 * flowering_orchard_leaves, joshua_leaves, mahogany_leaves, maple_leaves, orchard_leaves,
+                 * rainbow_eucalyptus_leaves, ripe_joshua_leaves, ripe_orchard_leaves, willow_leaves
+                 */
+                useFirstQuad = false;
+            }
+
+            BakedQuad quad = quads.get(useFirstQuad ? 0 : quads.size() - 1);
+            sprite = quad.getSprite();
+            shouldColor = quad.hasColor();
+        } else {
+            // fall back to block breaking particle
+            sprite = model.getParticleSprite();
+            shouldColor = true;
+        }
+
+        Identifier spriteId = sprite.getId();
+        NativeImage texture = ((SpriteAccessor) sprite).getImages()[0]; // directly extract texture
+        int blockColor = (shouldColor ? client.getBlockColors().getColor(state, world, pos, 0) : -1);
+
+        return calculateLeafColor(spriteId, texture, blockColor);
     }
 
     private static double[] calculateLeafColor(Identifier spriteId, NativeImage texture, int blockColor) {

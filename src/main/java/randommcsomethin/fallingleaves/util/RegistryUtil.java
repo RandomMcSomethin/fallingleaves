@@ -3,7 +3,8 @@ package randommcsomethin.fallingleaves.util;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
@@ -15,13 +16,13 @@ import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 
 public class RegistryUtil {
 
-    public static DefaultParticleType registerNewLeafParticle(String leafParticleName) {
+    public static ParticleType<BlockStateParticleEffect> registerNewLeafParticle(String leafParticleName) {
         LOGGER.debug("Registering particle: {}", leafParticleName);
 
         return Registry.register(
             Registry.PARTICLE_TYPE,
             makeId(leafParticleName),
-            FabricParticleTypes.simple(true)
+            FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY)
         );
     }
 

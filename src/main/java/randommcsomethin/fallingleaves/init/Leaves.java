@@ -6,7 +6,8 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.ActionResult;
@@ -29,8 +30,8 @@ import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
 import static randommcsomethin.fallingleaves.util.RegistryUtil.makeId;
 
 public class Leaves {
-    public static DefaultParticleType FALLING_LEAF;
-    public static DefaultParticleType FALLING_CONIFER_LEAF;
+    public static ParticleType<BlockStateParticleEffect> FALLING_LEAF;
+    public static ParticleType<BlockStateParticleEffect> FALLING_CONIFER_LEAF;
 
     private static boolean preLoadedRegisteredLeafBlocks = false;
 
@@ -40,8 +41,8 @@ public class Leaves {
         FALLING_LEAF = RegistryUtil.registerNewLeafParticle("falling_leaf");
         FALLING_CONIFER_LEAF = RegistryUtil.registerNewLeafParticle("falling_leaf_conifer");
 
-        ParticleFactoryRegistry.getInstance().register(FALLING_LEAF, FallingLeafParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(FALLING_CONIFER_LEAF, FallingLeafParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(FALLING_LEAF, FallingLeafParticle.BlockStateFactory::new);
+        ParticleFactoryRegistry.getInstance().register(FALLING_CONIFER_LEAF, FallingLeafParticle.BlockStateFactory::new);
 
         registerReloadListener();
         registerAttackBlockLeaves();

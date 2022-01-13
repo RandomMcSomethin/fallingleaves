@@ -5,10 +5,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.Wind;
 
 import java.util.List;
@@ -166,15 +168,23 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
     }
 
     @Environment(EnvType.CLIENT)
-    public static class DefaultFactory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider provider;
-
-        public DefaultFactory(SpriteProvider provider) {
-            this.provider = provider;
-        }
-
+    public record DefaultFactory(SpriteProvider provider) implements ParticleFactory<DefaultParticleType> {
         @Override
         public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double r, double g, double b) {
+            return new FallingLeafParticle(world, x, y, z, r, g, b, provider);
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    public record BlockStateFactory(SpriteProvider provider) implements ParticleFactory<BlockStateParticleEffect> {
+        @Override
+        public Particle createParticle(BlockStateParticleEffect parameters, ClientWorld world, double x, double y, double z, double unusedX, double unusedY, double unusedZ) {
+            double[] color = LeafUtil.getBlockTextureColor(parameters.getBlockState(), world, new BlockPos(x, y, z));
+
+            double r = color[0];
+            double g = color[1];
+            double b = color[2];
+
             return new FallingLeafParticle(world, x, y, z, r, g, b, provider);
         }
     }
