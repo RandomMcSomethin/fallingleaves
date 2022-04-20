@@ -16,8 +16,7 @@ import randommcsomethin.fallingleaves.util.LeafUtil;
 import java.util.Random;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
-import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
-import static randommcsomethin.fallingleaves.util.LeafUtil.trySpawnLeafParticle;
+import static randommcsomethin.fallingleaves.util.LeafUtil.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LeavesBlock.class)
@@ -35,11 +34,7 @@ public abstract class LeafTickMixin {
         if (!CONFIG.dropFromPlayerPlacedBlocks && state.get(LeavesBlock.PERSISTENT))
             return;
 
-        double spawnChance = LeafUtil.getModifiedSpawnChance(leafSettings);
-
-        if (spawnChance != 0 && random.nextDouble() < spawnChance) {
-            trySpawnLeafParticle(state, world, pos, random, leafSettings);
-        }
+        trySpawnLeafParticle(state, world, pos, random);
     }
 
 }

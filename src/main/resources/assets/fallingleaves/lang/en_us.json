@@ -20,6 +20,8 @@
   "text.autoconfig.fallingleaves.option.leafSpawners": "Additional blocks that drop leaves",
   "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "E.g. minecraft:pink_wool.",
   "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[1]": "After enabling this setting, a restart is required!",
+  "text.autoconfig.fallingleaves.option.startingSpawnRadius": "Starting Leaf Spawn Radius",
+  "text.autoconfig.fallingleaves.option.startingSpawnRadius.@Tooltip": "Leaves will not spawn inside this radius around the player.",
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "General",
   "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "Leaf Settings",
   "text.autoconfig.fallingleaves.category.fallingleaves.experimental": "Experimental",

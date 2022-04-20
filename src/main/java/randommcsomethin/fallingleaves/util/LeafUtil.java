@@ -17,6 +17,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +29,7 @@ import randommcsomethin.fallingleaves.mixin.SpriteAccessor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -56,23 +58,42 @@ public class LeafUtil {
         return spawnChance;
     }
 
-    public static void trySpawnLeafParticle(BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
+    public static void trySpawnLeafParticle(BlockState state, World world, BlockPos pos, Random random) {
+        if (CONFIG.startingSpawnRadius > 0) {
+            assert MinecraftClient.getInstance().player != null; // guaranteed when called from randomDisplayTick
+
+            if (LeafUtil.getMaximumDistance(MinecraftClient.getInstance().player.getBlockPos(), pos) < CONFIG.startingSpawnRadius) {
+                return;
+            }
+        }
+
+        // every leaf block or leaf spawner should have a settings entry
+        LeafSettingsEntry leafSettings = Objects.requireNonNull(getLeafSettingsEntry(state));
+        double spawnChance = LeafUtil.getModifiedSpawnChance(leafSettings);
+
+        if (spawnChance != 0 && random.nextDouble() < spawnChance) {
+            spawnLeafParticle(state, world, pos, random, leafSettings);
+        }
+    }
+
+    public static void spawnLeafParticle(BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
         // Particle position
         double x = pos.getX() + random.nextDouble();
         double y = pos.getY() - (state.isOpaque() ? 0.1 : 0); // don't spawn inside the block if it is opaque (to prevent leaves appearing black)
         double z = pos.getZ() + random.nextDouble();
 
-        if (shouldSpawnParticle(world, pos, x, y, z)) {
-            double[] color = getBlockTextureColor(state, world, pos);
+        if (!hasRoomForLeafParticle(world, pos, x, y, z))
+            return;
 
-            double r = color[0];
-            double g = color[1];
-            double b = color[2];
+        double[] color = getBlockTextureColor(state, world, pos);
 
-            BlockStateParticleEffect params = new BlockStateParticleEffect(leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF, state);
+        double r = color[0];
+        double g = color[1];
+        double b = color[2];
 
-            world.addParticle(params, x, y, z, r, g, b);
-        }
+        BlockStateParticleEffect params = new BlockStateParticleEffect(leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF, state);
+
+        world.addParticle(params, x, y, z, r, g, b);
     }
 
     public static double[] getBlockTextureColor(BlockState state, World world, BlockPos pos) {
@@ -138,7 +159,7 @@ public class LeafUtil {
         return textureColor;
     }
 
-    private static boolean shouldSpawnParticle(World world, BlockPos pos, double x, double y, double z) {
+    private static boolean hasRoomForLeafParticle(World world, BlockPos pos, double x, double y, double z) {
         // Never spawn a particle if there's a leaf block below
         // This test is necessary because modded leaf blocks may not have collisions
         if (isLeafBlock(world.getBlockState(pos.down()).getBlock(), true)) return false;
@@ -161,7 +182,7 @@ public class LeafUtil {
             ));
     }
 
-    /** Block tags can only be used once the integrated server is started */
+    /** Block tags can only be used once the integrated server has been started */
     public static boolean isLeafBlock(Block block, boolean useBlockTags) {
         return (block instanceof LeavesBlock) || (useBlockTags && block.getDefaultState().isIn(BlockTags.LEAVES));
     }
@@ -169,6 +190,13 @@ public class LeafUtil {
     @Nullable
     public static LeafSettingsEntry getLeafSettingsEntry(BlockState blockState) {
         return CONFIG.leafSettings.get(getBlockId(blockState));
+    }
+
+    public static int getMaximumDistance(Vec3i v1, Vec3i v2) {
+        int dx = Math.abs(v1.getX() - v2.getX());
+        int dy = Math.abs(v1.getY() - v2.getY());
+        int dz = Math.abs(v1.getZ() - v2.getZ());
+        return Math.max(dx, Math.max(dy, dz));
     }
 
     public static double[] averageColor(NativeImage image) {

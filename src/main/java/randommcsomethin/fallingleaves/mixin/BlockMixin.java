@@ -17,8 +17,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
-import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
-import static randommcsomethin.fallingleaves.util.LeafUtil.trySpawnLeafParticle;
+import static randommcsomethin.fallingleaves.util.LeafUtil.*;
 
 @Mixin(Block.class)
 public class BlockMixin {
@@ -30,13 +29,7 @@ public class BlockMixin {
         if (!CONFIG.leafSpawners.contains(id))
             return;
 
-        // every leaf spawner should have a settings entry
-        LeafSettingsEntry leafSettings = Objects.requireNonNull(getLeafSettingsEntry(state));
-        double spawnChance = LeafUtil.getModifiedSpawnChance(leafSettings);
-
-        if (spawnChance != 0 && random.nextDouble() < spawnChance) {
-            trySpawnLeafParticle(state, world, pos, random, leafSettings);
-        }
+        trySpawnLeafParticle(state, world, pos, random);
     }
 
 }
