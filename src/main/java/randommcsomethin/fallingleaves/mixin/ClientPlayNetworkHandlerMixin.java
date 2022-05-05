@@ -18,7 +18,7 @@ import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class ClientPlayNetworkHandlerMixin {
 
-    @Inject(at = @At("RETURN"), method = "onSynchronizeTags")
+    @Inject(method = "onSynchronizeTags", at = @At("RETURN"))
     public void loadRegisteredLeafBlocks(SynchronizeTagsS2CPacket packet, CallbackInfo ci) {
         LOGGER.info("Loading all registered leaf blocks.");
 

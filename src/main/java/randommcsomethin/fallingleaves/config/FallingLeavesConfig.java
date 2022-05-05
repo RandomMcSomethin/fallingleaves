@@ -94,6 +94,15 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = 0, max = 23)
     public int startingSpawnRadius = 0;
 
+    @ConfigEntry.Category("fallingleaves.experimental")
+    @ConfigEntry.Gui.Tooltip
+    public double decaySpawnRateFactor = 2.6;
+
+    @ConfigEntry.Category("fallingleaves.experimental")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 30)
+    public int maxDecayLeaves = 9;
+
     public void updateLeafSettings(Identifier blockId, Consumer<LeafSettingsEntry> f) {
         leafSettings.compute(blockId, (id, entry) -> {
             if (entry == null)

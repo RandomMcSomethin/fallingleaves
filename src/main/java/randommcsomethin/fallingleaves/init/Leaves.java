@@ -82,11 +82,14 @@ public class Leaves {
 
                 if (leafSettings != null) {
                     // binomial distribution - extremes (0 or 3 leaves) are less likely
+                    int count = 0;
                     for (int i = 0; i < 3; i++) {
                         if (random.nextBoolean()) {
-                            LeafUtil.spawnLeafParticle(state, world, pos, random, leafSettings);
+                            count++;
                         }
                     }
+
+                    LeafUtil.spawnLeafParticles(count, false, state, world, pos, random, leafSettings);
                 }
             }
 

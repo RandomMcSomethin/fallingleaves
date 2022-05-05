@@ -18,7 +18,7 @@ public abstract class ParticleManagerMixin {
     @Shadow
     protected ClientWorld world;
 
-    @Inject(at = @At("HEAD"), method = "tick")
+    @Inject(method = "tick", at = @At("HEAD"))
     public void tickWind(CallbackInfo ci) {
         Wind.tick(world);
     }

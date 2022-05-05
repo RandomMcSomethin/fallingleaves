@@ -42,7 +42,7 @@ public class LeafUtil {
 
     private static final Random renderRandom = new Random();
 
-    public static double getModifiedSpawnChance(LeafSettingsEntry leafSettings) {
+    public static double getModifiedSpawnChance(BlockState state, LeafSettingsEntry leafSettings) {
         double spawnChance = leafSettings.getSpawnChance();
 
 //        if (FabricLoader.getInstance().isModLoaded("seasons")) {
@@ -54,6 +54,12 @@ public class LeafUtil {
 //                spawnChance *= CONFIG.winterSpawnRateFactor;
 //            }
 //        }
+
+        if (CONFIG.decaySpawnRateFactor != 1.0f) {
+            if (isLeafBlock(state.getBlock(), true) && state.getBlock().hasRandomTicks(state)) { // decaying leaves have random ticks
+                spawnChance *= CONFIG.decaySpawnRateFactor;
+            }
+        }
 
         return spawnChance;
     }
@@ -69,31 +75,40 @@ public class LeafUtil {
 
         // every leaf block or leaf spawner should have a settings entry
         LeafSettingsEntry leafSettings = Objects.requireNonNull(getLeafSettingsEntry(state));
-        double spawnChance = LeafUtil.getModifiedSpawnChance(leafSettings);
+        double spawnChance = LeafUtil.getModifiedSpawnChance(state, leafSettings);
 
         if (spawnChance != 0 && random.nextDouble() < spawnChance) {
-            spawnLeafParticle(state, world, pos, random, leafSettings);
+            spawnLeafParticles(1, false, state, world, pos, random, leafSettings);
         }
     }
 
-    public static void spawnLeafParticle(BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
-        // Particle position
-        double x = pos.getX() + random.nextDouble();
-        double y = pos.getY() - (state.isOpaque() ? 0.1 : 0); // don't spawn inside the block if it is opaque (to prevent leaves appearing black)
-        double z = pos.getZ() + random.nextDouble();
+    public static void spawnLeafParticles(int count, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
+        if (count == 0) return;
 
-        if (!hasRoomForLeafParticle(world, pos, x, y, z))
-            return;
+        BlockStateParticleEffect params = new BlockStateParticleEffect(leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF, state);
 
         double[] color = getBlockTextureColor(state, world, pos);
-
         double r = color[0];
         double g = color[1];
         double b = color[2];
 
-        BlockStateParticleEffect params = new BlockStateParticleEffect(leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF, state);
+        for (int i = 0; i < count; i++) {
+            // Particle position
+            double x = pos.getX() + random.nextDouble();
+            double z = pos.getZ() + random.nextDouble();
+            double y;
 
-        world.addParticle(params, x, y, z, r, g, b);
+            if (spawnInsideBlock) {
+                y = pos.getY() + random.nextDouble();
+            } else {
+                y = pos.getY() - (state.isOpaque() ? 0.1 : 0); // move leaves outside of opaque blocks (to prevent them from appearing black)
+
+                if (!hasRoomForLeafParticle(world, pos, x, y, z))
+                    return;
+            }
+
+            world.addParticle(params, x, y, z, r, g, b);
+        }
     }
 
     public static double[] getBlockTextureColor(BlockState state, World world, BlockPos pos) {

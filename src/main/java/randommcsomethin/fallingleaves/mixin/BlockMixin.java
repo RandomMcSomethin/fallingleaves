@@ -22,7 +22,7 @@ import static randommcsomethin.fallingleaves.util.LeafUtil.*;
 @Mixin(Block.class)
 public class BlockMixin {
 
-    @Inject(at = @At("HEAD"), method = "randomDisplayTick")
+    @Inject(method = "randomDisplayTick", at = @At("HEAD"))
     private void randomLeafBlockTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
         // not a leaf spawner?
         Identifier id = Registry.BLOCK.getId(state.getBlock());
