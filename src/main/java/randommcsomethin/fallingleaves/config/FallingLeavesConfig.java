@@ -101,7 +101,7 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.Category("fallingleaves.experimental")
     @ConfigEntry.Gui.Tooltip(count = 2)
     @ConfigEntry.BoundedDiscrete(min = 0, max = 30)
-    public int maxDecayLeaves = 9;
+    public volatile int maxDecayLeaves = 9;
 
     public void updateLeafSettings(Identifier blockId, Consumer<LeafSettingsEntry> f) {
         leafSettings.compute(blockId, (id, entry) -> {

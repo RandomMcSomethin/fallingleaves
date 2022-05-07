@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -44,8 +45,12 @@ public abstract class LeafTickMixin {
     // TODO this only runs server-side and will thus only work in singleplayer
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+        if (CONFIG.maxDecayLeaves == 0)
+            return;
+
         MinecraftClient.getInstance().execute(() -> {
-            if (CONFIG.maxDecayLeaves == 0)
+            ClientWorld clientWorld = MinecraftClient.getInstance().world;
+            if (clientWorld == null)
                 return;
 
             LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
@@ -60,7 +65,7 @@ public abstract class LeafTickMixin {
                 }
             }
 
-            LeafUtil.spawnLeafParticles(count, true, state, MinecraftClient.getInstance().world, pos, random, leafSettings);
+            LeafUtil.spawnLeafParticles(count, true, state, clientWorld, pos, random, leafSettings);
         });
     }
 
