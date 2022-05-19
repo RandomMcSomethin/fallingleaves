@@ -9,8 +9,8 @@ import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntSliderBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import randommcsomethin.fallingleaves.config.ConfigDefaults;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
@@ -27,7 +27,7 @@ import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlock;
 
 public class LeafSettingsGuiProvider implements GuiProvider {
-    private static final TranslatableText RESET_TEXT = new TranslatableText("text.cloth-config.reset_value");
+    private static final MutableText RESET_TEXT = Text.translatable("text.cloth-config.reset_value");
 
     @SuppressWarnings({"rawtypes", "unchecked", "ConstantConditions"})
     @Override
@@ -45,7 +45,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
                     LeafSettingsEntry leafEntry = e.getValue();
                     Block block = getBlock(blockId);
 
-                    TranslatableText text = new TranslatableText(block.getTranslationKey());
+                    MutableText text = Text.translatable(block.getTranslationKey());
                     if (!leafEntry.isDefault(blockId)) {
                         text.append("*");
                     }
@@ -79,7 +79,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
         currentValue /= stepSize;
         defaultValue /= stepSize;
 
-        return new IntSliderBuilder(RESET_TEXT, new TranslatableText("config.fallingleaves.spawn_rate_factor"), currentValue, min, max)
+        return new IntSliderBuilder(RESET_TEXT, Text.translatable("config.fallingleaves.spawn_rate_factor"), currentValue, min, max)
             .setDefaultValue(defaultValue)
             .setSaveConsumer((Integer value) -> {
                 entry.spawnRateFactor = (value * stepSize) / 100.0;
@@ -87,12 +87,12 @@ public class LeafSettingsGuiProvider implements GuiProvider {
             .setTextGetter((Integer value) -> {
                 return Text.of((value * stepSize) + "%");
             })
-            .setTooltip(new TranslatableText("config.fallingleaves.spawn_rate_factor.@Tooltip"))
+            .setTooltip(Text.translatable("config.fallingleaves.spawn_rate_factor.@Tooltip"))
             .build();
     }
 
     private static BooleanListEntry buildIsConiferLeavesToggle(Identifier blockId, LeafSettingsEntry entry) {
-        return new BooleanToggleBuilder(RESET_TEXT, new TranslatableText("config.fallingleaves.is_conifer"), entry.isConiferBlock)
+        return new BooleanToggleBuilder(RESET_TEXT, Text.translatable("config.fallingleaves.is_conifer"), entry.isConiferBlock)
             .setDefaultValue(ConfigDefaults.isConifer(blockId))
             .setSaveConsumer((Boolean isConiferBlock) -> {
                 entry.isConiferBlock = isConiferBlock;

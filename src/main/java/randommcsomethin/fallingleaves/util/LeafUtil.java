@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.random.AbstractRandom;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +31,6 @@ import randommcsomethin.fallingleaves.mixin.SpriteAccessor;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,7 @@ import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlockId;
 
 public class LeafUtil {
 
-    private static final Random renderRandom = new Random();
+    private static final AbstractRandom renderRandom = AbstractRandom.create();
 
     public static double getModifiedSpawnChance(BlockState state, LeafSettingsEntry leafSettings) {
         double spawnChance = leafSettings.getSpawnChance();
@@ -64,7 +64,7 @@ public class LeafUtil {
         return spawnChance;
     }
 
-    public static void trySpawnLeafParticle(BlockState state, World world, BlockPos pos, Random random) {
+    public static void trySpawnLeafParticle(BlockState state, World world, BlockPos pos, AbstractRandom random) {
         if (CONFIG.startingSpawnRadius > 0) {
             assert MinecraftClient.getInstance().player != null; // guaranteed when called from randomDisplayTick
 
@@ -82,7 +82,7 @@ public class LeafUtil {
         }
     }
 
-    public static void spawnLeafParticles(int count, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
+    public static void spawnLeafParticles(int count, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, AbstractRandom random, LeafSettingsEntry leafSettings) {
         if (count == 0) return;
 
         BlockStateParticleEffect params = new BlockStateParticleEffect(leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF, state);

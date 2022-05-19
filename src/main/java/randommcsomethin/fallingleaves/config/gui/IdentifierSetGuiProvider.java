@@ -5,7 +5,7 @@ import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.lang.reflect.Field;
@@ -38,7 +38,7 @@ public class IdentifierSetGuiProvider implements GuiProvider {
         return Collections.singletonList(
             ConfigEntryBuilder.create()
                 .startStrList(
-                    new TranslatableText(i13n),
+                    Text.translatable(i13n),
                     Utils.<Set<Identifier>>getUnsafely(field, config).stream()
                         .map(Identifier::toString)
                         .collect(toList())

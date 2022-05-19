@@ -8,16 +8,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.AbstractRandom;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import randommcsomethin.fallingleaves.FallingLeavesClient;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.util.LeafUtil;
-
-import java.util.Random;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
@@ -28,7 +26,7 @@ import static randommcsomethin.fallingleaves.util.LeafUtil.trySpawnLeafParticle;
 public abstract class LeafTickMixin {
 
     @Inject(method = "randomDisplayTick", at = @At("HEAD"))
-    private void randomLeafBlockTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo info) {
+    private void randomLeafBlockTick(BlockState state, World world, BlockPos pos, AbstractRandom random, CallbackInfo ci) {
         LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
 
         // Every leaf block has a settings entry, but some blocks are considered leaves when they technically aren't
@@ -44,7 +42,7 @@ public abstract class LeafTickMixin {
 
     // TODO this only runs server-side and will thus only work in singleplayer
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, AbstractRandom random, CallbackInfo ci) {
         if (CONFIG.maxDecayLeaves == 0)
             return;
 
