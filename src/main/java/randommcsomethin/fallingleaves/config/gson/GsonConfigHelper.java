@@ -18,7 +18,11 @@ public class GsonConfigHelper {
 
     public GsonConfigHelper(String configName) {
         this.configPath = FabricLoader.getInstance().getConfigDir().resolve(configName + ".json");
-        this.gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        this.gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(); // note: not using IdentifierTypeAdapter
+    }
+
+    public boolean exists() {
+        return Files.exists(configPath);
     }
 
     public <T> T load(Class<T> configType) throws IOException, JsonParseException {

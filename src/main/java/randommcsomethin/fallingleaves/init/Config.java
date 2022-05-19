@@ -12,7 +12,8 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
-import randommcsomethin.fallingleaves.config.*;
+import randommcsomethin.fallingleaves.config.FallingLeavesConfig;
+import randommcsomethin.fallingleaves.config.FallingLeavesConfigV0;
 import randommcsomethin.fallingleaves.config.gson.GsonConfigHelper;
 import randommcsomethin.fallingleaves.config.gson.IdentifierTypeAdapter;
 import randommcsomethin.fallingleaves.config.gui.IdentifierGuiProvider;
@@ -80,8 +81,9 @@ public class Config {
     /** Migrates the old config v0 (1.0 to 1.4) to v1 (1.5+) */
     private static void migrateOldConfig() {
         GsonConfigHelper gsonHelper = new GsonConfigHelper(FallingLeavesClient.MOD_ID);
-        FallingLeavesConfigV0 oldConfig;
+        if (!gsonHelper.exists()) return; // nothing to migrate
 
+        FallingLeavesConfigV0 oldConfig;
         try {
             oldConfig = gsonHelper.load(FallingLeavesConfigV0.class);
         } catch (IOException | JsonParseException e) {

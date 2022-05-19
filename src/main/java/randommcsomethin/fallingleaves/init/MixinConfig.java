@@ -21,9 +21,11 @@ public class MixinConfig implements IMixinConfigPlugin {
 		List leafSpawners = List.of();
 		try {
 			GsonConfigHelper gsonHelper = new GsonConfigHelper(FallingLeavesClient.MOD_ID);
-			Map config = gsonHelper.load(Map.class);
-			if (config.get("leafSpawners") != null) {
-				leafSpawners = (List) config.get("leafSpawners");
+			if (gsonHelper.exists()) {
+				Map config = gsonHelper.load(Map.class);
+				if (config.get("leafSpawners") != null) {
+					leafSpawners = (List) config.get("leafSpawners");
+				}
 			}
 		} catch (IOException ignored) {
 		} catch (Exception e) {
