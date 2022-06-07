@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.AbstractRandom;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ import static randommcsomethin.fallingleaves.util.LeafUtil.*;
 public class BlockMixin {
 
     @Inject(method = "randomDisplayTick", at = @At("HEAD"))
-    private void randomLeafBlockTick(BlockState state, World world, BlockPos pos, AbstractRandom random, CallbackInfo ci) {
+    private void randomLeafBlockTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo ci) {
         // not a leaf spawner?
         Identifier id = Registry.BLOCK.getId(state.getBlock());
         if (!CONFIG.leafSpawners.contains(id))

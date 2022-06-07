@@ -15,7 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.AbstractRandom;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
@@ -72,7 +72,7 @@ public class Leaves {
 
     /** Spawn between 0 and 3 leaves on hitting a leaf block */
     private static void registerAttackBlockLeaves() {
-        AbstractRandom random = AbstractRandom.create();
+        Random random = Random.createLocal();
 
         AttackBlockCallback.EVENT.register((PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) -> {
             if (world.isClient) {
