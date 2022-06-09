@@ -58,12 +58,12 @@ public abstract class LeafTickMixin {
             // binomial distribution - extremes are less likely
             int count = 0;
             for (int i = 0; i < CONFIG.maxDecayLeaves; i++) {
-                if (random.nextBoolean()) {
+                if (clientWorld.random.nextBoolean()) {
                     count++;
                 }
             }
 
-            LeafUtil.spawnLeafParticles(count, true, state, clientWorld, pos, random, leafSettings);
+            LeafUtil.spawnLeafParticles(count, true, state, clientWorld, pos, clientWorld.random, leafSettings);
         });
     }
 
