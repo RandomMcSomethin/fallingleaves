@@ -34,7 +34,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modImplementation "com.github.Fourmisain:fabric-seasons:jitpack-SNAPSHOT"
+    modCompileOnly "com.github.Fourmisain:fabric-seasons:jitpack-SNAPSHOT"
 }
 
 processResources {
