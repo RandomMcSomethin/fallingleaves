@@ -6,6 +6,9 @@ public class ConfigDefaults {
 
     public static boolean isConifer(Identifier blockId) {
         switch (blockId.toString()) {
+            case "bewitchment:juniper_leaves":
+            case "bewitchment:cypress_leaves":
+            case "bewitchment:dragons_blood_leaves":
             case "biomemakeover:swamp_cypress_leaves":
             case "byg:araucaria_leaves":
             case "byg:blue_spruce_leaves":
