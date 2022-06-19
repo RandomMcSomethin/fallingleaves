@@ -6,9 +6,9 @@ public class ConfigDefaults {
 
     public static boolean isConifer(Identifier blockId) {
         switch (blockId.toString()) {
-            case "bewitchment:juniper_leaves":
             case "bewitchment:cypress_leaves":
             case "bewitchment:dragons_blood_leaves":
+            case "bewitchment:juniper_leaves":
             case "biomemakeover:swamp_cypress_leaves":
             case "byg:araucaria_leaves":
             case "byg:blue_spruce_leaves":
@@ -37,12 +37,15 @@ public class ConfigDefaults {
             // Shrubs and large leaved trees
             case "byg:palm_leaves":
             case "minecraft:jungle_leaves":
+            case "promenade:palm_leaves":
             case "terrestria:japenese_maple_shrub_leaves":
             case "terrestria:jungle_palm_leaves":
             case "terrestria:yucca_palm_leaves":
                 return 0.0;
 
             // Autumn Leaves
+            case "promenade:autumn_birch_leaves":
+            case "promenade:autumn_oak_leaves":
             case "traverse:brown_autumnal_leaves":
             case "traverse:orange_autumnal_leaves":
             case "traverse:red_autumnal_leaves":
@@ -53,6 +56,8 @@ public class ConfigDefaults {
             case "byg:pink_cherry_leaves":
             case "byg:skyris_leaves":
             case "byg:white_cherry_leaves":
+            case "promenade:pink_cherry_leaves":
+            case "promenade:white_cherry_leaves":
             case "terrestria:sakura_leaves":
                 return 1.4;
 
