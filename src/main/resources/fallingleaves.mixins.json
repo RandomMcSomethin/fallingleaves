@@ -11,7 +11,8 @@
     "MinecraftClientMixin",
     "NativeImageAccessor",
     "ParticleManagerMixin",
-    "SpriteAccessor"
+    "SpriteAccessor",
+    "options.SodiumExtraOptions"
   ],
   "injectors": {
     "defaultRequire": 1

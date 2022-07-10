@@ -1,5 +1,6 @@
 package randommcsomethin.fallingleaves.init;
 
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -32,11 +33,13 @@ public class MixinConfig implements IMixinConfigPlugin {
 			FallingLeavesClient.LOGGER.error("failed checking for leafSpawners entries", e);
 		}
 
-		// only apply "leaf spawner" mixin if spawners are defined
-		if (mixinName.equals("BlockMixin"))
-			return !leafSpawners.isEmpty();
-
-		return true;
+		return switch (mixinName) {
+			// only apply "leaf spawner" mixin if spawners are defined
+			case "BlockMixin" -> !leafSpawners.isEmpty();
+			// options mixin
+			case "options.SodiumExtraOptions" -> FabricLoader.getInstance().isModLoaded("sodium-extra");
+			default -> true;
+		};
 	}
 
 	@Override public void onLoad(String mixinPackage) {}

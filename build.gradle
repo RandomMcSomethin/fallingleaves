@@ -13,6 +13,13 @@ repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/" }
     maven { url 'https://jitpack.io' }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
@@ -35,6 +42,8 @@ dependencies {
     }
 
     modCompileOnly "com.github.Fourmisain:fabric-seasons:jitpack-SNAPSHOT"
+    modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
+    modCompileOnly "maven.modrinth:sodium-extra:${project.sodium_extra_version}"
 }
 
 processResources {

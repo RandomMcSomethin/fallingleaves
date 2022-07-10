@@ -15,6 +15,10 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Gui.Excluded
     @ConfigEntry.Category("fallingleaves.general")
+    public boolean enabled = true;
+
+    @ConfigEntry.Gui.Excluded
+    @ConfigEntry.Category("fallingleaves.general")
     public int version = 1;
 
     @ConfigEntry.Gui.Excluded
