@@ -1,5 +1,7 @@
 {
   "text.autoconfig.fallingleaves.title": "Falling Leaves",
+  "text.autoconfig.fallingleaves.option.enabled": "Enabled",
+  "text.autoconfig.fallingleaves.option.enabled.@Tooltip": "Allows to globally disable all features",
   "text.autoconfig.fallingleaves.option.leafSize": "Leaf Size",
   "text.autoconfig.fallingleaves.option.leafLifespan": "Leaf Life Span (in Ticks)",
   "text.autoconfig.fallingleaves.option.leafLifespan.@Tooltip": "20 ticks are roughly 1 second",
@@ -8,6 +10,7 @@
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "Conifer Leaf Spawn Rate",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "How many conifer leaves spawn over time",
   "text.autoconfig.fallingleaves.option.dropFromPlayerPlacedBlocks": "Drop leaves from player-placed blocks?",
+  "text.autoconfig.fallingleaves.option.leavesOnBlockHit": "Drop some leaves when hitting a block?",
   "text.autoconfig.fallingleaves.option.minimumFreeSpaceBelow": "Needed vertical space (in half-blocks)",
   "text.autoconfig.fallingleaves.option.minimumFreeSpaceBelow.@Tooltip": "Leaves only fall from a block if there's enough free space below",
   "text.autoconfig.fallingleaves.option.windEnabled": "Enable Wind?",

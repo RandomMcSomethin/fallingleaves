@@ -22,6 +22,9 @@ public class FallingLeavesConfig implements ConfigData {
     public boolean displayDebugData = false;
 
     @ConfigEntry.Category("fallingleaves.general")
+    public boolean enabled = true;
+
+    @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.BoundedDiscrete(min = 1, max = 10)
     private int leafSize = 5;
 
@@ -59,6 +62,9 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Category("fallingleaves.general")
     public boolean dropFromPlayerPlacedBlocks = true;
+
+    @ConfigEntry.Category("fallingleaves.general")
+    public boolean leavesOnBlockHit = true;
 
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip

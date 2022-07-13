@@ -16,10 +16,13 @@ import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.util.LeafUtil.*;
 
 @Mixin(Block.class)
-public class BlockMixin {
+public abstract class BlockMixin {
 
     @Inject(method = "randomDisplayTick", at = @At("HEAD"))
     private void randomLeafBlockTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo ci) {
+        if (!CONFIG.enabled)
+            return;
+
         // not a leaf spawner?
         Identifier id = Registry.BLOCK.getId(state.getBlock());
         if (!CONFIG.leafSpawners.contains(id))

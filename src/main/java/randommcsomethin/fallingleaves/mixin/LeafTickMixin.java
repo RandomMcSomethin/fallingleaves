@@ -27,6 +27,9 @@ public abstract class LeafTickMixin {
 
     @Inject(method = "randomDisplayTick", at = @At("HEAD"))
     private void randomLeafBlockTick(BlockState state, World world, BlockPos pos, Random random, CallbackInfo ci) {
+        if (!CONFIG.enabled)
+            return;
+
         LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
 
         // Every leaf block has a settings entry, but some blocks are considered leaves when they technically aren't
@@ -43,7 +46,7 @@ public abstract class LeafTickMixin {
     // TODO this only runs server-side and will thus only work in singleplayer
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (CONFIG.maxDecayLeaves == 0)
+        if (!CONFIG.enabled || CONFIG.maxDecayLeaves == 0)
             return;
 
         MinecraftClient.getInstance().execute(() -> {

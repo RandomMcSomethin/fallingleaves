@@ -72,21 +72,22 @@ public class Leaves {
     /** Spawn between 0 and 3 leaves on hitting a leaf block */
     private static void registerAttackBlockLeaves() {
         AttackBlockCallback.EVENT.register((PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) -> {
-            if (world.isClient) {
-                BlockState state = world.getBlockState(pos);
-                LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
+            if (!CONFIG.enabled || !CONFIG.leavesOnBlockHit || !world.isClient)
+                return ActionResult.PASS;
 
-                if (leafSettings != null) {
-                    // binomial distribution - extremes (0 or 3 leaves) are less likely
-                    int count = 0;
-                    for (int i = 0; i < 3; i++) {
-                        if (world.random.nextBoolean()) {
-                            count++;
-                        }
+            BlockState state = world.getBlockState(pos);
+            LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
+
+            if (leafSettings != null) {
+                // binomial distribution - extremes (0 or 3 leaves) are less likely
+                int count = 0;
+                for (int i = 0; i < 3; i++) {
+                    if (world.random.nextBoolean()) {
+                        count++;
                     }
-
-                    LeafUtil.spawnLeafParticles(count, false, state, world, pos, world.random, leafSettings);
                 }
+
+                LeafUtil.spawnLeafParticles(count, false, state, world, pos, world.random, leafSettings);
             }
 
             return ActionResult.PASS;
