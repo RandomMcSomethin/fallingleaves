@@ -93,12 +93,7 @@ public class LeafUtil {
 
         BlockStateParticleEffect params = new BlockStateParticleEffect(leafSettings.isConiferBlock ? Leaves.FALLING_CONIFER_LEAF : Leaves.FALLING_LEAF, state);
 
-        double[] color = getBlockTextureColor(state, world, pos);
-        double r = color[0];
-        double g = color[1];
-        double b = color[2];
-
-        spawnParticles(count, params, r, g, b, spawnInsideBlock, state, world, pos, random, leafSettings);
+        spawnParticles(count, params, spawnInsideBlock, state, world, pos, random, leafSettings);
     }
 
     public static void spawnSnowParticles(int count, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
@@ -128,10 +123,10 @@ public class LeafUtil {
 
         BlockStateParticleEffect params = new BlockStateParticleEffect(Leaves.FALLING_SNOW, state);
 
-        spawnParticles(count, params, 1.0, 1.0, 1.0, spawnInsideBlock, state, world, pos, random, leafSettings);
+        spawnParticles(count, params, spawnInsideBlock, state, world, pos, random, leafSettings);
     }
 
-    public static void spawnParticles(int count, BlockStateParticleEffect params, double r, double g, double b, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
+    public static void spawnParticles(int count, BlockStateParticleEffect params, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
         if (count == 0) return;
 
         for (int i = 0; i < count; i++) {
@@ -149,7 +144,7 @@ public class LeafUtil {
                     continue;
             }
 
-            world.addParticle(params, x, y, z, r, g, b);
+            world.addParticle(params, x, y, z, 0, 0, 0);
         }
     }
 
