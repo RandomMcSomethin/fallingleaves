@@ -28,7 +28,7 @@ public abstract class BlockMixin {
         if (!CONFIG.leafSpawners.contains(id))
             return;
 
-        trySpawnLeafParticle(state, world, pos, random);
+        trySpawnLeafAndSnowParticle(state, world, pos, random);
     }
 
 }

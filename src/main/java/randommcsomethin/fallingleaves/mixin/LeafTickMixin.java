@@ -19,7 +19,7 @@ import randommcsomethin.fallingleaves.util.LeafUtil;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
-import static randommcsomethin.fallingleaves.util.LeafUtil.trySpawnLeafParticle;
+import static randommcsomethin.fallingleaves.util.LeafUtil.trySpawnLeafAndSnowParticle;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LeavesBlock.class)
@@ -40,7 +40,7 @@ public abstract class LeafTickMixin {
         if (!CONFIG.dropFromPlayerPlacedBlocks && state.get(LeavesBlock.PERSISTENT))
             return;
 
-        trySpawnLeafParticle(state, world, pos, random);
+        trySpawnLeafAndSnowParticle(state, world, pos, random);
     }
 
     // TODO this only runs server-side and will thus only work in singleplayer
@@ -67,6 +67,15 @@ public abstract class LeafTickMixin {
             }
 
             LeafUtil.spawnLeafParticles(count, true, state, clientWorld, pos, clientWorld.random, leafSettings);
+
+            int snowCount = 0;
+            for (int i = 0; i < 2*CONFIG.maxDecayLeaves; i++) {
+                if (clientWorld.random.nextBoolean()) {
+                    snowCount++;
+                }
+            }
+
+            LeafUtil.spawnSnowParticles(snowCount, true, state, clientWorld, pos, clientWorld.random, leafSettings);
         });
     }
 

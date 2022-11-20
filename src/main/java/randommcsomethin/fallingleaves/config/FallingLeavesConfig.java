@@ -61,6 +61,16 @@ public class FallingLeavesConfig implements ConfigData {
     }
 
     @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 40)
+    private int snowflakeSpawnRate = 15;
+
+    public double getSnowflakeSpawnChance() {
+        double actualSpawnRate = snowflakeSpawnRate / 10.0;
+        return actualSpawnRate / 75.0;
+    }
+
+    @ConfigEntry.Category("fallingleaves.general")
     public boolean dropFromPlayerPlacedBlocks = true;
 
     @ConfigEntry.Category("fallingleaves.general")

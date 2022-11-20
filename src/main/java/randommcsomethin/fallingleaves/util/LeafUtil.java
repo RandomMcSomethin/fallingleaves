@@ -3,9 +3,7 @@ package randommcsomethin.fallingleaves.util;
 import io.github.lucaargolo.seasons.FabricSeasons;
 import io.github.lucaargolo.seasons.utils.Season;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -20,6 +18,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.village.VillagerType;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.MemoryUtil;
@@ -64,7 +64,7 @@ public class LeafUtil {
         return spawnChance;
     }
 
-    public static void trySpawnLeafParticle(BlockState state, World world, BlockPos pos, Random random) {
+    public static void trySpawnLeafAndSnowParticle(BlockState state, World world, BlockPos pos, Random random) {
         if (CONFIG.startingSpawnRadius > 0) {
             assert MinecraftClient.getInstance().player != null; // guaranteed when called from randomDisplayTick
 
@@ -80,6 +80,12 @@ public class LeafUtil {
         if (spawnChance != 0 && random.nextDouble() < spawnChance) {
             spawnLeafParticles(1, false, state, world, pos, random, leafSettings);
         }
+
+        // snow spawns independently from leaf particles (and the leaf block settings)
+        double snowSpawnChance = CONFIG.getSnowflakeSpawnChance();
+        if (snowSpawnChance != 0 && random.nextDouble() < snowSpawnChance) {
+            spawnSnowParticles(1, false, state, world, pos, random, leafSettings);
+        }
     }
 
     public static void spawnLeafParticles(int count, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
@@ -91,6 +97,42 @@ public class LeafUtil {
         double r = color[0];
         double g = color[1];
         double b = color[2];
+
+        spawnParticles(count, params, r, g, b, spawnInsideBlock, state, world, pos, random, leafSettings);
+    }
+
+    public static void spawnSnowParticles(int count, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
+        if (count == 0) return;
+
+        boolean snowy = false;
+
+        // matches all snowy vanilla biomes
+        if (VillagerType.forBiome(world.getBiome(pos)) == VillagerType.SNOW) {
+            snowy = true;
+        } else {
+            // check the top for snow layers/blocks
+            Block topBlock = world.getBlockState(world.getTopPosition(Heightmap.Type.WORLD_SURFACE, pos).down()).getBlock();
+
+            boolean isSnowLayer = topBlock instanceof SnowBlock; // works for seasons:seasonal_snow too
+            if (isSnowLayer || topBlock == Blocks.SNOW_BLOCK || topBlock instanceof PowderSnowBlock) {
+                snowy = true;
+            }
+        }
+
+        // biome temperature checks for snow don't work well, Seasons globally puts them at or below 0 in winter too
+        // if (world.getBiome(pos).value().getTemperature() < 0.0)
+        //    snowy = true;
+
+        if (!snowy)
+            return;
+
+        BlockStateParticleEffect params = new BlockStateParticleEffect(Leaves.FALLING_SNOW, state);
+
+        spawnParticles(count, params, 1.0, 1.0, 1.0, spawnInsideBlock, state, world, pos, random, leafSettings);
+    }
+
+    public static void spawnParticles(int count, BlockStateParticleEffect params, double r, double g, double b, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
+        if (count == 0) return;
 
         for (int i = 0; i < count; i++) {
             // Particle position
@@ -104,7 +146,7 @@ public class LeafUtil {
                 y = pos.getY() - (state.isOpaque() ? 0.1 : 0); // move leaves outside of opaque blocks (to prevent them from appearing black)
 
                 if (!hasRoomForLeafParticle(world, pos, x, y, z))
-                    return;
+                    continue;
             }
 
             world.addParticle(params, x, y, z, r, g, b);

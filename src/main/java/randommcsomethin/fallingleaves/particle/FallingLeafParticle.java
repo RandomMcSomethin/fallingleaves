@@ -10,6 +10,8 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import randommcsomethin.fallingleaves.FallingLeavesClient;
+import randommcsomethin.fallingleaves.init.Leaves;
 import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.Wind;
 
@@ -179,11 +181,17 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
     public record BlockStateFactory(SpriteProvider provider) implements ParticleFactory<BlockStateParticleEffect> {
         @Override
         public Particle createParticle(BlockStateParticleEffect parameters, ClientWorld world, double x, double y, double z, double unusedX, double unusedY, double unusedZ) {
-            double[] color = LeafUtil.getBlockTextureColor(parameters.getBlockState(), world, new BlockPos(x, y, z));
+            double r, g, b;
 
-            double r = color[0];
-            double g = color[1];
-            double b = color[2];
+            if (parameters.getType() == Leaves.FALLING_SNOW) {
+                r = g = b = 1;
+            } else {
+                double[] color = LeafUtil.getBlockTextureColor(parameters.getBlockState(), world, new BlockPos(x, y, z));
+
+                r = color[0];
+                g = color[1];
+                b = color[2];
+            }
 
             return new FallingLeafParticle(world, x, y, z, r, g, b, provider);
         }

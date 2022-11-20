@@ -30,6 +30,7 @@ import static randommcsomethin.fallingleaves.util.RegistryUtil.makeId;
 public class Leaves {
     public static ParticleType<BlockStateParticleEffect> FALLING_LEAF;
     public static ParticleType<BlockStateParticleEffect> FALLING_CONIFER_LEAF;
+    public static ParticleType<BlockStateParticleEffect> FALLING_SNOW;
 
     private static boolean preLoadedRegisteredLeafBlocks = false;
 
@@ -38,9 +39,11 @@ public class Leaves {
 
         FALLING_LEAF = RegistryUtil.registerNewLeafParticle("falling_leaf");
         FALLING_CONIFER_LEAF = RegistryUtil.registerNewLeafParticle("falling_leaf_conifer");
+        FALLING_SNOW = RegistryUtil.registerNewLeafParticle("falling_snow");
 
         ParticleFactoryRegistry.getInstance().register(FALLING_LEAF, FallingLeafParticle.BlockStateFactory::new);
         ParticleFactoryRegistry.getInstance().register(FALLING_CONIFER_LEAF, FallingLeafParticle.BlockStateFactory::new);
+        ParticleFactoryRegistry.getInstance().register(FALLING_SNOW, FallingLeafParticle.BlockStateFactory::new);
 
         registerReloadListener();
         registerAttackBlockLeaves();
@@ -88,6 +91,18 @@ public class Leaves {
                 }
 
                 LeafUtil.spawnLeafParticles(count, false, state, world, pos, world.random, leafSettings);
+
+                // spawn a bit of snow too
+                if (CONFIG.getSnowflakeSpawnChance() != 0) {
+                    int snowCount = 0;
+                    for (int i = 0; i < 6; i++) {
+                        if (world.random.nextBoolean()) {
+                            snowCount++;
+                        }
+                    }
+
+                    LeafUtil.spawnSnowParticles(snowCount, false, state, world, pos, world.random, leafSettings);
+                }
             }
 
             return ActionResult.PASS;

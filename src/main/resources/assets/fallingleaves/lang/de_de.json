@@ -8,6 +8,8 @@
   "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "Wieviele Blätter über Zeit spawnen",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "Nadelblatt-Spawnrate",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "Wieviele Nadelblätter über Zeit spawnen",
+  "text.autoconfig.fallingleaves.option.snowflakeSpawnRate": "Schneeflock-Spawnrate",
+  "text.autoconfig.fallingleaves.option.snowflakeSpawnRate.@Tooltip": "Wieviele Schneeflocken über Zeit von beschneiten Bäumen fallen",
   "text.autoconfig.fallingleaves.option.dropFromPlayerPlacedBlocks": "Fallen Blätter von Spieler-platziertem Laub?",
   "text.autoconfig.fallingleaves.option.leavesOnBlockHit": "Fallen Blätter wenn Laub geschlagen wird?",
   "text.autoconfig.fallingleaves.option.minimumFreeSpaceBelow": "Nötiger vertikaler Freiraum (in Halbblöcken)",

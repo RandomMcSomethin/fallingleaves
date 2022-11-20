@@ -8,6 +8,8 @@
   "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "How many leaves spawn over time",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "Conifer Leaf Spawn Rate",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "How many conifer leaves spawn over time",
+  "text.autoconfig.fallingleaves.option.snowflakeSpawnRate": "Snowflake Spawn Rate",
+  "text.autoconfig.fallingleaves.option.snowflakeSpawnRate.@Tooltip": "How many snowflakes fall from snowy trees over time",
   "text.autoconfig.fallingleaves.option.dropFromPlayerPlacedBlocks": "Drop leaves from player-placed blocks?",
   "text.autoconfig.fallingleaves.option.leavesOnBlockHit": "Drop some leaves when hitting a block?",
   "text.autoconfig.fallingleaves.option.minimumFreeSpaceBelow": "Needed vertical space (in half-blocks)",
