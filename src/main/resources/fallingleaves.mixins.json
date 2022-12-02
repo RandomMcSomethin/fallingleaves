@@ -11,7 +11,7 @@
     "MinecraftClientMixin",
     "NativeImageAccessor",
     "ParticleManagerMixin",
-    "SpriteAccessor"
+    "SpriteContentsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

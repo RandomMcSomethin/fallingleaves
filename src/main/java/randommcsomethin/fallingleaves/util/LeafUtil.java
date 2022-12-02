@@ -9,15 +9,16 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteContents;
 import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.tag.BlockTags;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerType;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -26,7 +27,7 @@ import org.lwjgl.system.MemoryUtil;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.init.Leaves;
 import randommcsomethin.fallingleaves.mixin.NativeImageAccessor;
-import randommcsomethin.fallingleaves.mixin.SpriteAccessor;
+import randommcsomethin.fallingleaves.mixin.SpriteContentsAccessor;
 
 import java.util.List;
 import java.util.Map;
@@ -162,7 +163,7 @@ public class LeafUtil {
         if (!quads.isEmpty()) {
             boolean useFirstQuad = true;
 
-            Identifier id = Registry.BLOCK.getId(state.getBlock());
+            Identifier id = Registries.BLOCK.getId(state.getBlock());
             if (id.getNamespace().equals("byg")) {
                 /*
                  * some BYG leaves have their actual tinted leaf texture in an "overlay" that comes second, full list:
@@ -181,8 +182,9 @@ public class LeafUtil {
             shouldColor = true;
         }
 
-        Identifier spriteId = sprite.getId();
-        NativeImage texture = ((SpriteAccessor) sprite).getImages()[0]; // directly extract texture
+        SpriteContents spriteContents = sprite.getContents();
+        Identifier spriteId = spriteContents.getId();
+        NativeImage texture = ((SpriteContentsAccessor) spriteContents).getMipmapLevelsImages()[0]; // directly extract texture
         int blockColor = (shouldColor ? client.getBlockColors().getColor(state, world, pos, 0) : -1);
 
         return calculateLeafColor(spriteId, texture, blockColor);
@@ -224,10 +226,10 @@ public class LeafUtil {
     }
 
     public static Map<Identifier, LeafSettingsEntry> getRegisteredLeafBlocks(boolean useBlockTags) {
-        return Registry.BLOCK
+        return Registries.BLOCK
             .getIds()
             .stream()
-            .filter(entry -> isLeafBlock(Registry.BLOCK.get(entry), useBlockTags))
+            .filter(entry -> isLeafBlock(Registries.BLOCK.get(entry), useBlockTags))
             .collect(Collectors.toMap(
                 Function.identity(),
                 LeafSettingsEntry::new

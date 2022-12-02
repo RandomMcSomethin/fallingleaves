@@ -5,8 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
 
@@ -20,7 +21,7 @@ public class RegistryUtil {
         LOGGER.debug("Registering particle: {}", leafParticleName);
 
         return Registry.register(
-            Registry.PARTICLE_TYPE,
+            Registries.PARTICLE_TYPE,
             makeId(leafParticleName),
             FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY)
         );
@@ -31,12 +32,12 @@ public class RegistryUtil {
     }
 
     public static Identifier getBlockId(BlockState blockState) {
-        return Registry.BLOCK.getId(blockState.getBlock());
+        return Registries.BLOCK.getId(blockState.getBlock());
     }
 
     @Nullable
     public static Block getBlock(Identifier blockId) {
-        Optional<Block> maybeBlock = Registry.BLOCK.getOrEmpty(blockId);
+        Optional<Block> maybeBlock = Registries.BLOCK.getOrEmpty(blockId);
         return maybeBlock.orElse(null);
     }
 

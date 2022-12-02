@@ -5,8 +5,8 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 public class ModUtil {
@@ -17,8 +17,8 @@ public class ModUtil {
             return "Minecraft";
         }
 
-        Identifier blockId = Registry.BLOCK.getId(block);
-        if (blockId.equals(Registry.BLOCK.getDefaultId())) {
+        Identifier blockId = Registries.BLOCK.getId(block);
+        if (blockId.equals(Registries.BLOCK.getDefaultId())) {
             return null;
         }
 
