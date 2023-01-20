@@ -1,13 +1,19 @@
 package randommcsomethin.fallingleaves.config;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.minecraft.command.argument.BlockArgumentParser;
+import net.minecraft.registry.Registries;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
 
 import java.util.*;
 import java.util.function.Consumer;
+
+import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 
 @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
 @Config(name = FallingLeavesClient.MOD_ID)
@@ -95,7 +101,11 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Category("fallingleaves.experimental")
     @ConfigEntry.Gui.Tooltip(count = 2)
-    public Set<Identifier> leafSpawners = new HashSet<>();
+    private Set<String> leafSpawners = new HashSet<>();  // block ids with properties, e.g. minecraft:bamboo[leaves=large]
+    @ConfigEntry.Gui.Excluded @ConfigEntry.Category("fallingleaves.experimental")
+    private transient Set<Identifier> leafSpawnerIds = new HashSet<>();
+    @ConfigEntry.Gui.Excluded @ConfigEntry.Category("fallingleaves.experimental")
+    private transient Map<Identifier, Map<Property<?>, Comparable<?>>> leafSpawnerProperties = new HashMap<>();
 
     @ConfigEntry.Category("fallingleaves.experimental")
     @ConfigEntry.Gui.Tooltip
@@ -118,6 +128,14 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 2)
     @ConfigEntry.BoundedDiscrete(min = 0, max = 30)
     public volatile int maxDecayLeaves = 9;
+
+    public boolean isLeafSpawner(Identifier blockId) {
+        return leafSpawnerIds.contains(blockId);
+    }
+
+    public Map<Property<?>, Comparable<?>> getLeafSpawnerProperties(Identifier blockId) {
+        return leafSpawnerProperties.getOrDefault(blockId, Map.of());
+    }
 
     public void updateLeafSettings(Identifier blockId, Consumer<LeafSettingsEntry> f) {
         leafSettings.compute(blockId, (id, entry) -> {
@@ -147,14 +165,41 @@ public class FallingLeavesConfig implements ConfigData {
         coniferLeafSpawnRate = (int)(coniferLeafRate * 10.0);
     }
 
+    private void parseLeafSpawners() {
+        leafSpawnerIds.clear();
+        leafSpawnerProperties.clear();
+
+        for (var spawner : leafSpawners) {
+            int a = spawner.indexOf("[");
+            if (a != -1) {
+                // get id
+                Identifier id = new Identifier(spawner.substring(0, a));
+                leafSpawnerIds.add(id);
+
+                // parse properties
+                try {
+                    var block = BlockArgumentParser.block(Registries.BLOCK.getReadOnlyWrapper(), spawner, false);
+                    leafSpawnerProperties.put(id, block.properties());
+                } catch (CommandSyntaxException e) {
+                    LOGGER.error("could not parse block state arguments of {}", spawner);
+                }
+            } else {
+                // regular id
+                leafSpawnerIds.add(new Identifier(spawner));
+            }
+        }
+    }
+
     @Override
     public void validatePostLoad() throws ConfigData.ValidationException {
         version = 1;
         leafSize = Math.max(leafSize, 1);
         minimumFreeSpaceBelow = Math.max(minimumFreeSpaceBelow, 1);
 
-        for (var spawner : leafSpawners)
-            leafSettings.computeIfAbsent(spawner, LeafSettingsEntry::new);
-    }
+        parseLeafSpawners();
 
+        for (var spawner : leafSpawnerIds) {
+            leafSettings.computeIfAbsent(spawner, LeafSettingsEntry::new);
+        }
+    }
 }

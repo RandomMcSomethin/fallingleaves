@@ -3,6 +3,7 @@ package randommcsomethin.fallingleaves.mixin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registries;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -13,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
-import static randommcsomethin.fallingleaves.util.LeafUtil.*;
+import static randommcsomethin.fallingleaves.util.LeafUtil.trySpawnLeafAndSnowParticle;
 
 @Mixin(Block.class)
 public abstract class BlockMixin {
@@ -23,10 +24,23 @@ public abstract class BlockMixin {
         if (!CONFIG.enabled)
             return;
 
-        // not a leaf spawner?
         Identifier id = Registries.BLOCK.getId(state.getBlock());
-        if (!CONFIG.leafSpawners.contains(id))
+
+        if (!CONFIG.isLeafSpawner(id))
             return;
+
+        // return if block properties don't match spawner properties
+        for (var entry : CONFIG.getLeafSpawnerProperties(id).entrySet()) {
+            Property<?> property = entry.getKey();
+            Comparable<?> value = entry.getValue();
+
+            if (!state.contains(property))
+                continue;
+
+            if (!state.get(property).equals(value)) {
+                return;
+            }
+        }
 
         trySpawnLeafAndSnowParticle(state, world, pos, random);
     }

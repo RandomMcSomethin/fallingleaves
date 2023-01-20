@@ -17,11 +17,12 @@ import randommcsomethin.fallingleaves.config.FallingLeavesConfigV0;
 import randommcsomethin.fallingleaves.config.gson.GsonConfigHelper;
 import randommcsomethin.fallingleaves.config.gson.IdentifierTypeAdapter;
 import randommcsomethin.fallingleaves.config.gui.IdentifierGuiProvider;
-import randommcsomethin.fallingleaves.config.gui.IdentifierSetGuiProvider;
 import randommcsomethin.fallingleaves.config.gui.LeafSettingsGuiProvider;
+import randommcsomethin.fallingleaves.config.gui.StringSetGuiProvider;
 import randommcsomethin.fallingleaves.util.Wind;
 
 import java.io.IOException;
+import java.util.List;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 
@@ -61,10 +62,12 @@ public class Config {
             field -> field.getName().equals("leafSettings")
         );
 
-        AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(
-            new IdentifierSetGuiProvider(),
-            IdentifierSetGuiProvider::predicate
-        );
+        for (var guiProvider : List.of(
+            new StringSetGuiProvider<>(Identifier.class, Identifier::new),
+            new StringSetGuiProvider<>(String.class, s -> s)
+        )) {
+            AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(guiProvider, guiProvider.getPredicate());
+        }
 
         AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerTypeProvider(
             new IdentifierGuiProvider(),
