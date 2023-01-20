@@ -22,7 +22,7 @@
   "text.autoconfig.fallingleaves.option.winterSpawnRateFactor": "Kış Oluşturma Çarpanı",
   "text.autoconfig.fallingleaves.option.winterSpawnRateFactor.@Tooltip": "Fabric Seasons için",
   "text.autoconfig.fallingleaves.option.leafSpawners": "Yaprak döken ek bloklar",
-  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "örn. minecraft:pink_wool.",
+  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "örn. minecraft:pink_wool, minecraft:bamboo[leaves=large].",
   "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[1]": "Bu ayarı etkinleştirdikten sonra bir yeniden başltama gereklidir!",
   "text.autoconfig.fallingleaves.option.startingSpawnRadius": "En Düşük Oluşma Yarıçapı",
   "text.autoconfig.fallingleaves.option.startingSpawnRadius.@Tooltip": "Yapraklar bu yarıçap içinde oluşmayacaktır.",

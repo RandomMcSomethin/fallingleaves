@@ -20,7 +20,7 @@
     "text.autoconfig.fallingleaves.option.winterSpawnRateFactor": "Множитель спавна зимой",
     "text.autoconfig.fallingleaves.option.winterSpawnRateFactor.@Tooltip": "Для Fabric Seasons",
     "text.autoconfig.fallingleaves.option.leafSpawners": "Дополнительные блоки, сбрасывающие листья",
-    "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "Например: minecraft:pink_wool.",
+    "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "Например: minecraft:pink_wool, minecraft:bamboo[leaves=large].",
     "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[1]": "После включения этой настройки требуется перезапуск!",
     "text.autoconfig.fallingleaves.option.startingSpawnRadius": "Минимальный радиус спавна",
     "text.autoconfig.fallingleaves.option.startingSpawnRadius.@Tooltip": "Листья не будут появляться внутри этого радиуса вокруг игрока.",

@@ -22,7 +22,7 @@
   "text.autoconfig.fallingleaves.option.winterSpawnRateFactor": "Multiplicador de taxa de spawn de inverno",
   "text.autoconfig.fallingleaves.option.winterSpawnRateFactor.@Tooltip": "Para estações de tecido",
   "text.autoconfig.fallingleaves.option.leafSpawners": "Blocos adicionais que soltam folhas",
-  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "Ex: minecraft:pink_wool.",
+  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "Ex: minecraft:pink_wool, minecraft:bamboo[leaves=large].",
   "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[1]": "Depois de habilitar essa configuração, é necessário reiniciar!",
   "text.autoconfig.fallingleaves.option.startingSpawnRadius": "Raio Mínimo de Geração",
   "text.autoconfig.fallingleaves.option.startingSpawnRadius.@Tooltip": "As folhas não irão aparecer dentro deste raio ao redor do jogador.",

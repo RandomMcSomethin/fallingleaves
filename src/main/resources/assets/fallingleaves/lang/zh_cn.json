@@ -22,7 +22,7 @@
   "text.autoconfig.fallingleaves.option.winterSpawnRateFactor": "冬季生成率乘数",
   "text.autoconfig.fallingleaves.option.winterSpawnRateFactor.@Tooltip": "对于 Fabric 季节",
   "text.autoconfig.fallingleaves.option.leafSpawners": "额外的落叶方块",
-  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "例如 minecraft:pink_wool。",
+  "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[0]": "例如 minecraft:pink_wool，minecraft:bamboo[leaves=large]。",
   "text.autoconfig.fallingleaves.option.leafSpawners.@Tooltip[1]": "启用此设置后，需要重新启动！",
   "text.autoconfig.fallingleaves.option.startingSpawnRadius": "最小生成半径",
   "text.autoconfig.fallingleaves.option.startingSpawnRadius.@Tooltip": "落叶不会在玩家周围的这个半径内产生。",
