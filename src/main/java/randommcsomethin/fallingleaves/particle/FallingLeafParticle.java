@@ -79,7 +79,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
             return;
         }
 
-        if (world.getFluidState(BlockPos.method_49637(x, y, z)).isIn(FluidTags.WATER)) {
+        if (world.getFluidState(BlockPos.ofFloored(x, y, z)).isIn(FluidTags.WATER)) {
             // float on water
             velocityY = 0.0;
             rotateTime = 0;
@@ -185,7 +185,7 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
             if (parameters.getType() == Leaves.FALLING_SNOW) {
                 r = g = b = 1;
             } else {
-                double[] color = LeafUtil.getBlockTextureColor(parameters.getBlockState(), world, BlockPos.method_49637(x, y, z));
+                double[] color = LeafUtil.getBlockTextureColor(parameters.getBlockState(), world, BlockPos.ofFloored(x, y, z));
 
                 r = color[0];
                 g = color[1];
