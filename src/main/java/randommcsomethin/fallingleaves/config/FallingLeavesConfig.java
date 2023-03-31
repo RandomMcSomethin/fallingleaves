@@ -59,12 +59,12 @@ public class FallingLeavesConfig implements ConfigData {
     
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(max = 10)
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
     private int leafWindySpawnRate = 2;
     
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(max = 8)
+    @ConfigEntry.BoundedDiscrete(min = 1, max = 8)
     public int leafWeatherSpawnCoeficient = 4;
     
     // leaf spawn rate can be affected slightly by the magnitude
