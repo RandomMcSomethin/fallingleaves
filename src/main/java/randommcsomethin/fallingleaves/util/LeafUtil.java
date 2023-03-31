@@ -55,6 +55,8 @@ public class LeafUtil {
                 spawnChance *= CONFIG.winterSpawnRateFactor;
             }
         }
+        
+        spawnChance *= CONFIG.getWindyLeafSpawnCoeficient();
 
         if (CONFIG.decaySpawnRateFactor != 1.0f) {
             if (isLeafBlock(state.getBlock(), true) && state.getBlock().hasRandomTicks(state)) { // decaying leaves have random ticks

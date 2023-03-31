@@ -9,6 +9,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
+import randommcsomethin.fallingleaves.util.Wind;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -54,6 +55,35 @@ public class FallingLeavesConfig implements ConfigData {
     public double getBaseLeafSpawnChance() {
         double actualSpawnRate = leafSpawnRate / 10.0;
         return actualSpawnRate / 75.0;
+    }
+    
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 10)
+    private int leafWindySpawnRate = 2;
+    
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 8)
+    public int leafWeatherSpawnCoeficient = 4;
+    
+    // leaf spawn rate can be affected slightly by the magnitude
+    // of the current wind speed.
+    // when weather events are in effect, spawn rate will be
+    // compounded based on the event with "Thunder" being
+    // the most intensive.
+    public double getWindyLeafSpawnCoeficient() {
+    	
+    	double actualSpawnCoeficient = 1 + (Wind.windMagnitute() * leafWindySpawnRate);
+    	switch (Wind.getState()) {
+    	case STORMY:
+    		actualSpawnCoeficient *= leafWeatherSpawnCoeficient;
+    	case WINDY:
+    		actualSpawnCoeficient *= leafWeatherSpawnCoeficient;
+    	default:
+    		break;
+    	}
+    	return actualSpawnCoeficient;
     }
 
     @ConfigEntry.Category("fallingleaves.general")

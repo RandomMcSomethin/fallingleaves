@@ -61,6 +61,14 @@ public class Wind {
             return (2f * rng.nextFloat() - 1f) * TAU / 8f;
         });
     }
+    
+    public static double windMagnitute() {
+    	return Math.sqrt(Math.pow(windX, 2)+Math.pow(windZ, 2));
+    }
+    
+    public static State getState() {
+    	return state;
+    }
 
     protected static void tickState(ClientWorld world) {
         --stateDuration;
