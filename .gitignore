@@ -3,6 +3,9 @@
 *.iml
 *.ipr
 *.iws
+/bin/
+.project
+*.prefs
 
 # IntelliJ
 out/
