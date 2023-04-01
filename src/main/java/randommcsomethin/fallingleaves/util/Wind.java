@@ -63,11 +63,7 @@ public class Wind {
     }
     
     public static double windMagnitute() {
-    	return Math.sqrt(Math.pow(windX, 2)+Math.pow(windZ, 2));
-    }
-    
-    public static State getState() {
-    	return state;
+    	return velocityNoise.getNoise();
     }
 
     protected static void tickState(ClientWorld world) {

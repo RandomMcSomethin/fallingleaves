@@ -59,32 +59,13 @@ public class FallingLeavesConfig implements ConfigData {
     
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
-    private int leafWindySpawnRate = 2;
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 2)
+    public float leafWindySpawnCoefficient = 1.0f;
     
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(min = 1, max = 8)
-    public int leafWeatherSpawnCoeficient = 4;
-    
-    // leaf spawn rate can be affected slightly by the magnitude
-    // of the current wind speed.
-    // when weather events are in effect, spawn rate will be
-    // compounded based on the event with "Thunder" being
-    // the most intensive.
-    public double getWindyLeafSpawnCoeficient() {
-    	
-    	double actualSpawnCoeficient = 1 + (Wind.windMagnitute() * leafWindySpawnRate);
-    	switch (Wind.getState()) {
-    	case STORMY:
-    		actualSpawnCoeficient *= leafWeatherSpawnCoeficient;
-    	case WINDY:
-    		actualSpawnCoeficient *= leafWeatherSpawnCoeficient;
-    	default:
-    		break;
-    	}
-    	return actualSpawnCoeficient;
-    }
+    @ConfigEntry.BoundedDiscrete(min = 1, max = 4)
+    public float leafRainSpawnCoefficient = 2.0f;
 
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip

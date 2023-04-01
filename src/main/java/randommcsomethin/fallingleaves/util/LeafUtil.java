@@ -43,7 +43,7 @@ public class LeafUtil {
 
     private static final Random renderRandom = Random.createLocal();
 
-    public static double getModifiedSpawnChance(BlockState state, LeafSettingsEntry leafSettings) {
+    public static double getModifiedSpawnChance(BlockState state, World world, LeafSettingsEntry leafSettings) {
         double spawnChance = leafSettings.getSpawnChance();
 
         if (FabricLoader.getInstance().isModLoaded("seasons")) {
@@ -55,8 +55,12 @@ public class LeafUtil {
                 spawnChance *= CONFIG.winterSpawnRateFactor;
             }
         }
-        
-        spawnChance *= CONFIG.getWindyLeafSpawnCoeficient();
+
+        // Compress the variability of wind speed to a number between .87 and 1.61, multiply this by coefficient
+        spawnChance *= Math.pow(Wind.windMagnitute() * 10, 0.2f * CONFIG.leafWindySpawnCoefficient);
+
+        if (world.isRaining())
+            spawnChance *= CONFIG.leafRainSpawnCoefficient;
 
         if (CONFIG.decaySpawnRateFactor != 1.0f) {
             if (isLeafBlock(state.getBlock(), true) && state.getBlock().hasRandomTicks(state)) { // decaying leaves have random ticks
@@ -78,7 +82,7 @@ public class LeafUtil {
 
         // every leaf block or leaf spawner should have a settings entry
         LeafSettingsEntry leafSettings = Objects.requireNonNull(getLeafSettingsEntry(state));
-        double spawnChance = LeafUtil.getModifiedSpawnChance(state, leafSettings);
+        double spawnChance = LeafUtil.getModifiedSpawnChance(state, world, leafSettings);
 
         if (spawnChance != 0 && random.nextDouble() < spawnChance) {
             spawnLeafParticles(1, false, state, world, pos, random, leafSettings);
