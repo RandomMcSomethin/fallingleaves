@@ -1,13 +1,14 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.3-SNAPSHOT'
     id 'maven-publish'
 }
 
-targetCompatibility = sourceCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
 version = "${project.mod_version}+${project.minecraft_version}"
 group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
 
 repositories {
     maven { url "https://maven.shedaniel.me/" }
@@ -38,21 +39,26 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
+    // expand all properties from gradle.properties
+    def stringProperties = providers.gradlePropertiesPrefixedBy('').get()
+    stringProperties.each { inputs.property(it.key, it.value) }
 
-    filesMatching("fabric.mod.json") {
-        expand("version": project.version) {
-            escapeBackslash = true
+    ['fabric.mod.json', "${project.mod_id}.mixins.json"].each {
+        filesMatching(it) {
+            expand(stringProperties) {
+                escapeBackslash = true
+            }
         }
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs.add('-Xlint:deprecation')
-    it.options.release = 17
+    it.options.release = project.java_version as Integer
 }
 
 java {
+    targetCompatibility = sourceCompatibility = project.java_version as Integer
     withSourcesJar()
 }
 
@@ -67,9 +73,5 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
         }
-    }
-
-    repositories {
-        // mavenLocal()
     }
 }

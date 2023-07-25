@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "randommcsomethin.fallingleaves.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_${java_version}",
   "plugin": "randommcsomethin.fallingleaves.init.MixinConfig",
   "client": [
     "BlockMixin",

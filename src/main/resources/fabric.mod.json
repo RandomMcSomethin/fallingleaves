@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "fallingleaves",
-  "version": "${version}",
+  "version": "${mod_version}",
   "name": "Falling Leaves",
   "description": "\"How the gentle wind \nbeckons through the leaves \nas autumn colors fall,\ndancing in a swirl \nof golden memories:\nthe loveliest lies of all.\"",
   "authors": [
@@ -31,8 +31,8 @@
   "depends": {
     "fabricloader": ">=0.14.7",
     "fabric": "*",
-    "minecraft": ">=1.19.4",
+    "minecraft": "${game_version_range}",
     "cloth-config": ">=9.0.0",
-    "java": ">=17"
+    "java": ">=${java_version}"
   }
 }
