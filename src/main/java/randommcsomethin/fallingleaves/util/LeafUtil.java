@@ -102,8 +102,11 @@ public class LeafUtil {
 
         boolean snowy = false;
 
+        boolean snowyVillagers = VillagerType.forBiome(world.getBiome(pos)) == VillagerType.SNOW;
+        boolean isSummer = FabricLoader.getInstance().isModLoaded("seasons") && FabricSeasons.getCurrentSeason() == Season.SUMMER;
+
         // matches all snowy vanilla biomes
-        if (VillagerType.forBiome(world.getBiome(pos)) == VillagerType.SNOW) {
+        if (!isSummer && snowyVillagers) {
             snowy = true;
         } else {
             // check the top for snow layers/blocks
