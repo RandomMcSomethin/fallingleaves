@@ -36,5 +36,6 @@
   "text.autoconfig.fallingleaves.category.fallingleaves.experimental": "Experimental",
   "config.fallingleaves.spawn_rate_factor": "Spawn Rate Multiplier",
   "config.fallingleaves.spawn_rate_factor.@Tooltip": "0% turns spawning off, 100% means base spawn rate",
-  "config.fallingleaves.is_conifer": "Are these a conifer leaves?"
+  "config.fallingleaves.is_conifer": "Are these a conifer leaves?",
+  "config.fallingleaves.spawn_breaking_leaves": "Drop some leaves when this block is hit or decays?"
 }

@@ -55,6 +55,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
 
                     builder.add(buildSpawnRateFactorSlider(blockId, leafEntry));
                     builder.add(buildIsConiferLeavesToggle(blockId, leafEntry));
+                    builder.add(buildSpawnBreakingLeaves(blockId, leafEntry));
 
                     entries.add(builder.build());
                 });
@@ -94,8 +95,17 @@ public class LeafSettingsGuiProvider implements GuiProvider {
     private static BooleanListEntry buildIsConiferLeavesToggle(Identifier blockId, LeafSettingsEntry entry) {
         return new BooleanToggleBuilder(RESET_TEXT, Text.translatable("config.fallingleaves.is_conifer"), entry.isConiferBlock)
             .setDefaultValue(ConfigDefaults.isConifer(blockId))
-            .setSaveConsumer((Boolean isConiferBlock) -> {
-                entry.isConiferBlock = isConiferBlock;
+            .setSaveConsumer((Boolean value) -> {
+                entry.isConiferBlock = value;
+            })
+            .build();
+    }
+
+    private static BooleanListEntry buildSpawnBreakingLeaves(Identifier blockId, LeafSettingsEntry entry) {
+        return new BooleanToggleBuilder(RESET_TEXT, Text.translatable("config.fallingleaves.spawn_breaking_leaves"), entry.spawnBreakingLeaves)
+            .setDefaultValue(ConfigDefaults.spawnBreakingLeaves(blockId))
+            .setSaveConsumer((Boolean value) -> {
+                entry.spawnBreakingLeaves = value;
             })
             .build();
     }

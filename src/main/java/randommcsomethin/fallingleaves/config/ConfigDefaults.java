@@ -66,4 +66,9 @@ public class ConfigDefaults {
         }
     }
 
+    // on block hit or when decaying
+    public static boolean spawnBreakingLeaves(Identifier blockId) {
+        return true;
+    }
+
 }

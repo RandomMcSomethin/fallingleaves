@@ -36,5 +36,6 @@
   "text.autoconfig.fallingleaves.category.fallingleaves.experimental": "Experimentell",
   "config.fallingleaves.spawn_rate_factor": "Spawnrate-Multiplikator",
   "config.fallingleaves.spawn_rate_factor.@Tooltip": "0% deaktiviert fallende Blätter, 100% heißt Grund-Spawnrate",
-  "config.fallingleaves.is_conifer": "Ist dies ein Nadellaub?"
+  "config.fallingleaves.is_conifer": "Ist dies ein Nadellaub?",
+  "config.fallingleaves.spawn_breaking_leaves": "Fallen Blätter wenn dieses Laub geschlagen wird oder zerfällt?"
 }

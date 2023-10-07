@@ -82,15 +82,17 @@ public class Leaves {
             LeafSettingsEntry leafSettings = getLeafSettingsEntry(state);
 
             if (leafSettings != null) {
-                // binomial distribution - extremes (0 or 3 leaves) are less likely
-                int count = 0;
-                for (int i = 0; i < 3; i++) {
-                    if (world.random.nextBoolean()) {
-                        count++;
+                if (leafSettings.spawnBreakingLeaves) {
+                    // binomial distribution - extremes (0 or 3 leaves) are less likely
+                    int count = 0;
+                    for (int i = 0; i < 3; i++) {
+                        if (world.random.nextBoolean()) {
+                            count++;
+                        }
                     }
-                }
 
-                LeafUtil.spawnLeafParticles(count, false, state, world, pos, world.random, leafSettings);
+                    LeafUtil.spawnLeafParticles(count, false, state, world, pos, world.random, leafSettings);
+                }
 
                 // spawn a bit of snow too
                 if (CONFIG.getSnowflakeSpawnChance() != 0) {
