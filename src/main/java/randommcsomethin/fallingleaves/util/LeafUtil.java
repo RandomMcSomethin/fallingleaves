@@ -13,6 +13,8 @@ import net.minecraft.client.texture.SpriteContents;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.resource.Resource;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -29,14 +31,18 @@ import randommcsomethin.fallingleaves.init.Leaves;
 import randommcsomethin.fallingleaves.mixin.NativeImageAccessor;
 import randommcsomethin.fallingleaves.mixin.SpriteContentsAccessor;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
+import static randommcsomethin.fallingleaves.util.RegistryUtil.getBiomeId;
 import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlockId;
 
 public class LeafUtil {
@@ -190,7 +196,46 @@ public class LeafUtil {
         NativeImage texture = ((SpriteContentsAccessor) spriteContents).getMipmapLevelsImages()[0]; // directly extract texture
         int blockColor = (shouldColor ? client.getBlockColors().getColor(state, world, pos, 0) : -1);
 
+        double[] ctmTextureColor = calculateCTMColor(state, world, pos);
+        if (ctmTextureColor != null) return ctmTextureColor;
+
         return calculateLeafColor(spriteId, texture, blockColor);
+    }
+
+    public static double[] calculateCTMColor(BlockState state, World world, BlockPos pos) {
+        if (!CTM.isEnabled())
+            return null;
+
+        // try to get OptiFine's biome specific texture
+        Identifier biomeId = getBiomeId(world, pos);
+        Identifier blockId = getBlockId(state);
+
+        Identifier spriteId = TextureCache.biomeTextures.get(new TextureCache.BiomeBlock(biomeId, blockId));
+        if (spriteId == null)
+            return null;
+
+        LOGGER.debug("get (biome id: {}, block id: {}) -> biome texture: {}", biomeId, blockId, spriteId);
+
+        TextureCache.Data cache = TextureCache.INST.get(spriteId);
+
+        if (cache != null) {
+            return cache.getColor();
+        } else {
+            Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(spriteId);
+            if (resource.isPresent()) {
+                // read, cache and return texture color
+                try (InputStream is = resource.get().getInputStream()) {
+                    double[] textureColor = averageColor(NativeImage.read(is));
+                    TextureCache.INST.put(spriteId, new TextureCache.Data(textureColor));
+                    LOGGER.debug("{}: Calculated CTM texture color {} ", spriteId, textureColor);
+                    return textureColor;
+                } catch (IOException e) {
+                    LOGGER.error("Couldn't read CTM texture {}", spriteId);
+                }
+            }
+        }
+
+        return null;
     }
 
     private static double[] calculateLeafColor(Identifier spriteId, NativeImage texture, int blockColor) {

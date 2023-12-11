@@ -1,9 +1,11 @@
 package randommcsomethin.fallingleaves.util;
 
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TextureCache {
     public record Data(double[] color) {
@@ -19,7 +21,10 @@ public class TextureCache {
         }
     }
 
-    public static final HashMap<Identifier, Data> INST = new HashMap<>();
+    public record BiomeBlock(Identifier biomeId, Identifier blockId) { }
+
+    public static final Map<Identifier, Data> INST = new HashMap<>();
+    public static final Map<BiomeBlock, Identifier> biomeTextures = new HashMap<>();
 
     private TextureCache() {}
 

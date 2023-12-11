@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
+import randommcsomethin.fallingleaves.util.CTM;
 import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.RegistryUtil;
 import randommcsomethin.fallingleaves.util.TextureCache;
@@ -63,6 +65,9 @@ public class Leaves {
                 }
 
                 TextureCache.INST.clear();
+
+                CTM.parseOptiFineConfig();
+                CTM.readBiomeTextures(resourceManager);
             }
 
             @Override
