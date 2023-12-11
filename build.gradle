@@ -113,7 +113,7 @@ curseforge {
                 toList(project.curseforge_dependencies).each{ requiredDependency(it) }
             }
             mainArtifact(remapJar.archiveFile.get().asFile) {
-                displayName = "${project.mod_version} ${versionRange(gameVersionList)}]"
+                displayName = "${project.mod_version} [${versionRange(gameVersionList)}]"
             }
             afterEvaluate {
                 uploadTask.dependsOn('build')
