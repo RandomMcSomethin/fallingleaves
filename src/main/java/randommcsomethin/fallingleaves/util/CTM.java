@@ -42,12 +42,11 @@ public class CTM {
                     if (option.length != 2)
                         return;
 
-                    if (option[0].equalsIgnoreCase("ofConnectedTextures")) {
-                        // 1 = fast, 2 = fancy, 3 = off
-                        ctmEnabled = !option[1].equals("3");
-
-                        if (ctmEnabled)
-                            LOGGER.info("OptiFine Connected Textures are enabled.");
+                    // 1 = fast, 2 = fancy, 3 = off
+                    if (option[0].equalsIgnoreCase("ofConnectedTextures") && option[1].equals("3")) {
+                        ctmEnabled = false;
+                    } else {
+                        LOGGER.info("OptiFine Connected Textures are enabled.");
                     }
                 });
             } catch (IOException e) {
@@ -133,8 +132,28 @@ public class CTM {
     private static List<Identifier> parseBiome(String biomes) {
         List<Identifier> biomeList = new ArrayList<>();
 
-        for (String biome : biomes.split(" "))
-            biomeList.add(new Identifier(biome.toLowerCase(Locale.ROOT)));
+        for (String biome : biomes.split(" ")) {
+            if (biome.isEmpty()) continue;
+
+            // convert e.g. DarkForest -> dark_forest
+            StringBuilder biomeId = new StringBuilder();
+            for (int i = 0; i < biome.length(); i++) {
+                char c = biome.charAt(i);
+
+                if (Character.isUpperCase(c)) {
+                    if (i > 0) biomeId.append('_');
+                    c = Character.toLowerCase(c);
+                }
+
+                biomeId.append(c);
+            }
+
+            try {
+                biomeList.add(new Identifier(biomeId.toString()));
+            } catch (Exception e) {
+                LOGGER.error("couldn't parse biome \"{}\"", biome);
+            }
+        }
 
         return biomeList;
     }
