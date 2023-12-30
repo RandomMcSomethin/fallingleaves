@@ -9,6 +9,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import randommcsomethin.fallingleaves.FallingLeavesClient;
+import randommcsomethin.fallingleaves.util.Wind;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -55,6 +56,16 @@ public class FallingLeavesConfig implements ConfigData {
         double actualSpawnRate = leafSpawnRate / 10.0;
         return actualSpawnRate / 75.0;
     }
+    
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 2)
+    public float leafWindySpawnCoefficient = 1.0f;
+    
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(min = 1, max = 4)
+    public float leafRainSpawnCoefficient = 2.0f;
 
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip

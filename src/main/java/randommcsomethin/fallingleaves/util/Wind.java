@@ -61,6 +61,10 @@ public class Wind {
             return (2f * rng.nextFloat() - 1f) * TAU / 8f;
         });
     }
+    
+    public static double windMagnitute() {
+    	return velocityNoise.getNoise();
+    }
 
     protected static void tickState(ClientWorld world) {
         --stateDuration;
