@@ -10,7 +10,9 @@
     "LeafTickMixin",
     "MinecraftClientMixin",
     "NativeImageAccessor",
+    "ParticleManagerAccessor",
     "ParticleManagerMixin",
+    "SimpleSpriteProviderInvoker",
     "SpriteContentsAccessor"
   ],
   "injectors": {

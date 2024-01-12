@@ -5,6 +5,8 @@ import io.github.lucaargolo.seasons.utils.Season;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.NativeImage;
@@ -133,6 +135,8 @@ public class LeafUtil {
     public static void spawnParticles(int count, BlockStateParticleEffect params, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
         if (count == 0) return;
 
+        MinecraftClient client = MinecraftClient.getInstance();
+
         for (int i = 0; i < count; i++) {
             // Particle position
             double x = pos.getX() + random.nextDouble();
@@ -148,7 +152,8 @@ public class LeafUtil {
                     continue;
             }
 
-            world.addParticle(params, x, y, z, 0, 0, 0);
+            Particle particle = Leaves.FACTORIES.get(params.getType()).createParticle(params, client.world, x, y, z, 0, 0, 0);
+            client.particleManager.addParticle(particle);
         }
     }
 
