@@ -1,9 +1,13 @@
 package randommcsomethin.fallingleaves.mixin;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,10 +23,9 @@ import java.util.Map;
 
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.init.Leaves.FACTORIES;
-import static randommcsomethin.fallingleaves.init.Leaves.IDS;
 
 @Environment(EnvType.CLIENT)
-@Mixin(ParticleManager.class)
+@Mixin(value = ParticleManager.class, priority = 1010) // after Fabric API
 public abstract class ParticleManagerMixin {
 
     @Shadow
@@ -31,14 +34,25 @@ public abstract class ParticleManagerMixin {
     @Shadow @Final
     private Map<Identifier, ParticleManager.SimpleSpriteProvider> spriteAwareFactories;
 
+    @Shadow @Final
+    private Int2ObjectMap<ParticleFactory<?>> factories;
+
+    @SuppressWarnings("unchecked")
     @Inject(method = "registerDefaultFactories", at = @At("RETURN"))
     public void registerLeafFactories(CallbackInfo ci) {
-        for (var type : Leaves.TYPES) {
-            Identifier id = IDS.get(type);
+        for (var entry : Leaves.LEAVES.entrySet()) {
+            var type = entry.getKey();
+            var id = entry.getValue();
 
-            var spriteProvider = SimpleSpriteProviderInvoker.init();
-            spriteAwareFactories.put(id, spriteProvider);
-            FACTORIES.put(type, new FallingLeafParticle.BlockStateFactory(spriteProvider));
+            var particleFactory = (ParticleFactory<BlockStateParticleEffect>) factories.get(Registries.PARTICLE_TYPE.getRawId(type));
+
+            if (particleFactory == null) {
+                var spriteProvider = SimpleSpriteProviderInvoker.init();
+                spriteAwareFactories.put(id, spriteProvider);
+                particleFactory = new FallingLeafParticle.BlockStateFactory(spriteProvider);
+            }
+
+            FACTORIES.put(type, particleFactory);
         }
     }
 

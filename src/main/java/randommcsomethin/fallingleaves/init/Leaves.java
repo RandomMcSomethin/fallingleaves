@@ -1,5 +1,6 @@
 package randommcsomethin.fallingleaves.init;
 
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -9,6 +10,8 @@ import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.ActionResult;
@@ -18,35 +21,56 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
+import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
 import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.TextureCache;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
+import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
 import static randommcsomethin.fallingleaves.util.RegistryUtil.makeId;
 
 public class Leaves {
-    public static ParticleType<BlockStateParticleEffect> FALLING_LEAF = FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY);
-    public static ParticleType<BlockStateParticleEffect> FALLING_CONIFER_LEAF = FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY);
-    public static ParticleType<BlockStateParticleEffect> FALLING_SNOW = FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY);
+    public static final ParticleType<BlockStateParticleEffect> FALLING_LEAF;
+    public static final ParticleType<BlockStateParticleEffect> FALLING_CONIFER_LEAF;
+    public static final ParticleType<BlockStateParticleEffect> FALLING_SNOW;
 
-    public static final List<ParticleType<BlockStateParticleEffect>> TYPES = List.of(FALLING_LEAF, FALLING_CONIFER_LEAF, FALLING_SNOW);
-    public static final Map<ParticleType<BlockStateParticleEffect>, Identifier> IDS = Map.of(
-        FALLING_LEAF, makeId("falling_leaf"),
-        FALLING_CONIFER_LEAF, makeId("falling_leaf_conifer"),
-        FALLING_SNOW, makeId("falling_snow")
-    );
-    public static final Map<ParticleType<BlockStateParticleEffect>, ParticleFactory<BlockStateParticleEffect>> FACTORIES = new HashMap<>();
+    public static final Map<ParticleType<BlockStateParticleEffect>, Identifier> LEAVES;
+    public static final Map<ParticleType<BlockStateParticleEffect>, ParticleFactory<BlockStateParticleEffect>> FACTORIES = new IdentityHashMap<>();
 
     private static boolean preLoadedRegisteredLeafBlocks = false;
 
+    static {
+        FALLING_LEAF = FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY);
+        FALLING_CONIFER_LEAF = FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY);
+        FALLING_SNOW = FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY);
+
+        LEAVES = Map.of(
+            FALLING_LEAF, makeId("falling_leaf"),
+            FALLING_CONIFER_LEAF, makeId("falling_leaf_conifer"),
+            FALLING_SNOW, makeId("falling_snow")
+        );
+    }
+
     public static void init() {
+        if (CONFIG.registerParticles) {
+            LOGGER.info("Registering leaf particles.");
+            registerLeafParticles();
+        }
+
         registerReloadListener();
         registerAttackBlockLeaves();
+    }
+
+    private static void registerLeafParticles() {
+        for (var entry : LEAVES.entrySet()) {
+            Registry.register(Registries.PARTICLE_TYPE, entry.getValue(), entry.getKey());
+            ParticleFactoryRegistry.getInstance().register(entry.getKey(), FallingLeafParticle.BlockStateFactory::new);
+        }
     }
 
     private static void registerReloadListener() {
