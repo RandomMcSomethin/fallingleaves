@@ -6,6 +6,8 @@
   "text.autoconfig.fallingleaves.option.leafLifespan.@Tooltip": "20 ticks are roughly 1 second",
   "text.autoconfig.fallingleaves.option.leafSpawnRate": "Leaf Spawn Rate",
   "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "How many leaves spawn over time",
+  "text.autoconfig.fallingleaves.option.cherrySpawnRate": "Cherry Petals Spawn Rate",
+  "text.autoconfig.fallingleaves.option.cherrySpawnRate.@Tooltip": "Changes the vanilla cherry petals spawn rate in factors of 10%, i.e.\n5 = 50% (half rate)\n10 = 100% (original rate)\n20 = 200% (double rate)",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "Conifer Leaf Spawn Rate",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "How many conifer leaves spawn over time",
   "text.autoconfig.fallingleaves.option.snowflakeSpawnRate": "Snowflake Spawn Rate",

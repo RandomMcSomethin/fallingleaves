@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 
-@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
+@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal", "FieldCanBeLocal"})
 @Config(name = FallingLeavesClient.MOD_ID)
 public class FallingLeavesConfig implements ConfigData {
 
@@ -64,6 +64,15 @@ public class FallingLeavesConfig implements ConfigData {
     public double getBaseConiferLeafSpawnChance() {
         double actualSpawnRate = coniferLeafSpawnRate / 10.0;
         return actualSpawnRate / 75.0;
+    }
+
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 20)
+    public int cherrySpawnRate = 10;
+
+    public double getCherrySpawnRateFactor() {
+        return cherrySpawnRate / 20.0;
     }
 
     @ConfigEntry.Category("fallingleaves.general")

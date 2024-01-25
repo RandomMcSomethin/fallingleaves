@@ -6,6 +6,7 @@
   "plugin": "randommcsomethin.fallingleaves.init.MixinConfig",
   "client": [
     "BlockMixin",
+    "CherryLeavesBlockMixin",
     "ClientPlayNetworkHandlerMixin",
     "LeafTickMixin",
     "MinecraftClientMixin",
