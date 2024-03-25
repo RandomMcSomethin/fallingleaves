@@ -5,8 +5,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -24,13 +26,14 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
 
     public static final int FADE_DURATION = 16; // ticks
     // public static final double FRICTION       = 0.30;
-    public static final double WATER_FRICTION = 0.05;
+    public static final double WATER_FRICTION = 0.075;
 
     protected final float windCoefficient; // to emulate drag/lift
 
     protected final float maxRotateSpeed; // rotations / tick
     protected final int maxRotateTime;
     protected int rotateTime = 0;
+    protected boolean inWater = false;
     protected boolean stuckInGround = false;
 
     public FallingLeafParticle(ClientWorld clientWorld, double x, double y, double z, double r, double g, double b, SpriteProvider provider) {
@@ -79,16 +82,55 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
             return;
         }
 
-        if (world.getFluidState(BlockPos.ofFloored(x, y, z)).isIn(FluidTags.WATER)) {
-            // float on water
-            velocityY = 0.0;
-            rotateTime = 0;
+        BlockPos blockPos = BlockPos.ofFloored(x, y, z);
+        FluidState fluidState = world.getFluidState(blockPos);
 
-            velocityX *= (1 - WATER_FRICTION);
-            velocityZ *= (1 - WATER_FRICTION);
+        if (fluidState.isIn(FluidTags.LAVA)) {
+            double waterY = blockPos.getY() + fluidState.getHeight(world, blockPos);
+            if (waterY >= y) {
+                world.addParticle(ParticleTypes.LAVA, x, y, z, 0.0, 0.0, 0.0);
+                markDead();
+                return;
+            }
+        }
+
+        // apply gravity
+        velocityY -= 0.04 * gravityStrength;
+
+        if (fluidState.isIn(FluidTags.WATER)) {
+            double waterY;
+            if ((waterY = blockPos.getY() + fluidState.getHeight(world, blockPos)) >= y - 0.1) {
+                if (!inWater) {
+                    // hit water for the first time
+                    inWater = true;
+
+                    if (Math.abs(waterY - y) < 0.2)
+                        y = waterY;
+
+                    velocityY *= 0.1;
+                    velocityX *= 0.5;
+                    velocityZ *= 0.5;
+
+                    rotateTime = 0;
+                } else {
+                    // buoyancy - try to stay on top of the water surface
+                    double depth = Math.max(waterY + 0.1 - y, 0);
+                    velocityY += depth * windCoefficient / 30.0f;
+                }
+
+                if (!fluidState.isStill()) {
+                    Vec3d pushVel = fluidState.getVelocity(world, blockPos).multiply(0.4);
+                    velocityX += (pushVel.x - velocityX) * windCoefficient / 60.0f;
+                    velocityZ += (pushVel.z - velocityZ) * windCoefficient / 60.0f;
+                }
+
+                velocityX *= (1 - WATER_FRICTION);
+                velocityY *= (1 - WATER_FRICTION);
+                velocityZ *= (1 - WATER_FRICTION);
+            }
         } else {
-            // apply gravity
-            velocityY -= 0.04 * gravityStrength;
+            // note: intentionally inaccurate, so the leaves don't constantly switch between being blown by wind and hitting water again
+            inWater = false;
 
             if (!onGround) {
                 // spin when in the air
