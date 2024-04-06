@@ -13,10 +13,12 @@ public class IdentifierTypeAdapter extends TypeAdapter<Identifier> {
 
     private IdentifierTypeAdapter() { }
 
+    @Override
     public void write(JsonWriter out, Identifier value) throws IOException {
         out.value(value.toString());
     }
 
+    @Override
     public Identifier read(JsonReader reader) throws IOException {
         return new Identifier(reader.nextString());
     }

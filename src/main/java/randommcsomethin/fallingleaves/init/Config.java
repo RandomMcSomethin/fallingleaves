@@ -16,6 +16,7 @@ import randommcsomethin.fallingleaves.config.FallingLeavesConfig;
 import randommcsomethin.fallingleaves.config.FallingLeavesConfigV0;
 import randommcsomethin.fallingleaves.config.gson.GsonConfigHelper;
 import randommcsomethin.fallingleaves.config.gson.IdentifierTypeAdapter;
+import randommcsomethin.fallingleaves.config.gson.LeafSettingsTypeAdapter;
 import randommcsomethin.fallingleaves.config.gui.IdentifierGuiProvider;
 import randommcsomethin.fallingleaves.config.gui.LeafSettingsGuiProvider;
 import randommcsomethin.fallingleaves.config.gui.StringSetGuiProvider;
@@ -40,6 +41,7 @@ public class Config {
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeAdapter(Identifier.class, IdentifierTypeAdapter.INST)
+                .registerTypeAdapterFactory(new LeafSettingsTypeAdapter())
                 .create());
         });
         CONFIG = configHolder.getConfig();
