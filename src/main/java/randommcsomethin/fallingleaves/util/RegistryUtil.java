@@ -23,7 +23,7 @@ public class RegistryUtil {
         return Registry.register(
             Registries.PARTICLE_TYPE,
             makeId(leafParticleName),
-            FabricParticleTypes.complex(true, BlockStateParticleEffect.PARAMETERS_FACTORY)
+            FabricParticleTypes.complex(true, BlockStateParticleEffect::createCodec, BlockStateParticleEffect::createPacketCodec)
         );
     }
 

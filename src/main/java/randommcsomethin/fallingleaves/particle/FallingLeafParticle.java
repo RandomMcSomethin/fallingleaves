@@ -7,8 +7,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -211,9 +211,9 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
     }
 
     @Environment(EnvType.CLIENT)
-    public record DefaultFactory(SpriteProvider provider) implements ParticleFactory<DefaultParticleType> {
+    public record SimpleFactory(SpriteProvider provider) implements ParticleFactory<SimpleParticleType> {
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double r, double g, double b) {
+        public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double r, double g, double b) {
             return new FallingLeafParticle(world, x, y, z, r, g, b, provider);
         }
     }

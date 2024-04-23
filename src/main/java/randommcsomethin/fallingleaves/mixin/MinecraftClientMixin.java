@@ -1,6 +1,7 @@
 package randommcsomethin.fallingleaves.mixin;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.world.ClientWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +13,7 @@ import randommcsomethin.fallingleaves.util.Wind;
 public abstract class MinecraftClientMixin {
 
     @Inject(method = "joinWorld", at = @At("HEAD"))
-    public void initWind(ClientWorld world, CallbackInfo ci) {
+    public void initWind(ClientWorld world, DownloadingTerrainScreen.WorldEntryReason worldEntryReason, CallbackInfo ci) {
         Wind.init();
     }
 

@@ -57,7 +57,7 @@ public class LeafUtil {
         }
 
         if (CONFIG.decaySpawnRateFactor != 1.0f) {
-            if (isLeafBlock(state.getBlock(), true) && state.getBlock().hasRandomTicks(state)) { // decaying leaves have random ticks
+            if (isLeafBlock(state.getBlock(), true) && state.hasRandomTicks()) { // decaying leaves have random ticks
                 spawnChance *= CONFIG.decaySpawnRateFactor;
             }
         }
