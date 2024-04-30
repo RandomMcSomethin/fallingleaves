@@ -17,8 +17,12 @@ public class GsonConfigHelper {
     private final Gson gson;
 
     public GsonConfigHelper(String configName) {
+        this(configName, new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()); // note: not using IdentifierTypeAdapter
+    }
+
+    public GsonConfigHelper(String configName, Gson gson) {
         this.configPath = FabricLoader.getInstance().getConfigDir().resolve(configName + ".json");
-        this.gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(); // note: not using IdentifierTypeAdapter
+        this.gson = gson;
     }
 
     public boolean exists() {
@@ -27,7 +31,10 @@ public class GsonConfigHelper {
 
     public <T> T load(Class<T> configType) throws IOException, JsonParseException {
         try (BufferedReader reader = Files.newBufferedReader(configPath)) {
-            return gson.fromJson(reader, configType);
+            T config = gson.fromJson(reader, configType);
+            if (config == null)
+                throw new JsonParseException("config file is empty");
+            return config;
         }
     }
 

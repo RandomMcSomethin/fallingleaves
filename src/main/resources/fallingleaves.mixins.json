@@ -8,6 +8,7 @@
     "BlockMixin",
     "CherryLeavesBlockMixin",
     "ClientPlayNetworkHandlerMixin",
+    "GsonConfigSerializerMixin",
     "LeafTickMixin",
     "MinecraftClientMixin",
     "NativeImageAccessor",

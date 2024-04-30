@@ -1,5 +1,6 @@
 package randommcsomethin.fallingleaves.init;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonParseException;
@@ -30,20 +31,19 @@ import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 public class Config {
 
     public static FallingLeavesConfig CONFIG;
+    public static final Gson GSON = new GsonBuilder()
+        .setPrettyPrinting()
+        .disableHtmlEscaping()
+        .registerTypeAdapter(Identifier.class, IdentifierTypeAdapter.INST)
+        .registerTypeAdapterFactory(new LeafSettingsTypeAdapter())
+        .create();
 
     private static ConfigHolder<FallingLeavesConfig> configHolder;
 
     public static void init() {
         migrateOldConfig();
 
-        configHolder = AutoConfig.register(FallingLeavesConfig.class, (definition, configClass) -> {
-            return new GsonConfigSerializer<>(definition, configClass, new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .registerTypeAdapter(Identifier.class, IdentifierTypeAdapter.INST)
-                .registerTypeAdapterFactory(new LeafSettingsTypeAdapter())
-                .create());
-        });
+        configHolder = AutoConfig.register(FallingLeavesConfig.class, (definition, configClass) -> new GsonConfigSerializer<>(definition, configClass, GSON));
         CONFIG = configHolder.getConfig();
 
         configHolder.registerSaveListener((manager, data) -> {
@@ -51,7 +51,7 @@ public class Config {
                 data.validatePostLoad();
             } catch (ConfigData.ValidationException ignored) { }
             Wind.init();
-            return ActionResult.PASS;
+            return ActionResult.SUCCESS;
         });
 
         // Note: Configurator.setLevel() might not be supported in future versions of log4j.
@@ -85,7 +85,7 @@ public class Config {
 
     /** Migrates the old config v0 (1.0 to 1.4) to v1 (1.5+) */
     private static void migrateOldConfig() {
-        GsonConfigHelper gsonHelper = new GsonConfigHelper(FallingLeavesClient.MOD_ID);
+        GsonConfigHelper gsonHelper = new GsonConfigHelper(FallingLeavesClient.MOD_ID, GSON);
         if (!gsonHelper.exists()) return; // nothing to migrate
 
         FallingLeavesConfigV0 oldConfig;

@@ -1,5 +1,6 @@
 package randommcsomethin.fallingleaves.init;
 
+import com.google.gson.JsonParseException;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -27,9 +28,9 @@ public class MixinConfig implements IMixinConfigPlugin {
 					leafSpawners = (List) config.get("leafSpawners");
 				}
 			}
-		} catch (IOException ignored) {
+		} catch (IOException | JsonParseException ignored) {
 		} catch (Exception e) {
-			FallingLeavesClient.LOGGER.error("failed checking for leafSpawners entries", e);
+			FallingLeavesClient.LOGGER.error("failed checking for leafSpawners entries: {}", e.getMessage());
 		}
 
 		// only apply "leaf spawner" mixin if spawners are defined
