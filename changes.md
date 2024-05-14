@@ -1,1 +1,3 @@
-update to 1.20.5
+ - add Spanish translation, thanks to TheLegendofSaram!
+ - fix an ancient issue with config migration
+ - patch a Cloth Config internal crash when the config file is empty for whatever reason
