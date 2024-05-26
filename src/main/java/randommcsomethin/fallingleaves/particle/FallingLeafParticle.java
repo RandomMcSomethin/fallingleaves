@@ -2,6 +2,8 @@ package randommcsomethin.fallingleaves.particle;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -153,8 +155,26 @@ public class FallingLeafParticle extends SpriteBillboardParticle {
             // the wind coefficient is just another factor in (0, 1) to add some variance between leaves.
             // this implementation lags behind the actual wind speed and will never reach it fully,
             // so wind speeds needs to be adjusted accordingly
-            velocityX += (Wind.windX - velocityX) * windCoefficient / 60.0f;
-            velocityZ += (Wind.windZ - velocityZ) * windCoefficient / 60.0f;
+            double ax = (Wind.windX - velocityX) * windCoefficient / 60.0f;
+            double az = (Wind.windZ - velocityZ) * windCoefficient / 60.0f;
+
+            if (FabricLoader.getInstance().isModLoaded("wilderwild")) {
+                // redirect wind in direction of Wilder Wild / FrozenLib wind
+                Vec3d wind = ClientWindManager.getWindMovement(world, new Vec3d(x, y, z));
+
+                double windNorm2d = Math.sqrt(wind.x * wind.x + wind.z * wind.z);
+                if (windNorm2d >= 1.0E-4) {
+                    double norm = Math.sqrt(ax*ax + az*az);
+                    ax = norm * wind.x / windNorm2d;
+                    az = norm * wind.z / windNorm2d;
+                } else {
+                    // hopefully doesn't happen too often
+                    ax = az = 0;
+                }
+            }
+
+            velocityX += ax;
+            velocityZ += az;
         }
 
         move(velocityX, velocityY, velocityZ);
