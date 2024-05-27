@@ -37,10 +37,9 @@ dependencies {
     }
 
     modCompileOnly "com.github.Fourmisain:fabric-seasons:jitpack-SNAPSHOT"
-
-    // TODO frozenlib jitpack build fails, same with local builds...?!
-    //modCompileOnly "com.github.Fourmisain:FrozenLib:depends-SNAPSHOT"
-    modCompileOnly files("frozenlib-1.7.2-mc1.20.6.jar")
+    modCompileOnly("com.github.Fourmisain:FrozenLib:jitpack-SNAPSHOT") {
+        exclude(group: "com.github.glitchfiend")
+    }
 }
 
 processResources {
