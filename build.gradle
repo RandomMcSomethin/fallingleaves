@@ -13,6 +13,17 @@ base {
 }
 
 repositories {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.terraformersmc.com/' }
     maven { url 'https://jitpack.io' }
@@ -37,9 +48,7 @@ dependencies {
     }
 
     modCompileOnly "com.github.Fourmisain:fabric-seasons:jitpack-SNAPSHOT"
-    modCompileOnly("com.github.Fourmisain:FrozenLib:jitpack-SNAPSHOT") {
-        exclude(group: "com.github.glitchfiend")
-    }
+    modCompileOnly "maven.modrinth:frozenlib:1.7.2-mc1.20.6"
 }
 
 processResources {
