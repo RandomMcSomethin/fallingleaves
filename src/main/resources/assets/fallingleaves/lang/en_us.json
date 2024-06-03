@@ -33,6 +33,8 @@
   "text.autoconfig.fallingleaves.option.maxDecayLeaves": "Decayed Leaf Max. Spawn Count",
   "text.autoconfig.fallingleaves.option.maxDecayLeaves.@Tooltip[0]": "When a leaf block decays/turns to air it'll spawn some leaves.",
   "text.autoconfig.fallingleaves.option.maxDecayLeaves.@Tooltip[1]": "Only works in singleplayer.",
+  "text.autoconfig.fallingleaves.option.registerParticles": "Register Leaf Particles",
+  "text.autoconfig.fallingleaves.option.registerParticles.@Tooltip": "Allows /particle command to be used in singleplayer.\nCan cause issues when joining LAN servers (e.g. via Essential).",
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "General",
   "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "Leaf Block Settings",
   "text.autoconfig.fallingleaves.category.fallingleaves.experimental": "Experimental",

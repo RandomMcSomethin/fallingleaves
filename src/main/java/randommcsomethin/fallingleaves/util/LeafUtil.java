@@ -5,6 +5,7 @@ import io.github.lucaargolo.seasons.utils.Season;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.NativeImage;
@@ -148,7 +149,19 @@ public class LeafUtil {
                     continue;
             }
 
-            world.addParticle(params, x, y, z, 0, 0, 0);
+            spawnParticle(params, x, y, z);
+        }
+    }
+
+    public static void spawnParticle(BlockStateParticleEffect params, double x, double y, double z) {
+        MinecraftClient client = MinecraftClient.getInstance();
+
+        // note: doesn't respect shouldAlwaysSpawn, though we set it to true anyway
+        if (CONFIG.registerParticles) {
+            client.particleManager.addParticle(params, x, y, z, 0, 0, 0);
+        } else {
+            Particle particle = Leaves.FACTORIES.get(params.getType()).createParticle(params, client.world, x, y, z, 0, 0, 0);
+            client.particleManager.addParticle(particle);
         }
     }
 

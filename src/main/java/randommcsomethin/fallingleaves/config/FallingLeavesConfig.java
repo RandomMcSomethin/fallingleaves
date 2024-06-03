@@ -138,6 +138,10 @@ public class FallingLeavesConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = 0, max = 30)
     public volatile int maxDecayLeaves = 9;
 
+    @ConfigEntry.Category("fallingleaves.experimental")
+    @ConfigEntry.Gui.Tooltip
+    public boolean registerParticles = true;
+
     public boolean isLeafSpawner(Identifier blockId) {
         return leafSpawnerIds.contains(blockId);
     }
