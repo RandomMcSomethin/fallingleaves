@@ -33,6 +33,8 @@
   "text.autoconfig.fallingleaves.option.maxDecayLeaves": "Max. Spawn-Anzahl für zerfallenes Laub",
   "text.autoconfig.fallingleaves.option.maxDecayLeaves.@Tooltip[0]": "Wenn Laub zerfällt/zu Luft wird werden ein Paar Blätter gespawnt.",
   "text.autoconfig.fallingleaves.option.maxDecayLeaves.@Tooltip[1]": "Funktioniert nur im Einzelspieler.",
+  "text.autoconfig.fallingleaves.option.registerParticles": "Registriere Blattpartikel",
+  "text.autoconfig.fallingleaves.option.registerParticles.@Tooltip": "Erlaubt den /particle Befehl (im Einzelspieler) zu benutzen.\nKann Probleme beim Hosten eines LAN-Servers (z.B. mit Essential) auslösen,\nwenn der Client Falling Leaves nicht installiert hat.\nDas Ändern dieser Einstellung benötigt einen Neustart.",
   "text.autoconfig.fallingleaves.category.fallingleaves.general": "Allgemein",
   "text.autoconfig.fallingleaves.category.fallingleaves.leafsettings": "Laub-Einstellungen",
   "text.autoconfig.fallingleaves.category.fallingleaves.experimental": "Experimentell",
