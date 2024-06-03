@@ -134,8 +134,6 @@ public class LeafUtil {
     public static void spawnParticles(int count, BlockStateParticleEffect params, boolean spawnInsideBlock, BlockState state, World world, BlockPos pos, Random random, LeafSettingsEntry leafSettings) {
         if (count == 0) return;
 
-        MinecraftClient client = MinecraftClient.getInstance();
-
         for (int i = 0; i < count; i++) {
             // Particle position
             double x = pos.getX() + random.nextDouble();
@@ -151,6 +149,17 @@ public class LeafUtil {
                     continue;
             }
 
+            spawnParticle(params, x, y, z);
+        }
+    }
+
+    public static void spawnParticle(BlockStateParticleEffect params, double x, double y, double z) {
+        MinecraftClient client = MinecraftClient.getInstance();
+
+        // note: doesn't respect shouldAlwaysSpawn, though we set it to true anyway
+        if (CONFIG.registerParticles) {
+            client.particleManager.addParticle(params, x, y, z, 0, 0, 0);
+        } else {
             Particle particle = Leaves.FACTORIES.get(params.getType()).createParticle(params, client.world, x, y, z, 0, 0, 0);
             client.particleManager.addParticle(particle);
         }
