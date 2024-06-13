@@ -24,7 +24,7 @@ public class IdentifierGuiProvider implements GuiProvider {
                     Utils.<Identifier>getUnsafely(field, config).toString()
                 )
                 .setDefaultValue(() -> Utils.<Identifier>getUnsafely(field, defaults).toString())
-                .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new Identifier(newValue)))
+                .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, Identifier.of(newValue)))
                 .build()
         );
     }

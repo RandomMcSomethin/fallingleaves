@@ -20,6 +20,6 @@ public class IdentifierTypeAdapter extends TypeAdapter<Identifier> {
 
     @Override
     public Identifier read(JsonReader reader) throws IOException {
-        return new Identifier(reader.nextString());
+        return Identifier.of(reader.nextString());
     }
 }

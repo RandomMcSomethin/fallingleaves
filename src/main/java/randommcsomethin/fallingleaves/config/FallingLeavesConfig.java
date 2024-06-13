@@ -102,7 +102,7 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Category("fallingleaves.general")
     public Set<Identifier> windlessDimensions = new HashSet<>(Arrays.asList(
-        new Identifier("the_nether"), new Identifier("the_end")));
+        Identifier.ofVanilla("the_nether"), Identifier.ofVanilla("the_end")));
 
     @ConfigEntry.Category("fallingleaves.leafsettings")
     @ConfigEntry.Gui.TransitiveObject
@@ -186,7 +186,7 @@ public class FallingLeavesConfig implements ConfigData {
             int a = spawner.indexOf("[");
             if (a != -1) {
                 // get id
-                Identifier id = new Identifier(spawner.substring(0, a));
+                Identifier id = Identifier.of(spawner.substring(0, a));
                 leafSpawnerIds.add(id);
 
                 // parse properties
@@ -198,7 +198,7 @@ public class FallingLeavesConfig implements ConfigData {
                 }
             } else {
                 // regular id
-                leafSpawnerIds.add(new Identifier(spawner));
+                leafSpawnerIds.add(Identifier.of(spawner));
             }
         }
     }

@@ -12,7 +12,7 @@ import java.util.Optional;
 public class RegistryUtil {
 
     public static Identifier makeId(String path) {
-        return new Identifier(FallingLeavesClient.MOD_ID, path);
+        return Identifier.of(FallingLeavesClient.MOD_ID, path);
     }
 
     public static Identifier getBlockId(BlockState blockState) {

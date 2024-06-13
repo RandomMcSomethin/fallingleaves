@@ -65,7 +65,7 @@ public class Config {
         );
 
         for (var guiProvider : List.of(
-            new StringSetGuiProvider<>(Identifier.class, Identifier::new),
+            new StringSetGuiProvider<>(Identifier.class, Identifier::of),
             new StringSetGuiProvider<>(String.class, s -> s)
         )) {
             AutoConfig.getGuiRegistry(FallingLeavesConfig.class).registerPredicateProvider(guiProvider, guiProvider.getPredicate());
@@ -118,12 +118,12 @@ public class Config {
 
         // Conifer Leaves were moved to Leaf Settings
         for (String leafId : oldConfig.coniferLeafIds) {
-            newConfig.updateLeafSettings(new Identifier(leafId), (entry) -> entry.isConiferBlock= true);
+            newConfig.updateLeafSettings(Identifier.of(leafId), (entry) -> entry.isConiferBlock= true);
         }
 
         // Rate Overrides were replaced by Spawn Rate Factors/Multipliers
         for (var oldEntry : oldConfig.rateOverrides.entrySet()) {
-            newConfig.updateLeafSettings(new Identifier(oldEntry.getKey()), (newEntry) -> {
+            newConfig.updateLeafSettings(Identifier.of(oldEntry.getKey()), (newEntry) -> {
                 double oldRateOverride = oldEntry.getValue();
 
                 // Set the new factor according the override and base rate
