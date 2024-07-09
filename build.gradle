@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.modrinth.minotaur' version '2.+'
@@ -82,7 +82,7 @@ publishing {
 }
 
 def changesMd = file('changes.md').getText('UTF-8')
-def toList = (String s) -> s.split(',').collect{ it.trim() }
+def toList = (String s) -> s.split(',').collect { it.trim() }
 def gameVersionList = toList(project.game_version_list)
 
 modrinth {
@@ -98,8 +98,8 @@ modrinth {
         gameVersions = gameVersionList
         loaders = ['fabric']
         dependencies {
-            toList(project.modrinth_dependencies).each{ required.project(it) }
-            toList(project.modrinth_optional_dependencies).each{ optional.project(it) }
+            toList(project.modrinth_dependencies).each { required.project(it) }
+            toList(project.modrinth_optional_dependencies).each { optional.project(it) }
         }
     }
 }
@@ -115,11 +115,11 @@ curseforge {
             changelog = changesMd
 
             addGameVersion 'Fabric'
-            gameVersionList.each{ addGameVersion(it) }
+            gameVersionList.each { addGameVersion(it) }
 
             relations {
-                toList(project.curseforge_dependencies).each{ requiredDependency(it) }
-                toList(project.curseforge_optional_dependencies).each{ optionalDependency(it) }
+                toList(project.curseforge_dependencies).each { requiredDependency(it) }
+                toList(project.curseforge_optional_dependencies).each { optionalDependency(it) }
             }
             mainArtifact(remapJar.archiveFile.get().asFile) {
                 displayName = "${project.mod_version} [${versionRange(gameVersionList)}]"

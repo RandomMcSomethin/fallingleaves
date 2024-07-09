@@ -1,6 +1,8 @@
 package randommcsomethin.fallingleaves.config;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 /** Old v0 config format used in versions 1.0 to 1.4 */
 @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})

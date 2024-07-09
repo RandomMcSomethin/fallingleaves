@@ -25,7 +25,6 @@ import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
 import randommcsomethin.fallingleaves.util.LeafUtil;
 import randommcsomethin.fallingleaves.util.TextureCache;
 
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
