@@ -1,1 +1,1 @@
-add Vietnamese (Vietnam) translation, thanks to godkyo98!
+update Traditional Chinese (zh_tw), thanks to yichifauzi!
