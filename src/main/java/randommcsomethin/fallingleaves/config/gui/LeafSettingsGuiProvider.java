@@ -8,13 +8,14 @@ import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntSliderBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import randommcsomethin.fallingleaves.config.ConfigDefaults;
 import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
-import randommcsomethin.fallingleaves.util.ModUtil;
 import randommcsomethin.fallingleaves.util.TranslationComparator;
 
 import java.lang.reflect.Field;
@@ -24,10 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
-import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlock;
 
 public class LeafSettingsGuiProvider implements GuiProvider {
     private static final MutableText RESET_TEXT = Text.translatable("text.cloth-config.reset_value");
+
+    public static String getModName(String modId) {
+        return FabricLoader.getInstance().getModContainer(modId).map(c -> c.getMetadata().getName()).orElse(modId);
+    }
 
     @SuppressWarnings({"rawtypes", "unchecked", "ConstantConditions"})
     @Override
@@ -38,12 +42,12 @@ public class LeafSettingsGuiProvider implements GuiProvider {
 
             // Insert per-leaf settings ordered by translation name
             leafSettings.entrySet().stream()
-                .filter((e) -> getBlock(e.getKey()) != null) // Only insert registered blocks
-                .sorted((e1, e2) -> TranslationComparator.INST.compare(getBlock(e1.getKey()).getTranslationKey(), getBlock(e2.getKey()).getTranslationKey()))
+                .filter(e -> Registries.BLOCK.containsId(e.getKey())) // Only insert registered blocks
+                .sorted((e1, e2) -> TranslationComparator.INST.compare(Registries.BLOCK.get(e1.getKey()).getTranslationKey(), Registries.BLOCK.get(e2.getKey()).getTranslationKey()))
                 .forEachOrdered((e) -> {
                     Identifier blockId = e.getKey();
                     LeafSettingsEntry leafEntry = e.getValue();
-                    Block block = getBlock(blockId);
+                    Block block = Registries.BLOCK.get(blockId);
 
                     MutableText text = Text.translatable(block.getTranslationKey());
                     if (!leafEntry.isDefault(blockId)) {
@@ -51,7 +55,7 @@ public class LeafSettingsGuiProvider implements GuiProvider {
                     }
 
                     SubCategoryBuilder builder = new SubCategoryBuilder(RESET_TEXT, text)
-                        .setTooltip(Text.of(ModUtil.getModName(block)));
+                        .setTooltip(Text.of(getModName(blockId.getNamespace())));
 
                     builder.add(buildSpawnRateFactorSlider(blockId, leafEntry));
                     builder.add(buildIsConiferLeavesToggle(blockId, leafEntry));

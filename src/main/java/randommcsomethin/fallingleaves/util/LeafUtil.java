@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
-import static randommcsomethin.fallingleaves.util.RegistryUtil.getBlockId;
 
 public class LeafUtil {
 
@@ -259,7 +258,7 @@ public class LeafUtil {
 
     @Nullable
     public static LeafSettingsEntry getLeafSettingsEntry(BlockState blockState) {
-        return CONFIG.leafSettings.get(getBlockId(blockState));
+        return CONFIG.leafSettings.get(Registries.BLOCK.getId(blockState.getBlock()));
     }
 
     public static int getMaximumDistance(Vec3i v1, Vec3i v2) {

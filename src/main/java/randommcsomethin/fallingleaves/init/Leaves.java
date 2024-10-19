@@ -29,9 +29,9 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
+import static randommcsomethin.fallingleaves.FallingLeavesClient.id;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 import static randommcsomethin.fallingleaves.util.LeafUtil.getLeafSettingsEntry;
-import static randommcsomethin.fallingleaves.util.RegistryUtil.makeId;
 
 public class Leaves {
     public static final ParticleType<BlockStateParticleEffect> FALLING_LEAF;
@@ -49,9 +49,9 @@ public class Leaves {
         FALLING_SNOW = FabricParticleTypes.complex(true, BlockStateParticleEffect::createCodec, BlockStateParticleEffect::createPacketCodec);
 
         LEAVES = Map.of(
-            FALLING_LEAF, makeId("falling_leaf"),
-            FALLING_CONIFER_LEAF, makeId("falling_leaf_conifer"),
-            FALLING_SNOW, makeId("falling_snow")
+            FALLING_LEAF, id("falling_leaf"),
+            FALLING_CONIFER_LEAF, id("falling_leaf_conifer"),
+            FALLING_SNOW, id("falling_snow")
         );
     }
 
@@ -90,7 +90,7 @@ public class Leaves {
 
             @Override
             public Identifier getFabricId() {
-                return makeId("resource_reload_listener");
+                return id("resource_reload_listener");
             }
         });
     }
