@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version '1.8-SNAPSHOT'
     id 'maven-publish'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.modrinth.minotaur' version '2.+'
@@ -19,15 +19,23 @@ loom {
 repositories {
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.terraformersmc.com/' }
-    maven { url 'https://jitpack.io' }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
     mavenCentral()
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixin_extras_version}"))
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
@@ -40,7 +48,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modCompileOnly "com.github.Fourmisain:fabric-seasons:jitpack-SNAPSHOT"
+    modImplementation "maven.modrinth:fabric-seasons:${project.fabric_seasons_version}"
 }
 
 processResources {
@@ -48,7 +56,7 @@ processResources {
     def stringProperties = providers.gradlePropertiesPrefixedBy('').get()
     stringProperties.each { inputs.property(it.key, it.value) }
 
-    ['fabric.mod.json', "${project.mod_id}.mixins.json"].each {
+    ['*.mod.json', "*.mixins.json"].each {
         filesMatching(it) {
             expand(stringProperties) {
                 escapeBackslash = true
@@ -103,6 +111,8 @@ modrinth {
         }
     }
 }
+
+tasks.modrinth.dependsOn("build")
 
 curseforge {
     def CURSEFORGE_TOKEN = System.getenv('CURSEFORGE_TOKEN')
