@@ -1,1 +1,1 @@
-update Traditional Chinese (zh_tw), thanks to yichifauzi!
+update to 1.21.2
