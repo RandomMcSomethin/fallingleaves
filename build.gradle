@@ -48,7 +48,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modImplementation "maven.modrinth:fabric-seasons:${project.fabric_seasons_version}"
+    modCompileOnly "maven.modrinth:fabric-seasons:${project.fabric_seasons_version}"
 }
 
 processResources {
