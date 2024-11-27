@@ -49,6 +49,7 @@ dependencies {
     }
 
     modCompileOnly "maven.modrinth:fabric-seasons:${project.fabric_seasons_version}"
+    modCompileOnly "maven.modrinth:serene-seasons:${project.serene_seasons_version}"
 }
 
 processResources {

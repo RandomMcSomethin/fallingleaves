@@ -1,8 +1,5 @@
 package randommcsomethin.fallingleaves.util;
 
-import io.github.lucaargolo.seasons.FabricSeasons;
-import io.github.lucaargolo.seasons.utils.Season;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.Particle;
@@ -29,6 +26,8 @@ import randommcsomethin.fallingleaves.config.LeafSettingsEntry;
 import randommcsomethin.fallingleaves.init.Leaves;
 import randommcsomethin.fallingleaves.mixin.NativeImageAccessor;
 import randommcsomethin.fallingleaves.mixin.SpriteContentsAccessor;
+import randommcsomethin.fallingleaves.seasons.Season;
+import randommcsomethin.fallingleaves.seasons.Seasons;
 
 import java.util.List;
 import java.util.Map;
@@ -46,14 +45,12 @@ public class LeafUtil {
     public static double getModifiedSpawnChance(BlockState state, LeafSettingsEntry leafSettings) {
         double spawnChance = leafSettings.getSpawnChance();
 
-        if (FabricLoader.getInstance().isModLoaded("seasons")) {
-            if (FabricSeasons.getCurrentSeason() == Season.FALL) {
-                // TODO this is a bit weird because some trees like Traverse's autumnal leaves already have boosted values
-                // double autumn, what does it mean?
-                spawnChance *= CONFIG.fallSpawnRateFactor;
-            } else if (FabricSeasons.getCurrentSeason() == Season.WINTER) {
-                spawnChance *= CONFIG.winterSpawnRateFactor;
-            }
+        if (Seasons.currentSeason == Season.FALL) {
+            // TODO this is a bit weird because some trees like Traverse's autumnal leaves already have boosted values
+            // double autumn, what does it mean?
+            spawnChance *= CONFIG.fallSpawnRateFactor;
+        } else if (Seasons.currentSeason == Season.WINTER) {
+            spawnChance *= CONFIG.winterSpawnRateFactor;
         }
 
         if (CONFIG.decaySpawnRateFactor != 1.0f) {
@@ -103,7 +100,7 @@ public class LeafUtil {
         boolean snowy = false;
 
         boolean snowyVillagers = VillagerType.forBiome(world.getBiome(pos)) == VillagerType.SNOW;
-        boolean isSummer = FabricLoader.getInstance().isModLoaded("seasons") && FabricSeasons.getCurrentSeason() == Season.SUMMER;
+        boolean isSummer = Seasons.currentSeason == Season.SUMMER;
 
         // matches all snowy vanilla biomes
         if (!isSummer && snowyVillagers) {

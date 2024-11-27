@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import randommcsomethin.fallingleaves.init.Leaves;
 import randommcsomethin.fallingleaves.particle.FallingLeafParticle;
+import randommcsomethin.fallingleaves.seasons.Seasons;
 import randommcsomethin.fallingleaves.util.Wind;
 
 import java.util.Map;
@@ -57,10 +58,11 @@ public abstract class ParticleManagerMixin {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void tickWind(CallbackInfo ci) {
+    public void tick(CallbackInfo ci) {
         if (!CONFIG.enabled)
             return;
 
+        Seasons.tick(world);
         Wind.tick(world);
     }
 
