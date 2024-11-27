@@ -1,1 +1,1 @@
-update to 1.21.2
+add compatibility for Serene Seasons (Fall/Winter Spawn Rate Multiplier)
