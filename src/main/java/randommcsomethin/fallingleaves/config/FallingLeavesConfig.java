@@ -191,7 +191,7 @@ public class FallingLeavesConfig implements ConfigData {
 
                 // parse properties
                 try {
-                    var block = BlockArgumentParser.block(Registries.BLOCK, spawner, false);
+                    var block = BlockArgumentParser.block(Registries.BLOCK.getReadOnlyWrapper(), spawner, false);
                     leafSpawnerProperties.put(id, block.properties());
                 } catch (CommandSyntaxException e) {
                     LOGGER.error("could not parse block state arguments of {}", spawner);
