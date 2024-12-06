@@ -34,6 +34,11 @@ public class ConfigDefaults {
 
     public static double spawnRateFactor(Identifier blockId) {
         switch (blockId.toString()) {
+            // Vanilla leaf/petal particles
+            case "minecraft:cherry_leaves":
+            case "minecraft:pale_oak_leaves":
+                return 0.0;
+
             // Shrubs and large leaved trees
             case "byg:palm_leaves":
             case "minecraft:jungle_leaves":

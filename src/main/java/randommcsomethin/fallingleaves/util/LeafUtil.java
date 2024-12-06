@@ -9,6 +9,8 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteContents;
 import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
@@ -39,6 +41,9 @@ import static randommcsomethin.fallingleaves.FallingLeavesClient.LOGGER;
 import static randommcsomethin.fallingleaves.init.Config.CONFIG;
 
 public class LeafUtil {
+
+    public static final Identifier CHERRY_LEAVES_PARTICLE_ID = Identifier.ofVanilla("cherry_leaves");
+    public static final Identifier PALE_OAK_LEAVES_PARTICLE_ID = Identifier.ofVanilla("pale_oak_leaves");
 
     private static final Random renderRandom = Random.createLocal();
 
@@ -187,7 +192,7 @@ public class LeafUtil {
 
             BakedQuad quad = quads.get(useFirstQuad ? 0 : quads.size() - 1);
             sprite = quad.getSprite();
-            shouldColor = quad.hasColor();
+            shouldColor = quad.hasTint();
         } else {
             // fall back to block breaking particle
             sprite = model.getParticleSprite();

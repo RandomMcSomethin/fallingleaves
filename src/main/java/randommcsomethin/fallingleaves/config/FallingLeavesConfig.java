@@ -77,6 +77,15 @@ public class FallingLeavesConfig implements ConfigData {
 
     @ConfigEntry.Category("fallingleaves.general")
     @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 20)
+    public int paleOakSpawnRate = 10;
+
+    public double getPaleOakSpawnRateFactor() {
+        return paleOakSpawnRate / 20.0;
+    }
+
+    @ConfigEntry.Category("fallingleaves.general")
+    @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 40)
     private int snowflakeSpawnRate = 15;
 

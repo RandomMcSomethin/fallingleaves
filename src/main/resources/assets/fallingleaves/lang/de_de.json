@@ -8,6 +8,8 @@
   "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "Wieviele Blätter über Zeit spawnen",
   "text.autoconfig.fallingleaves.option.cherrySpawnRate": "Kirschblüten-Spawnrate",
   "text.autoconfig.fallingleaves.option.cherrySpawnRate.@Tooltip": "Ändert die vanilla Kirschblüten-Spawnrate in 10%-Faktoren, d.h.\n5 = 50% (halbe Rate)\n10 = 100% (originale Rate)\n20 = 200% (doppelte Rate)",
+  "text.autoconfig.fallingleaves.option.paleOakSpawnRate": "Blasseichen-Spawnrate",
+  "text.autoconfig.fallingleaves.option.paleOakSpawnRate.@Tooltip": "Ändert die vanilla Blasseichen-Spawnrate in 10%-Faktoren, d.h.\n5 = 50% (halbe Rate)\n10 = 100% (originale Rate)\n20 = 200% (doppelte Rate)",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "Nadelblatt-Spawnrate",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "Wieviele Nadelblätter über Zeit spawnen",
   "text.autoconfig.fallingleaves.option.snowflakeSpawnRate": "Schneeflock-Spawnrate",
