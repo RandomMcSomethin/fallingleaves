@@ -1,3 +1,9 @@
+1.16.6
+
+ - update Traditional Chinese (zh_tw) translation, thanks to yichifauzi!
+
+1.16.5
+
 update for 1.21.4:
 
  - allow controlling the spawn rate of vanilla Pale Oak leaves!
