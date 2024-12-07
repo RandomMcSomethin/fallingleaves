@@ -8,6 +8,8 @@
   "text.autoconfig.fallingleaves.option.leafSpawnRate.@Tooltip": "隨著時間推移生成多少樹葉",
   "text.autoconfig.fallingleaves.option.cherrySpawnRate": "櫻花花瓣生成率",
   "text.autoconfig.fallingleaves.option.cherrySpawnRate.@Tooltip": "以 10% 的倍數更改原版櫻花花瓣生成率，即\n5 = 50%（一半速率）\n10 = 100%（原始速率）\n20 = 200%（雙倍速率）",
+  "text.autoconfig.fallingleaves.option.paleOakSpawnRate": "蒼白橡木樹葉生成率",
+  "text.autoconfig.fallingleaves.option.paleOakSpawnRate.@Tooltip": "以 10% 的倍數調整原版蒼白橡木樹葉生成率，例如：\n5 = 50%（一半速率）\n10 = 100%（原始速率）\n20 = 200%（雙倍速率）",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate": "針葉生成率",
   "text.autoconfig.fallingleaves.option.coniferLeafSpawnRate.@Tooltip": "隨著時間推移生成多少針葉",
   "text.autoconfig.fallingleaves.option.snowflakeSpawnRate": "雪花生成率",
